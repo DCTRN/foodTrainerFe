@@ -1,0 +1,32 @@
+<div class="main-wrapper">
+  <form class="example-form">
+    <table class="example-full-width">
+      <tr>
+        <td colspan="2">
+          <mat-form-field class="example-full-width">
+            <mat-label>Username</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <mat-form-field class="example-full-width">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" />
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button (click)="navigateToMainPage()" mat-stroked-button class="btn">
+            Return to main page
+          </button>
+        </td>
+        <td>
+          <button mat-stroked-button class="btn">Login</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>

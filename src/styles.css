@@ -1,1 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
+/* https://colorhunt.co/palette/167893 Color Palette 167893*/
+
+:root {
+  --primary-color: #333334;
+  --primary-color-lighter: #5b5b5b;
+  --primary-color-lightest: #7d7c7c;
+
+  --secondary-color: #9a25b1;
+  --secondary-color-darker: #702d7c;
+  --secondary-color-darkest: #503f57;
+
+  --white-color: #ffffff;
+  --white-color-darker: #cfccc9;
+  --black-color: #070505;
+}
+/* :root {
+  --primary-color: #0f4c75;
+  --secondary-color: #3282b8;
+  --light-blue: #bbe1fa;
+  --dark-grey: #1b262c;
+  --white-color: #ffffff;
+  --black-color: #000000;
+} */
+
+html,
+body {
+  background-color: var(--primary-color);
+  color: var(--primary-color-lightest);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

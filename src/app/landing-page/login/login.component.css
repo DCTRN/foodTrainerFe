@@ -1,0 +1,56 @@
+.example-form,
+.main-wrapper {
+  width: 100%;
+}
+
+.main-wrapper {
+  height: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.example-form {
+  margin-top: -8rem;
+}
+
+.example-full-width {
+  width: 100%;
+}
+table,
+form,
+tr {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+td {
+  margin: 0.5rem;
+}
+
+td mat-form-field.mat-form-field {
+  width: 100%;
+}
+
+.btn {
+  width: 100%;
+  border-radius: 0.2rem;
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+  transition: all 0.3s ease-in-out;
+  border: none;
+  outline: none;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color-darker);
+  color: var(--white-color-darker);
+}

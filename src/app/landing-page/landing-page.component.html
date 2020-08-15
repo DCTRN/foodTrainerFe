@@ -1,12 +1,23 @@
 <div class="main-wrapper">
   <div class="main-page">
     <div class="header">
-      <h1>Let's start counting!</h1>
+      <h1 class="header__title">Let's start counting!</h1>
     </div>
     <div class="nav-options">
-      <button class="register">Register</button>
-      <button class="login">Login</button>
+      <button
+        (click)="navigate(destiny.LOGIN)"
+        class="btn btn--primary btn--login"
+        mat-stroked-button
+      >
+        Login
+      </button>
+      <button
+        (click)="navigate(destiny.REGISTER)"
+        class="btn btn--secondary btn--register"
+        mat-stroked-button
+      >
+        Register
+      </button>
     </div>
   </div>
-  <p>landing-page works!</p>
 </div>
