@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { interval, of } from 'rxjs';
+import { tap, timeout, skipWhile, mergeMap } from 'rxjs/operators';
 
 export enum LandingPageNavigationDestiny {
   LOGIN = '/login',
@@ -23,7 +25,7 @@ export class LandingPageComponent implements OnInit {
     },
   };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {  }
 
   public ngOnInit(): void {}
 

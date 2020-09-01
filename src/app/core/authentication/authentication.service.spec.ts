@@ -1,31 +1,24 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
-import { getTestBed, TestBed, flush } from '@angular/core/testing';
-import { User } from 'src/app/core/stores/user/user.model';
-import { Environment } from '../../core/environment';
-import { AuthenticationApiService } from './authentication-api.service';
-import { Tokens } from '../../core/stores/tokens/tokens.model';
-import { LoggerTestingModule } from 'ngx-logger/testing';
-import { NGXLogger, LoggerConfig } from 'ngx-logger';
+import { TestBed, getTestBed } from '@angular/core/testing';
+import { AuthenticationService } from './authentication.service';
+import { AuthenticationApiService } from 'src/app/api/authentication/authentication-api.service';
 import {
   userMock,
   userFromBeMock,
   loginCredentialsMock,
   tokensMock,
-} from './authentication-mock-data.data';
+} from '../../api/authentication/authentication-mock-data.data';
+import { of, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { NGXLogger, LoggerConfig } from 'ngx-logger';
+import { User } from '../stores/user/user.model';
+import { Tokens } from '../stores/tokens/tokens.model';
 
-describe('AuthenticationApiService', () => {
+fdescribe('AuthenticationService', () => {
   let injector: TestBed;
-  let service: AuthenticationApiService;
-  let httpTestingController: HttpTestingController;
+  let service: AuthenticationService;
+  let authenticationApiService: AuthenticationApiService;
   let logger: NGXLogger;
-
-  const apiUrl = Environment.apiUrl;
-  const registerUrl = Environment.authUrl.REGISTER;
-  const loginUrl = Environment.authUrl.LOGIN;
-  const refreshUrl = Environment.authUrl.REFRESH;
 
   beforeEach(() => {
     injector = getTestBed();
@@ -33,13 +26,9 @@ describe('AuthenticationApiService', () => {
       imports: [HttpClientTestingModule, LoggerTestingModule],
       providers: [AuthenticationApiService, NGXLogger, LoggerConfig],
     });
-    service = injector.inject(AuthenticationApiService);
-    httpTestingController = injector.inject(HttpTestingController);
+    service = injector.inject(AuthenticationService);
+    authenticationApiService = injector.inject(AuthenticationApiService);
     logger = injector.inject(NGXLogger);
-  });
-
-  afterAll(() => {
-    httpTestingController.verify();
   });
 
   it('should be created', () => {
@@ -49,24 +38,30 @@ describe('AuthenticationApiService', () => {
   it('should register successfuly', () => {
     let user: User;
     let error: any;
+    const registerSpy = spyOn(
+      authenticationApiService,
+      'register'
+    ).and.returnValue(of(userFromBeMock));
 
     const register$ = service.register(userMock);
     register$.subscribe(
       (u: User) => (user = u),
       (e) => (error = e)
     );
-    httpTestingController
-      .expectOne(`${apiUrl}${registerUrl}`)
-      .flush(userFromBeMock);
 
+    expect(registerSpy).toHaveBeenCalled();
     expect(register$).toBeTruthy();
     expect(user.username).toEqual(userFromBeMock.username);
     expect(error).toBeFalsy();
   });
 
   it('should failed to register', () => {
-    let user: User;
     let error: any;
+    let user: User;
+    const registerSpy = spyOn(
+      authenticationApiService,
+      'register'
+    ).and.returnValue(throwError('error'));
     const logSpy = spyOn(logger, 'log');
 
     const register$ = service.register(userMock);
@@ -74,10 +69,8 @@ describe('AuthenticationApiService', () => {
       (u: User) => (user = u),
       (e) => (error = e)
     );
-    httpTestingController
-      .expectOne(`${apiUrl}${registerUrl}`)
-      .error(new ErrorEvent('error'));
 
+    expect(registerSpy).toHaveBeenCalled();
     expect(register$).toBeTruthy();
     expect(user).toBeFalsy();
     expect(error).toBeTruthy();
@@ -87,14 +80,17 @@ describe('AuthenticationApiService', () => {
   it('should login successfuly', () => {
     let successfulData: Tokens;
     let error: any;
+    const loginSpy = spyOn(authenticationApiService, 'login').and.returnValue(
+      of(tokensMock)
+    );
 
     const login$ = service.login(loginCredentialsMock);
     login$.subscribe(
       (t: Tokens) => (successfulData = t),
       (e) => (error = e)
     );
-    httpTestingController.expectOne(`${apiUrl}${loginUrl}`).flush(tokensMock);
 
+    expect(loginSpy).toHaveBeenCalled();
     expect(login$).toBeTruthy();
     expect(login$).toBeTruthy(successfulData);
     expect(error).toBeFalsy();
@@ -104,16 +100,17 @@ describe('AuthenticationApiService', () => {
     let successfulData: Tokens;
     let error: any;
     const logSpy = spyOn(logger, 'log');
+    const loginSpy = spyOn(authenticationApiService, 'login').and.returnValue(
+      throwError('Error')
+    );
 
     const login$ = service.login(loginCredentialsMock);
     login$.subscribe(
       (t: Tokens) => (successfulData = t),
       (e) => (error = e)
     );
-    httpTestingController
-      .expectOne(`${apiUrl}${loginUrl}`)
-      .error(new ErrorEvent('error'));
 
+    expect(loginSpy).toHaveBeenCalled();
     expect(login$).toBeTruthy();
     expect(successfulData).toBeFalsy();
     expect(error).toBeTruthy();
@@ -123,14 +120,18 @@ describe('AuthenticationApiService', () => {
   it('should refresh token', () => {
     let successfulData: Tokens;
     let error: any;
+    const refreshTokenSpy = spyOn(
+      authenticationApiService,
+      'refreshToken'
+    ).and.returnValue(of(tokensMock));
 
     const refresh$ = service.refreshToken(tokensMock.refresh_token);
     refresh$.subscribe(
       (t: Tokens) => (successfulData = t),
       (e) => (error = e)
     );
-    httpTestingController.expectOne(`${apiUrl}${refreshUrl}`).flush(tokensMock);
 
+    expect(refreshTokenSpy).toHaveBeenCalled();
     expect(refresh$).toBeTruthy();
     expect(successfulData).toBeTruthy();
     expect(error).toBeFalsy();
@@ -140,16 +141,18 @@ describe('AuthenticationApiService', () => {
     let successfulData: Tokens;
     let error: any;
     const logSpy = spyOn(logger, 'log');
+    const refreshTokenSpy = spyOn(
+      authenticationApiService,
+      'refreshToken'
+    ).and.returnValue(throwError('Error'));
 
     const refresh$ = service.refreshToken(tokensMock.refresh_token);
     refresh$.subscribe(
       (t: Tokens) => (successfulData = t),
       (e) => (error = e)
     );
-    httpTestingController
-      .expectOne(`${apiUrl}${refreshUrl}`)
-      .error(new ErrorEvent('error'));
 
+    expect(refreshTokenSpy).toHaveBeenCalled();
     expect(refresh$).toBeTruthy();
     expect(successfulData).toBeFalsy();
     expect(error).toBeTruthy();

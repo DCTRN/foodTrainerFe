@@ -2,6 +2,7 @@ enum AuthUrl {
   AUTH = 'auth',
   REGISTER = 'auth/register',
   LOGIN = 'auth/login',
+  REFRESH = 'auth/refresh',
 }
 
 export abstract class Environment {

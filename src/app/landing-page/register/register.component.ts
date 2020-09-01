@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   FormBuilder,
-  FormGroup,
-  FormControl,
-  Validators,
+  FormControl, FormGroup,
+  Validators
 } from '@angular/forms';
-import { SimpleErrorStateMatcher } from '../../utils/simple-error-state-matcher.class';
-import { Store, select } from '@ngrx/store';
-import { User } from 'src/app/core/ngrx/stores/user/user.model';
+import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { register } from 'src/app/core/ngrx/stores/user/user.actions';
+import { register } from 'src/app/core/stores/user/user.actions';
+import { User } from 'src/app/core/stores/user/user.model';
+import { SimpleErrorStateMatcher } from '../../utils/simple-error-state-matcher.class';
 
 @Component({
   selector: 'app-register',

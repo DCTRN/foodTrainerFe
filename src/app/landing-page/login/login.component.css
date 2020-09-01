@@ -7,13 +7,13 @@
   height: 100%;
   display: flex;
   flex-flow: column wrap;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0.5rem;
 }
 
-.example-form {
-  margin-top: -8rem;
-}
+/* .example-form {
+  margin-top: 2rem;
+} */
 
 .example-full-width {
   width: 100%;
@@ -30,10 +30,8 @@ tr {
 table {
   table-layout: fixed;
   width: 100%;
-}
-
-td {
-  margin: 0.5rem;
+  border-collapse: separate;
+  border-spacing: 0.5rem 2rem;
 }
 
 td mat-form-field.mat-form-field {

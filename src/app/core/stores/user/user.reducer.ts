@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { User } from './user.model';
-import { register, login, update } from './user.actions';
+import { register, login, update, UserAction } from './user.actions';
 
 export const initialState: User = {
   username: undefined,
@@ -15,11 +15,12 @@ export const initialState: User = {
 
 const _userReducer = createReducer(
   initialState,
-  on(register, (state, action) => action),
-  on(login, (state, action) => {
+  on(UserAction.REGISTER, (state, action) => action),
+  on(UserAction.LOGIN, (state, action) => {
     return { ...state, ...action };
   }),
-  on(update, (state, action) => action)
+  on(UserAction.UPDATE, (state, action) => action),
+  on(UserAction.ERROR, (state, action) => state)
 );
 
 export function userReducer(state, action) {

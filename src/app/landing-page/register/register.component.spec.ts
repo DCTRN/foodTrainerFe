@@ -13,6 +13,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+
+const initialState = undefined;
 
 describe('RegisterComponent', () => {
   let injector: TestBed;
@@ -32,6 +35,7 @@ describe('RegisterComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
       ],
+      providers: [provideMockStore({ initialState })],
       declarations: [RegisterComponent],
     }).compileComponents();
   }));
