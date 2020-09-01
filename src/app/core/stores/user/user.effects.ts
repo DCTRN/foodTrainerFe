@@ -11,7 +11,7 @@ import { TokensAction } from '../tokens/tokens.actions';
 
 @Injectable()
 export class UserEffects {
-  register$ = createEffect(() =>
+  public register$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserAction.REGISTER),
       mergeMap((action: User) => {
@@ -23,7 +23,7 @@ export class UserEffects {
     )
   );
 
-  login$ = createEffect(() =>
+  public login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserAction.LOGIN),
       tap(() => console.log('ATTEMPTING TO LOGIN')),

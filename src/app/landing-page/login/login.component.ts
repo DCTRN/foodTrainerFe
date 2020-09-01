@@ -33,10 +33,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userStore: Store<{ user: User }>
   ) {
-    this.userStore
-      .pipe(select('user'))
-      .pipe(tap((user) => console.log(user)))
-      .subscribe();
+    this.userStore.pipe(select('user')).subscribe();
   }
 
   public ngOnInit(): void {

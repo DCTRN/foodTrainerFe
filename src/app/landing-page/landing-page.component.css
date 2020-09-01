@@ -40,11 +40,9 @@
 h1.header__title {
   display: block;
   width: 100%;
-  /* height: 100%; */
   color: var(--primary-color-lightest);
   font-size: 3rem;
   margin: 0;
-  /* margin-top: -3rem; */
 }
 
 .nav-options {
@@ -65,9 +63,7 @@ h1.header__title {
 }
 
 .btn--login {
-  /* background-color: var(--secondary-color); */
   font-weight: bold;
-  /* color: var(--dark-grey); */
 }
 
 .btn:hover {

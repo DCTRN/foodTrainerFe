@@ -1,27 +1,39 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   async,
   ComponentFixture,
-  TestBed,
   getTestBed,
+  TestBed,
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RegisterComponent } from './register.component';
-import { MatNativeDateModule } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { User } from 'src/app/core/stores/user/user.model';
+import { RegisterComponent } from './register.component';
 
 const initialState = undefined;
+
+const userMock: User = {
+  username: 'mike8',
+  password: 'haslo1234',
+  email: 'michal.kowalski@gmail.com',
+  phoneNumber: '123123123',
+  birthDate: new Date(),
+  firstName: 'majkel',
+  lastName: 'majk',
+};
 
 describe('RegisterComponent', () => {
   let injector: TestBed;
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let router: Router;
+  let store: MockStore;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -46,6 +58,7 @@ describe('RegisterComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     router = injector.inject(Router);
+    store = injector.inject(MockStore);
   });
 
   it('should create', () => {
@@ -58,5 +71,26 @@ describe('RegisterComponent', () => {
     component.navigateToMainPage();
 
     expect(routerSpy).toHaveBeenCalledWith('/landing-page');
+  });
+
+  it('should dispatch register action if valid form', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+
+    component.register();
+
+    expect(dispatchSpy).not.toHaveBeenCalled();
+
+    component.usernameFormControl.setValue(userMock.username);
+    component.passwordFormControl.setValue('Password123');
+    component.passwordConfirmationFormControl.setValue('Password123');
+    component.emailFormControl.setValue(userMock.email);
+    component.phoneNumberFormControl.setValue(userMock.phoneNumber);
+    component.birthDateFormControl.setValue(new Date());
+    component.firstNameFormControl.setValue(userMock.firstName);
+    component.lastNameFormControl.setValue(userMock.lastName);
+
+    component.register();
+
+    expect(dispatchSpy).toHaveBeenCalled();
   });
 });

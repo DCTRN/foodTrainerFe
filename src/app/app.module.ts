@@ -11,9 +11,10 @@ import { environment } from '../environments/environment';
 import { UserEffects } from './core/stores/user/user.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
+import { DummyComponent } from './core/stores/user/dummy.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, DummyComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -14,7 +14,7 @@ import { NGXLogger, LoggerConfig } from 'ngx-logger';
 import { User } from '../stores/user/user.model';
 import { Tokens } from '../stores/tokens/tokens.model';
 
-fdescribe('AuthenticationService', () => {
+describe('AuthenticationService', () => {
   let injector: TestBed;
   let service: AuthenticationService;
   let authenticationApiService: AuthenticationApiService;

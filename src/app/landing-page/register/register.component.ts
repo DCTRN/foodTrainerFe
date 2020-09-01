@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
-  FormControl, FormGroup,
-  Validators
+  FormControl,
+  FormGroup,
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
@@ -37,10 +38,7 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userStore: Store<{ user: User }>
   ) {
-    this.userStore
-      .pipe(select('user'))
-      .pipe(tap((user) => console.log(user)))
-      .subscribe();
+    this.userStore.pipe(select('user')).subscribe();
   }
 
   public ngOnInit(): void {

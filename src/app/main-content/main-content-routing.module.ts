@@ -8,6 +8,11 @@ const routes: Routes = [
     component: MainContentComponent,
     children: [
       {
+        path: '',
+        redirectTo: '/main/diary',
+        pathMatch: 'full',
+      },
+      {
         path: 'diary',
         loadChildren: () =>
           import('./diary/diary.module').then((m) => m.DiaryModule),
