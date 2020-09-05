@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { User } from 'src/app/core/stores/user/user.model';
+import { User } from '@stores/user/user.model';
 import { RegisterComponent } from './register.component';
 
 const initialState = undefined;

@@ -26,8 +26,6 @@
 
 .header {
   width: 100%;
-  max-height: 50%;
-  min-height: 8rem;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -40,6 +38,7 @@
 h1.header__title {
   display: block;
   width: 100%;
+  padding: 1rem;
   color: var(--primary-color-lightest);
   font-size: 3rem;
   margin: 0;
@@ -48,10 +47,11 @@ h1.header__title {
 .nav-options {
   min-height: 16rem;
   justify-content: space-around;
+  padding: 1rem;
 }
 
 .btn {
-  width: 18rem;
+  width: 100%;
   height: 3rem;
   font-size: 2rem;
   border-radius: 0.2rem;
@@ -69,4 +69,39 @@ h1.header__title {
 .btn:hover {
   background-color: var(--secondary-color-darker);
   color: var(--white-color-darker);
+}
+
+@media (min-width: 768px) {
+  .nav-options {
+    margin: 3rem;
+  }
+
+  h1.header__title {
+    font-size: 6rem;
+    padding: 2rem;
+  }
+
+  .btn {
+    height: 4rem;
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 1366px) {
+  .btn {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1920px) {
+  h1.header__title {
+    font-size: 8rem;
+    padding: 3rem;
+  }
+  .btn {
+    width: 75%;
+    height: 6rem;
+    font-size: 4rem;
+    margin-top: 4rem;
+  }
 }

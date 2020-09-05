@@ -5,16 +5,16 @@ import {
   userFromBeMock,
   loginCredentialsMock,
   tokensMock,
-} from '../../api/authentication/authentication-mock-data.data';
+} from '@api/authentication/authentication-mock-data.data';
 import { of, throwError } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { NGXLogger, LoggerConfig } from 'ngx-logger';
-import { User } from '../stores/user/user.model';
-import { Tokens } from '../stores/tokens/tokens.model';
+import { User } from '@stores/user/user.model';
+import { Tokens } from '@stores/tokens/tokens.model';
 import { Injectable } from '@angular/core';
 import { TokensStorageService } from './tokens-storage.service';
-import { AuthenticationApiService } from 'app/api/authentication/authentication-api.service';
+import { AuthenticationApiService } from '@api/authentication/authentication-api.service';
 
 @Injectable()
 export class TokensStorageServiceMock {

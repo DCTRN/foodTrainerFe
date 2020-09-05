@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription, timer } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { TokensAction } from '../stores/tokens/tokens.actions';
-import { Tokens } from '../stores/tokens/tokens.model';
+import { TokensAction } from '@stores/tokens/tokens.actions';
+import { Tokens } from '@stores/tokens/tokens.model';
 import { NGXLogger } from 'ngx-logger';
 
 @Injectable({

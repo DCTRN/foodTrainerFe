@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthenticationApiService } from '../../api/authentication/authentication-api.service';
-import { LoginCredentials } from '../../api/authentication/login-credentials.model';
-import { Tokens } from '../stores/tokens/tokens.model';
-import { User } from '../stores/user/user.model';
+import { AuthenticationApiService } from '@api/authentication/authentication-api.service';
+import { LoginCredentials } from '@api/authentication/login-credentials.model';
+import { Tokens } from '@stores/tokens/tokens.model';
+import { User } from '@stores/user/user.model';
 import { TokensStorageService } from './tokens-storage.service';
 
 @Injectable({

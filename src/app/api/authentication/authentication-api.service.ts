@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
-import { Tokens } from '../../core/stores/tokens/tokens.model';
+import { Tokens } from '@stores/tokens/tokens.model';
+import { Environment } from '@core/environment';
+import { User } from '@stores/user/user.model';
 import { LoginCredentials } from './login-credentials.model';
-import { Environment } from '../../core/environment';
-import { User } from '../../core/stores/user/user.model';
 
 @Injectable({
   providedIn: 'root',

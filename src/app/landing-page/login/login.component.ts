@@ -7,10 +7,10 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { LoginCredentials } from 'app/api/authentication/login-credentials.model';
-import { login, UserActionType } from 'app/core/stores/user/user.actions';
-import { User } from 'app/core/stores/user/user.model';
-import { SimpleErrorStateMatcher } from 'app/utils/simple-error-state-matcher.class';
+import { LoginCredentials } from '@api/authentication/login-credentials.model';
+import { login, UserActionType } from '@stores/user/user.actions';
+import { User } from '@stores/user/user.model';
+import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 

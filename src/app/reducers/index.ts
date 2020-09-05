@@ -1,7 +1,7 @@
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-import { userReducer } from '../core/stores/user/user.reducer';
-import { tokensReducer } from '../core/stores/tokens/tokens.reducer';
+import { userReducer } from '@stores/user/user.reducer';
+import { tokensReducer } from '@stores/tokens/tokens.reducer';
 
 export interface State {}
 

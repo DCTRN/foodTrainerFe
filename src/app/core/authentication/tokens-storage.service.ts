@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Tokens } from '../stores/tokens/tokens.model';
+import { Tokens } from '@stores/tokens/tokens.model';
 import { NGXLogger } from 'ngx-logger';
 
 @Injectable({

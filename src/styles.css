@@ -1,6 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 /* https://colorhunt.co/palette/167893 Color Palette 167893*/
 
+/*
+360×640
+768×1024
+1366×768
+1920×1080
+*/
+
 :root {
   --primary-color: #333334;
   --primary-color-lighter: #5b5b5b;
@@ -14,14 +21,6 @@
   --white-color-darker: #cfccc9;
   --black-color: #070505;
 }
-/* :root {
-  --primary-color: #0f4c75;
-  --secondary-color: #3282b8;
-  --light-blue: #bbe1fa;
-  --dark-grey: #1b262c;
-  --white-color: #ffffff;
-  --black-color: #000000;
-} */
 
 html,
 body {

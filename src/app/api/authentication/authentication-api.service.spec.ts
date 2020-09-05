@@ -3,10 +3,10 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { getTestBed, TestBed, flush } from '@angular/core/testing';
-import { User } from 'src/app/core/stores/user/user.model';
-import { Environment } from '../../core/environment';
-import { AuthenticationApiService } from './authentication-api.service';
-import { Tokens } from '../../core/stores/tokens/tokens.model';
+import { User } from '@stores/user/user.model';
+import { Environment } from '@core/environment';
+import { AuthenticationApiService } from '@api/authentication/authentication-api.service';
+import { Tokens } from '@stores/tokens/tokens.model';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { NGXLogger, LoggerConfig } from 'ngx-logger';
 import {

@@ -7,11 +7,11 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { register, UserActionType } from 'app/core/stores/user/user.actions';
-import { User } from 'app/core/stores/user/user.model';
+import { register, UserActionType } from '@stores/user/user.actions';
+import { User } from '@stores/user/user.model';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { SimpleErrorStateMatcher } from '../../utils/simple-error-state-matcher.class';
+import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 
 @Component({
   selector: 'app-register',

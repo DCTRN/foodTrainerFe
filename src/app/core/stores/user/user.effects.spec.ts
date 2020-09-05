@@ -6,7 +6,6 @@ import { UserEffects } from './user.effects';
 import { NGXLogger, LoggerConfig } from 'ngx-logger';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { Injectable } from '@angular/core';
-import { LoginCredentials } from '@api/authentication/login-credentials.model';
 import { Tokens } from '../tokens/tokens.model';
 import { User } from './user.model';
 import { AuthenticationService } from '../../authentication/authentication.service';
@@ -20,6 +19,7 @@ import {
 } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import { LoginCredentials } from '@api/authentication/login-credentials.model';
 
 export const userMock: User = {
   username: 'mike8',

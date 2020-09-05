@@ -1,4 +1,4 @@
-import { User } from 'src/app/core/stores/user/user.model';
+import { User } from '@stores/user/user.model';
 import { LoginCredentials } from './login-credentials.model';
 export const loginCredentialsMock: LoginCredentials = {
   username: 'mike8',

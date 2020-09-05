@@ -1,6 +1,6 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { TokensStorageService } from './tokens-storage.service';
-import { Tokens } from '../stores/tokens/tokens.model';
+import { Tokens } from '@stores/tokens/tokens.model';
 
 const loginTokens: Tokens = {
   access_token: 'access_token_login',

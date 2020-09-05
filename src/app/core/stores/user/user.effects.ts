@@ -10,7 +10,7 @@ import { TokensAction } from '../tokens/tokens.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
-import { LoginCredentials } from 'app/api/authentication/login-credentials.model';
+import { LoginCredentials } from '@api/authentication/login-credentials.model';
 
 @Injectable()
 export class UserEffects {

@@ -1,14 +1,8 @@
-import {
-  fakeAsync,
-  getTestBed,
-  TestBed,
-  inject,
-  tick,
-} from '@angular/core/testing';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { Tokens } from '../stores/tokens/tokens.model';
+import { fakeAsync, getTestBed, TestBed, tick } from '@angular/core/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { TokensAction } from '@stores/tokens/tokens.actions';
+import { Tokens } from '@stores/tokens/tokens.model';
 import { AuthenticationTimerService } from './authentication-timer.service';
-import { TokensAction } from '../stores/tokens/tokens.actions';
 
 export const initialState: Tokens = {
   access_token: undefined,
