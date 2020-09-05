@@ -7,6 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -19,6 +20,7 @@ import { LoginComponent } from './login.component';
     MatNativeDateModule,
     MatDatepickerModule,
     MatButtonModule,
+    MatSnackBarModule,
   ],
 })
 export class LoginModule {}

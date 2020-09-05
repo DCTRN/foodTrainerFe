@@ -1,6 +1,5 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { AuthenticationService } from './authentication.service';
-import { AuthenticationApiService } from 'src/app/api/authentication/authentication-api.service';
 import {
   userMock,
   userFromBeMock,
@@ -13,6 +12,24 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { NGXLogger, LoggerConfig } from 'ngx-logger';
 import { User } from '../stores/user/user.model';
 import { Tokens } from '../stores/tokens/tokens.model';
+import { Injectable } from '@angular/core';
+import { TokensStorageService } from './tokens-storage.service';
+import { AuthenticationApiService } from 'app/api/authentication/authentication-api.service';
+
+@Injectable()
+export class TokensStorageServiceMock {
+  private tokens: Tokens = tokensMock;
+
+  constructor() {}
+
+  public setTokens(tokens: Tokens): void {
+    this.tokens = tokens;
+  }
+
+  public getTokens(): Tokens {
+    return this.tokens;
+  }
+}
 
 describe('AuthenticationService', () => {
   let injector: TestBed;
@@ -24,7 +41,15 @@ describe('AuthenticationService', () => {
     injector = getTestBed();
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, LoggerTestingModule],
-      providers: [AuthenticationApiService, NGXLogger, LoggerConfig],
+      providers: [
+        AuthenticationApiService,
+        NGXLogger,
+        LoggerConfig,
+        {
+          provide: TokensStorageService,
+          useClass: TokensStorageServiceMock,
+        },
+      ],
     });
     service = injector.inject(AuthenticationService);
     authenticationApiService = injector.inject(AuthenticationApiService);
@@ -125,7 +150,7 @@ describe('AuthenticationService', () => {
       'refreshToken'
     ).and.returnValue(of(tokensMock));
 
-    const refresh$ = service.refreshToken(tokensMock.refresh_token);
+    const refresh$ = service.refreshToken();
     refresh$.subscribe(
       (t: Tokens) => (successfulData = t),
       (e) => (error = e)
@@ -137,7 +162,7 @@ describe('AuthenticationService', () => {
     expect(error).toBeFalsy();
   });
 
-  it('should refresh token', () => {
+  it('should fail to refresh token', () => {
     let successfulData: Tokens;
     let error: any;
     const logSpy = spyOn(logger, 'log');
@@ -146,7 +171,7 @@ describe('AuthenticationService', () => {
       'refreshToken'
     ).and.returnValue(throwError('Error'));
 
-    const refresh$ = service.refreshToken(tokensMock.refresh_token);
+    const refresh$ = service.refreshToken();
     refresh$.subscribe(
       (t: Tokens) => (successfulData = t),
       (e) => (error = e)

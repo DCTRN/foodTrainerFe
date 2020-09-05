@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { User } from 'src/app/core/stores/user/user.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable, pipe, of, throwError } from 'rxjs';
-import { mergeMap, catchError } from 'rxjs/operators';
-import { Environment } from 'src/app/core/environment';
+import { Injectable } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
-import { LoginCredentials } from './login-credentials.model';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
 import { Tokens } from '../../core/stores/tokens/tokens.model';
+import { LoginCredentials } from './login-credentials.model';
+import { Environment } from '../../core/environment';
+import { User } from '../../core/stores/user/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class AuthenticationApiService {
   constructor(private http: HttpClient, private logger: NGXLogger) {}
 
   public refreshToken(token: string): Observable<Tokens> {
-    return this.http.post(this.refreshUrl, token).pipe(
+    return this.http.post(this.refreshUrl, { refresh_token: token }).pipe(
       mergeMap((t: Tokens) => of(t)),
       catchError((error) => {
         this.logger.log(`${this.signature} failed to refresh token`, error);

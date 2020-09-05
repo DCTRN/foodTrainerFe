@@ -11,10 +11,11 @@ import { environment } from '../environments/environment';
 import { UserEffects } from './core/stores/user/user.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
-import { DummyComponent } from './core/stores/user/dummy.component';
+import { TokenEffects } from './core/stores/tokens/tokens.effects';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [AppComponent, DummyComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -27,7 +28,8 @@ import { DummyComponent } from './core/stores/user/dummy.component';
     }),
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    EffectsModule.forRoot([UserEffects]),
+    EffectsModule.forRoot([UserEffects, TokenEffects]),
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

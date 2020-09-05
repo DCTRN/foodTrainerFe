@@ -7,10 +7,10 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
+import { register, UserActionType } from 'app/core/stores/user/user.actions';
+import { User } from 'app/core/stores/user/user.model';
+import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { register } from 'src/app/core/stores/user/user.actions';
-import { User } from 'src/app/core/stores/user/user.model';
 import { SimpleErrorStateMatcher } from '../../utils/simple-error-state-matcher.class';
 
 @Component({
@@ -33,10 +33,13 @@ export class RegisterComponent implements OnInit {
 
   public user$: Observable<User>;
 
+  private readonly signature = '[R.C]';
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private userStore: Store<{ user: User }>
+    private userStore: Store<{ user: User }>,
+    private logger: NGXLogger
   ) {
     this.userStore.pipe(select('user')).subscribe();
   }
@@ -60,6 +63,7 @@ export class RegisterComponent implements OnInit {
       lastName: this.lastNameFormControl.value,
     };
     this.userStore.dispatch(register(user));
+    this.logger.log(`${this.signature} dispatching ${UserActionType.REGISTER}`);
   }
 
   public navigateToMainPage(): void {

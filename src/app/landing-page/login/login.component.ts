@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { SimpleErrorStateMatcher } from 'src/app/utils/simple-error-state-matcher.class';
 import {
-  FormGroup,
-  FormControl,
   FormBuilder,
+  FormControl,
+  FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { LoginCredentials } from 'app/api/authentication/login-credentials.model';
+import { login, UserActionType } from 'app/core/stores/user/user.actions';
+import { User } from 'app/core/stores/user/user.model';
+import { SimpleErrorStateMatcher } from 'app/utils/simple-error-state-matcher.class';
+import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/core/stores/user/user.model';
-import { Store, select } from '@ngrx/store';
-import { tap } from 'rxjs/operators';
-import { register, login } from 'src/app/core/stores/user/user.actions';
-import { LoginCredentials } from 'src/app/api/authentication/login-credentials.model';
 
 @Component({
   selector: 'app-login',
@@ -28,10 +28,13 @@ export class LoginComponent implements OnInit {
 
   public user$: Observable<User>;
 
+  private readonly signature = '[L.C]';
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private userStore: Store<{ user: User }>
+    private userStore: Store<{ user: User }>,
+    private logger: NGXLogger
   ) {
     this.userStore.pipe(select('user')).subscribe();
   }
@@ -49,6 +52,7 @@ export class LoginComponent implements OnInit {
       username: this.usernameFormControl.value,
       password: this.passwordFormControl.value,
     };
+    this.logger.log(`${this.signature} dispatching ${UserActionType.LOGIN}`);
     this.userStore.dispatch(login(loginCredentials));
   }
 

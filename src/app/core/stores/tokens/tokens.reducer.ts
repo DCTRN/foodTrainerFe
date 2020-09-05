@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Tokens } from './tokens.model';
-import { login, refresh, update } from './tokens.actions';
+import { login, refresh, update, error } from './tokens.actions';
 
 export const initialState: Tokens = {
   access_token: undefined,
@@ -10,12 +10,10 @@ export const initialState: Tokens = {
 
 const _tokensReducer = createReducer(
   initialState,
-  on(login, (state, action) => {
-    console.log('tokens reducer', action);
-    return action;
-  }),
-  on(refresh, (state, action) => action),
-  on(update, (state, action) => action)
+  on(login, (state, action) => action),
+  on(refresh, (state) => state),
+  on(update, (state, action) => action),
+  on(error, (state) => state)
 );
 
 export function tokensReducer(state, action) {
