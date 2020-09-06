@@ -8,6 +8,7 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { TokensStorageService } from './tokens-storage.service';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { LocalStorageService } from 'ngx-webstorage';
 
 export const tokensMock = {
   access_token: 'access_token',
@@ -32,6 +33,7 @@ describe('AuthenticationInterceptor', () => {
       providers: [
         AuthenticationInterceptor,
         TokensStorageService,
+        LocalStorageService,
         {
           provide: HTTP_INTERCEPTORS,
           useClass: AuthenticationInterceptor,
