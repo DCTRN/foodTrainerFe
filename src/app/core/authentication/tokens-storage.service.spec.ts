@@ -1,6 +1,7 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { TokensStorageService } from './tokens-storage.service';
 import { Tokens } from '@stores/tokens/tokens.model';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 const loginTokens: Tokens = {
   access_token: 'access_token_login',
@@ -14,7 +15,9 @@ describe('TokensStorageService', () => {
 
   beforeEach(() => {
     injector = getTestBed();
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [LoggerTestingModule],
+    });
     service = injector.inject(TokensStorageService);
   });
 

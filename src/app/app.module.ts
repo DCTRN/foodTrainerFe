@@ -8,11 +8,13 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { UserEffects } from './core/stores/user/user.effects';
+import { UserEffects } from '@stores/user/user.effects';
 import { EffectsModule } from '@ngrx/effects';
-import { HttpClientModule } from '@angular/common/http';
-import { TokenEffects } from './core/stores/tokens/tokens.effects';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenEffects } from '@stores/tokens/tokens.effects';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthenticationInterceptor } from '@core/authentication/authentication.interceptor';
+import { LoggerInterceptor } from '@core/logs/logger.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +33,18 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     EffectsModule.forRoot([UserEffects, TokenEffects]),
     MatSnackBarModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggerInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

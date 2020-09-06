@@ -3,6 +3,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TokensAction } from '@stores/tokens/tokens.actions';
 import { Tokens } from '@stores/tokens/tokens.model';
 import { AuthenticationTimerService } from './authentication-timer.service';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 export const initialState: Tokens = {
   access_token: undefined,
@@ -17,6 +18,7 @@ describe('AuthenticationTimerService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [LoggerTestingModule],
       providers: [provideMockStore({ initialState })],
     });
     injector = getTestBed();

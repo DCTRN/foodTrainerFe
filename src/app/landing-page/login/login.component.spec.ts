@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoginComponent } from './login.component';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 const initialState = undefined;
 
@@ -31,6 +32,7 @@ describe('LoginComponent', () => {
         ReactiveFormsModule,
         MatInputModule,
         BrowserAnimationsModule,
+        LoggerTestingModule,
       ],
       providers: [provideMockStore({ initialState })],
       declarations: [LoginComponent],
