@@ -49,4 +49,20 @@ describe('TokensStorageService', () => {
     expect(logSpy).toHaveBeenCalled();
     expect(storeSpy).toHaveBeenCalled();
   });
+
+  it('should clear storage', () => {
+    let tokens: Tokens;
+    const logSpy = spyOn(logger, 'log');
+    const storeSpy = spyOn(localStorageService, 'store');
+    const clearSpy = spyOn(localStorageService, 'clear');
+
+    service.setTokens(loginTokens);
+    service.clearTokens();
+    tokens = service.getTokens();
+
+    expect(tokens).toBeFalsy();
+    expect(logSpy).toHaveBeenCalled();
+    expect(storeSpy).toHaveBeenCalled();
+    expect(clearSpy).toHaveBeenCalled();
+  });
 });

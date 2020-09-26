@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import {
   MenuItems,
   NavigationMediatorService,
-} from '../services/navigation-mediator/navigation-mediator.service';
+} from '@shared/services/navigation-mediator/navigation-mediator.service.ts';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-bottom-nav',
-  templateUrl: './bottom-nav.component.html',
-  styleUrls: ['./bottom-nav.component.css'],
+  selector: 'app-drawer',
+  templateUrl: './drawer.component.html',
+  styleUrls: ['./drawer.component.css'],
 })
-export class BottomNavComponent implements OnInit, OnDestroy {
+export class DrawerComponent implements OnInit, OnDestroy {
   public menuItems = MenuItems;
   public currentlySelectedMenuItem: MenuItems;
   private subscriptions = new Subscription();

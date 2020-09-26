@@ -1,2 +1,10 @@
-<p>main-content works!</p>
-<router-outlet></router-outlet>
+<mat-drawer-container class="wrapper" [hasBackdrop]="true">
+  <mat-drawer class="drawer" #drawer [mode]="this.matDrawerMode">
+    <app-drawer></app-drawer>
+  </mat-drawer>
+  <mat-drawer-content>
+    <app-toolbar (menuClick)="onMenuClick()"></app-toolbar>
+    <router-outlet></router-outlet>
+    <app-bottom-nav></app-bottom-nav>
+  </mat-drawer-content>
+</mat-drawer-container>

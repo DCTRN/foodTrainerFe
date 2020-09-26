@@ -16,6 +16,7 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { metaReducers, reducers } from './reducers';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +35,7 @@ import { metaReducers, reducers } from './reducers';
     EffectsModule.forRoot([UserEffects, TokenEffects]),
     MatSnackBarModule,
     NgxWebstorageModule.forRoot(),
+    MatProgressSpinnerModule,
   ],
   providers: [
     {

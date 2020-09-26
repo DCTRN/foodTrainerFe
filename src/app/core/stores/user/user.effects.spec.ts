@@ -115,6 +115,7 @@ describe('User effects', () => {
   });
 
   it('should handle success register action', () => {
+    const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
     let resultAction: any;
     const registerSpy = spyOn(
       authenticationService,
@@ -169,7 +170,7 @@ describe('User effects', () => {
     const loginSpy = spyOn(authenticationService, 'login').and.returnValue(
       throwError('Error')
     );
-
+   
     actions$.next(
       UserAction.LOGIN({ username: 'username', password: 'password' })
     );

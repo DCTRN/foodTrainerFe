@@ -1,0 +1,63 @@
+<mat-card class="drawer__header">
+  <div class="drawer__header__title">Food Trainer</div>
+  <div class="drawer__header__user-details">Mike1998</div>
+  <div class="drawer__header__user-details email">mike1998@gmail.com</div>
+</mat-card>
+<div class="drawer__content">
+  <mat-card
+    (click)="onMenuItemClick(menuItems.MAIN_PAGE)"
+    [ngClass]="{
+      selected: this.currentlySelectedMenuItem === menuItems.MAIN_PAGE
+    }"
+    class="drawer__content__item"
+  >
+    <mat-icon>home</mat-icon>
+    <span class="drawer__item__label">Main page</span>
+  </mat-card>
+  <mat-card
+    (click)="onMenuItemClick(menuItems.DIARY)"
+    [ngClass]="{ selected: this.currentlySelectedMenuItem === menuItems.DIARY }"
+    class="drawer__content__item"
+  >
+    <mat-icon>food_bank</mat-icon>
+    <span class="drawer__item__label">Diary</span>
+  </mat-card>
+  <mat-card
+    (click)="onMenuItemClick(menuItems.REPORTS)"
+    [ngClass]="{
+      selected: this.currentlySelectedMenuItem === menuItems.REPORTS
+    }"
+    class="drawer__content__item"
+  >
+    <mat-icon>insert_chart</mat-icon>
+    <span class="drawer__item__label">Reports</span>
+  </mat-card>
+  <mat-card
+    (click)="onMenuItemClick(menuItems.FRIENDS)"
+    [ngClass]="{
+      selected: this.currentlySelectedMenuItem === menuItems.FRIENDS
+    }"
+    class="drawer__content__item"
+  >
+    <mat-icon>group</mat-icon>
+    <span class="drawer__item__label">Friends</span>
+  </mat-card>
+  <mat-card
+    (click)="onMenuItemClick(menuItems.ACCOUNT)"
+    [ngClass]="{
+      selected: this.currentlySelectedMenuItem === menuItems.ACCOUNT
+    }"
+    class="drawer__content__item"
+  >
+    <mat-icon>account_circle</mat-icon>
+    <span class="drawer__item__label">Account</span>
+  </mat-card>
+  <mat-divider></mat-divider>
+  <mat-card
+    (click)="onMenuItemClick(menuItems.LOG_OUT)"
+    class="drawer__content__item"
+  >
+    <mat-icon>power_settings_new</mat-icon>
+    <span class="drawer__item__label">Log out</span>
+  </mat-card>
+</div>

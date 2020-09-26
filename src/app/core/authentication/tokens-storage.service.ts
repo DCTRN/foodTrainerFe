@@ -16,12 +16,20 @@ export class TokensStorageService {
   ) {}
 
   public setTokens(tokens: Tokens): void {
-    this.logger.log(`${this.signature} setting tokens: ${tokens}`);
+    this.logger.log(
+      `${this.signature} setting tokens: ${JSON.stringify(tokens)}`
+    );
     this.localStorageService.store('tokens', tokens);
     this.tokens = tokens;
   }
 
   public getTokens(): Tokens {
     return this.tokens;
+  }
+
+  public clearTokens(): void {
+    this.logger.log(`${this.signature} clearing tokens`);
+    this.localStorageService.clear('tokens');
+    this.tokens = null;
   }
 }

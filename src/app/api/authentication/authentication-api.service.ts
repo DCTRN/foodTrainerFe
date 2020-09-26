@@ -25,7 +25,12 @@ export class AuthenticationApiService {
       mergeMap((t: Tokens) => of(t)),
       catchError((error) => {
         this.logger.log(`${this.signature} failed to refresh token`, error);
-        return throwError(error);
+        return throwError(
+          error?.error?.error || {
+            error: 'unknown',
+            errorDescription: 'Unknown error',
+          }
+        );
       })
     );
   }
@@ -35,7 +40,12 @@ export class AuthenticationApiService {
       mergeMap((t: Tokens) => of(t)),
       catchError((error) => {
         this.logger.log(`${this.signature} failed to login`, error);
-        return throwError(error);
+        return throwError(
+          error?.error?.error || {
+            error: 'unknown',
+            errorDescription: 'Unknown error',
+          }
+        );
       })
     );
   }
@@ -45,7 +55,12 @@ export class AuthenticationApiService {
       mergeMap((u: User) => of(u)),
       catchError((error) => {
         this.logger.log(`${this.signature} failed to register`, error);
-        return throwError(error);
+        return throwError(
+          error?.error?.error || {
+            error: 'unknown',
+            errorDescription: 'Unknown error',
+          }
+        );
       })
     );
   }

@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { TokensAction } from '@stores/tokens/tokens.actions';
 import { Tokens } from '@stores/tokens/tokens.model';
 import { NGXLogger } from 'ngx-logger';
+import { AppState } from 'src/app/reducers';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class AuthenticationTimerService {
   private timer = new Subscription();
   constructor(
     private logger: NGXLogger,
-    private tokensStore: Store<{ tokens: Tokens }>
+    private tokensStore: Store<AppState>
   ) {}
 
   public start(): void {

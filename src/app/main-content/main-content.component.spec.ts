@@ -1,7 +1,15 @@
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MainContentComponent } from './main-content.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MainContentComponent } from './main-content.component';
+
+@Component({
+  selector: 'app-toolbar',
+  template: '',
+})
+export class ToolbarComponentMock {
+  constructor() {}
+}
 
 describe('MainContentComponent', () => {
   let component: MainContentComponent;
@@ -10,7 +18,8 @@ describe('MainContentComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [MainContentComponent],
+      declarations: [MainContentComponent, ToolbarComponentMock],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 

@@ -1,4 +1,3 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   async,
@@ -6,15 +5,18 @@ import {
   getTestBed,
   TestBed,
 } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BehaviorSubject, Observable } from 'rxjs';
 import {
   MenuItems,
   NavigationMediatorService,
 } from '../services/navigation-mediator/navigation-mediator.service';
-import { BottomNavComponent } from './bottom-nav.component';
+import { DrawerComponent } from './drawer.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 class NavigationMediatorServiceMock {
@@ -36,30 +38,35 @@ class NavigationMediatorServiceMock {
   }
 }
 
-describe('BottomNavComponent', () => {
+describe('DrawerComponent', () => {
   let injector: TestBed;
+  let component: DrawerComponent;
+  let fixture: ComponentFixture<DrawerComponent>;
   let navigationMediatorService: NavigationMediatorService;
-  let component: BottomNavComponent;
-  let fixture: ComponentFixture<BottomNavComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [BottomNavComponent],
+      imports: [
+        RouterTestingModule,
+        MatIconModule,
+        MatCardModule,
+        MatDividerModule,
+      ],
+      declarations: [DrawerComponent],
       providers: [
         {
           provide: NavigationMediatorService,
           useClass: NavigationMediatorServiceMock,
         },
       ],
-      schemas: [NO_ERRORS_SCHEMA],
+      // schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     injector = getTestBed();
     navigationMediatorService = injector.inject(NavigationMediatorService);
-    fixture = injector.createComponent(BottomNavComponent);
+    fixture = injector.createComponent(DrawerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -71,7 +78,7 @@ describe('BottomNavComponent', () => {
   it('should keep currently selected menu item highlighted', () => {
     fixture.detectChanges();
     const diaryMenuItem = fixture.debugElement.queryAll(
-      By.css('.bottom-nav__item')
+      By.css('.drawer__content__item')
     )[1] as DebugElement;
     const classes = Object.keys(diaryMenuItem.classes);
     const isSelected = classes.find((c: string) => c === 'selected');
@@ -90,7 +97,7 @@ describe('BottomNavComponent', () => {
     component.onMenuItemClick(MenuItems.MAIN_PAGE);
     fixture.detectChanges();
     const diaryMenuItem = fixture.debugElement.queryAll(
-      By.css('.bottom-nav__item')
+      By.css('.drawer__content__item')
     )[0] as DebugElement;
     const classes = Object.keys(diaryMenuItem.classes);
     const isSelected = classes.find((c: string) => c === 'selected');

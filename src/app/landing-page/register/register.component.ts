@@ -5,13 +5,17 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '@core/authentication/authentication.service';
+import { ErrorFormat } from '@core/models/error-format.model';
 import { select, Store } from '@ngrx/store';
 import { register, UserActionType } from '@stores/user/user.actions';
 import { User } from '@stores/user/user.model';
-import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
+import { NGXLogger } from 'ngx-logger';
+import { filter, map, mergeMap } from 'rxjs/operators';
+import { AppState } from 'src/app/reducers';
 
 @Component({
   selector: 'app-register',
@@ -31,26 +35,42 @@ export class RegisterComponent implements OnInit {
   public firstNameFormControl: FormControl;
   public lastNameFormControl: FormControl;
 
-  public user$: Observable<User>;
+  public user: User;
 
   private readonly signature = '[R.C]';
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private userStore: Store<{ user: User }>,
-    private logger: NGXLogger
-  ) {
-    this.userStore.pipe(select('user')).subscribe();
-  }
+    private userStore: Store<AppState>,
+    private logger: NGXLogger,
+    private snackBar: MatSnackBar
+  ) {}
 
   public ngOnInit(): void {
     this.createRegisterFormControls();
     this.createRegisterFormGroup();
+    this.userStore
+      .pipe(
+        select('user'),
+        filter((u: User) => !!u?.email)
+      )
+      .subscribe((u: User) => {
+        this.user = u;
+        this.usernameFormControl?.setValue(this.user.username);
+        this.emailFormControl?.setValue(this.user.email);
+        this.phoneNumberFormControl?.setValue(this.user.phoneNumber);
+        this.firstNameFormControl?.setValue(this.user.firstName);
+        this.lastNameFormControl?.setValue(this.user.lastName);
+        this.birthDateFormControl?.setValue(this.user.birthDate);
+      });
   }
 
   public register(): void {
     if (!this.registerForm?.valid) {
+      this.snackBar.open('Please fill form with valid data.', 'Close', {
+        duration: 5000,
+      });
       return;
     }
     const user: User = {

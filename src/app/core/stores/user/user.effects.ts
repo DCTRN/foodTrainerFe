@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { LoginCredentials } from '@api/authentication/login-credentials.model';
+import { ErrorFormat } from '@core/models/error-format.model';
 
 @Injectable()
 export class UserEffects {
@@ -23,7 +24,14 @@ export class UserEffects {
       mergeMap((action: User) => {
         return this.authenticationService.register(action).pipe(
           map((user: User) => update(user)),
-          catchError((err) => this.handleError(err, this.failedRegisterMessage))
+          tap(() => this.openSnackBar('Registered successfuly! Now you can log in^^')),
+          tap(() => this.router.navigateByUrl('/login')),
+          catchError((err: ErrorFormat) =>
+            this.handleError(
+              err,
+              `${err.errorDescription || this.failedRegisterMessage}.`
+            )
+          )
         );
       })
     )
@@ -39,8 +47,8 @@ export class UserEffects {
         return this.authenticationService
           .login(this.createLoginCredentials(action))
           .pipe(
-            tap(() => this.router.navigateByUrl('/main')),
             map((tokens: Tokens) => TokensAction.LOGIN(tokens)),
+            tap(() => this.router.navigateByUrl('/main')),
             catchError((err) => this.handleError(err, this.failedLoginMessage))
           );
       })
@@ -50,7 +58,7 @@ export class UserEffects {
   private readonly signature = '[U.E]';
   private readonly failedLoginMessage = 'Failed to login. Please try again.';
   private readonly failedRegisterMessage =
-    'Failed to register. Please try again.';
+    '. Failed to register. Please try again.';
 
   constructor(
     private actions$: Actions,
@@ -64,12 +72,12 @@ export class UserEffects {
     return { username: action.username, password: action.password };
   }
 
-  private handleError(err: any, message: string) {
-    this.openErrorSnackBar(message);
+  private handleError(err: ErrorFormat, message: string) {
+    this.openSnackBar(message);
     return of(UserAction.ERROR(err));
   }
 
-  private openErrorSnackBar(message: string) {
+  private openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 5000,
     });

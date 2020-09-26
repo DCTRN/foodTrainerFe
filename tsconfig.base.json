@@ -10,6 +10,7 @@
       "@landingPage/*": ["src/app/landing-page/*"],
       "@main-content/*": ["src/app/main-content/*"],
       "@stores/*": ["src/app/core/stores/*"],
+      "@shared/*": ["src/app/main-content/shared/*"],
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

@@ -1,0 +1,65 @@
+.drawer__header {
+  width: 100%;
+  background-color: var(--secondary-color);
+  padding: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.drawer__header__title {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.email {
+  opacity: 0.8;
+}
+
+.drawer__content {
+  margin-top: 0.1rem;
+}
+
+.drawer__content__item {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-content: center;
+  align-items: flex-end;
+  align-self: center;
+  padding: 1rem;
+  row-gap: 0.5rem;
+  box-shadow: none !important;
+}
+
+.drawer__content__item:hover {
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+  cursor: pointer;
+}
+
+.selected {
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+  cursor: pointer;
+}
+
+.drawer__item__label {
+  margin-left: 0.5rem;
+}
+
+mat-divider.mat-divider {
+  margin-top: 0.6rem;
+  border-top-width: 0.1rem;
+}
+
+@media (min-width: 768px) {
+  .drawer__content {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .drawer__content .mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+}

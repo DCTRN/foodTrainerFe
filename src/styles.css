@@ -9,11 +9,13 @@
 */
 
 :root {
-  --primary-color: #333334;
+  --primary-color: #303030;
+  /* --primary-color: #333334; */
   --primary-color-lighter: #5b5b5b;
   --primary-color-lightest: #7d7c7c;
 
-  --secondary-color: #9a25b1;
+  /* --secondary-color: #9a25b1; */
+  --secondary-color: #7b1fa2;
   --secondary-color-darker: #702d7c;
   --secondary-color-darkest: #503f57;
 

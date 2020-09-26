@@ -16,6 +16,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { User } from '@stores/user/user.model';
 import { RegisterComponent } from './register.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const initialState = undefined;
 
@@ -48,6 +49,7 @@ describe('RegisterComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         LoggerTestingModule,
+        MatSnackBarModule,
       ],
       providers: [provideMockStore({ initialState })],
       declarations: [RegisterComponent],

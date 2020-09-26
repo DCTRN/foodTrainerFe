@@ -1,18 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Router, NavigationEnd, RouterEvent } from '@angular/router';
-import { filter, tap } from 'rxjs/operators';
+import { filter, tap, map, mergeMap, skipWhile, take } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { Tokens } from '@core/stores/tokens/tokens.model';
+import { LocalStorageService } from 'ngx-webstorage';
+import { TokensAction } from '@core/stores/tokens/tokens.actions';
+import { TokensStorageService } from '@core/authentication/tokens-storage.service';
+import { Token } from '@angular/compiler/src/ml_parser/lexer';
+import { of, interval } from 'rxjs';
+import { AuthenticationService } from '@core/authentication/authentication.service';
+import { AppState } from './reducers';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public title = 'food-trainer';
+  public showSpinner = true;
   private readonly signature = '[APP.C]';
 
-  constructor(private logger: NGXLogger, private router: Router) {
+  constructor(
+    private logger: NGXLogger,
+    private router: Router,
+    private tokensStore: Store<AppState>,
+    private localStorageService: LocalStorageService,
+    private tokensStorageService: TokensStorageService,
+    private authenticationService: AuthenticationService
+  ) {
     this.logger.log(`${this.signature} ${this.title} started!`);
     this.router.events
       .pipe(
@@ -22,5 +39,34 @@ export class AppComponent {
         )
       )
       .subscribe();
+  }
+
+  public ngOnInit(): void {
+    const tokens = this.localStorageService.retrieve('tokens') as Tokens;
+    if (tokens) {
+      this.tokensStorageService.setTokens(tokens);
+      this.tokensStore.dispatch(TokensAction.REFRESH());
+      of(null)
+        .pipe(
+          mergeMap(() => this.waitForAuthOperationToFinish()),
+          mergeMap(() => this.authenticationService.getAuthState$()),
+          take(1),
+          tap(() => console.log('dupa')),
+          tap(() => setTimeout(() => (this.showSpinner = false), 1000)),
+          tap(() => console.log('dupa2')),
+          filter((state: boolean) => state),
+          tap(() => this.router.navigateByUrl('/main'))
+        )
+        .subscribe();
+    } else {
+      this.showSpinner = false
+    }
+  }
+
+  private waitForAuthOperationToFinish() {
+    return interval(33).pipe(
+      skipWhile(() => this.authenticationService.isAuthOperationInProgress()),
+      take(1)
+    );
   }
 }
