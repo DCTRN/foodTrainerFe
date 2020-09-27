@@ -3,6 +3,10 @@
   width: 100%;
 }
 
+.example-form {
+  max-width: 768px;
+}
+
 .main-wrapper {
   height: 100%;
   display: flex;
@@ -63,7 +67,7 @@ td mat-form-field.mat-form-field {
     font-size: 2rem;
   }
 }
-
+/*
 @media (min-width: 1366px) {
   .main-wrapper {
     width: 75%;
@@ -74,4 +78,4 @@ td mat-form-field.mat-form-field {
   .main-wrapper {
     width: 50%;
   }
-}
+} */

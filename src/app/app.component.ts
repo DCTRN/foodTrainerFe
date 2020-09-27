@@ -45,21 +45,19 @@ export class AppComponent implements OnInit {
     const tokens = this.localStorageService.retrieve('tokens') as Tokens;
     if (tokens) {
       this.tokensStorageService.setTokens(tokens);
-      this.tokensStore.dispatch(TokensAction.REFRESH());
+      this.tokensStore.dispatch(TokensAction.REFRESH_TOKENS_REQUEST());
       of(null)
         .pipe(
           mergeMap(() => this.waitForAuthOperationToFinish()),
           mergeMap(() => this.authenticationService.getAuthState$()),
           take(1),
-          tap(() => console.log('dupa')),
           tap(() => setTimeout(() => (this.showSpinner = false), 1000)),
-          tap(() => console.log('dupa2')),
           filter((state: boolean) => state),
           tap(() => this.router.navigateByUrl('/main'))
         )
         .subscribe();
     } else {
-      this.showSpinner = false
+      this.showSpinner = false;
     }
   }
 

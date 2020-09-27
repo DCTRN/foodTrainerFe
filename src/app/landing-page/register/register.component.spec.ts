@@ -18,7 +18,18 @@ import { RegisterComponent } from './register.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-const initialState = undefined;
+export const initialState: any = {
+  user: {
+    username: undefined,
+    email: undefined,
+    birthDate: undefined,
+    phoneNumber: undefined,
+    firstName: undefined,
+    lastName: undefined,
+    id: undefined,
+    authenticationLevel: undefined,
+  },
+};
 
 const userMock: User = {
   username: 'mike8',

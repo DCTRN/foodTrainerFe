@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import {
   MenuItems,
   NavigationMediatorService,
@@ -15,7 +16,10 @@ describe('NavigationMediatorService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule],
-      providers: [NavigationMediatorService],
+      providers: [
+        provideMockStore({ initialState: {} }),
+        NavigationMediatorService,
+      ],
     });
     injector = getTestBed();
     service = injector.inject(NavigationMediatorService);

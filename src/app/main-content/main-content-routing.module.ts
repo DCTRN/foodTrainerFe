@@ -17,6 +17,26 @@ const routes: Routes = [
         loadChildren: () =>
           import('./diary/diary.module').then((m) => m.DiaryModule),
       },
+      {
+        path: 'home',
+        loadChildren: () =>
+          import('./home/home.module').then((m) => m.HomeModule),
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./reports/reports.module').then((m) => m.ReportsModule),
+      },
+      {
+        path: 'friends',
+        loadChildren: () =>
+          import('./friends/friends.module').then((m) => m.FriendsModule),
+      },
+      {
+        path: 'account',
+        loadChildren: () =>
+          import('./account/account.module').then((m) => m.AccountModule),
+      },
     ],
   },
 ];

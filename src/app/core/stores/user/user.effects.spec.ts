@@ -1,11 +1,18 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { getTestBed, TestBed } from '@angular/core/testing';
+import {
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  getTestBed,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { ReplaySubject, Observable, of, throwError } from 'rxjs';
 import { UserEffects } from './user.effects';
 import { NGXLogger, LoggerConfig } from 'ngx-logger';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { Injectable } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { Tokens } from '../tokens/tokens.model';
 import { User } from './user.model';
 import { AuthenticationService } from '../../authentication/authentication.service';
@@ -20,6 +27,21 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { LoginCredentials } from '@api/authentication/login-credentials.model';
+import { provideMockStore } from '@ngrx/store/testing';
+import { TokensStorageService } from '@core/authentication/tokens-storage.service';
+
+const initialState = undefined;
+
+@Component({
+  selector: 'app-mock',
+  template: '',
+})
+class MockComponent {}
+
+@Injectable()
+class RouterMock {
+  public navigateByUrl(route: string): void {}
+}
 
 export const userMock: User = {
   username: 'mike8',
@@ -51,6 +73,21 @@ export const tokensMock = {
 };
 
 @Injectable()
+export class TokensStorageServiceMock {
+  private tokens: Tokens = tokensMock;
+
+  constructor() {}
+
+  public setTokens(tokens: Tokens): void {
+    this.tokens = tokens;
+  }
+
+  public getTokens(): Tokens {
+    return this.tokens;
+  }
+}
+
+@Injectable()
 class MatSnackBarMock {
   public open(
     message: string,
@@ -64,11 +101,11 @@ class MatSnackBarMock {
 @Injectable()
 class AuthenticationServiceMock {
   public login(credentials: LoginCredentials): Observable<Tokens> {
-    return null;
+    return of(tokensMock);
   }
 
   public register(user: User): Observable<User> {
-    return null;
+    return of(userFromBeMock);
   }
 }
 
@@ -85,13 +122,15 @@ describe('User effects', () => {
       imports: [
         HttpClientTestingModule,
         LoggerTestingModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'login', component: MockComponent },
+          { path: 'main', component: MockComponent },
+        ]),
       ],
       providers: [
         UserEffects,
         provideMockActions(() => actions$),
-        NGXLogger,
-        LoggerConfig,
+        provideMockStore({ initialState }),
         {
           provide: AuthenticationService,
           useClass: AuthenticationServiceMock,
@@ -99,6 +138,14 @@ describe('User effects', () => {
         {
           provide: MatSnackBar,
           useClass: MatSnackBarMock,
+        },
+        {
+          provide: TokensStorageService,
+          useClass: TokensStorageServiceMock,
+        },
+        {
+          provide: Router,
+          useClass: RouterMock,
         },
       ],
     });
@@ -121,12 +168,12 @@ describe('User effects', () => {
       authenticationService,
       'register'
     ).and.returnValue(of(userFromBeMock));
-    actions$.next(UserAction.REGISTER(userMock));
+    actions$.next(UserAction.REGISTER_REQUEST(userMock));
 
     service.register$.subscribe((action) => (resultAction = action));
 
     expect(registerSpy).toHaveBeenCalled();
-    expect(resultAction).toEqual(UserAction.UPDATE(userFromBeMock));
+    expect(resultAction).toEqual(UserAction.USER_UPDATE(userFromBeMock));
   });
 
   it('should failed register action', () => {
@@ -136,7 +183,7 @@ describe('User effects', () => {
       authenticationService,
       'register'
     ).and.returnValue(throwError('Error'));
-    actions$.next(UserAction.REGISTER(userMock));
+    actions$.next(UserAction.REGISTER_REQUEST(userMock));
 
     service.register$.subscribe(
       (a) => (resultAction = a),
@@ -144,7 +191,7 @@ describe('User effects', () => {
     );
 
     expect(registerSpy).toHaveBeenCalled();
-    expect(resultAction).toEqual(UserAction.ERROR('Error'));
+    expect(resultAction).toEqual(UserAction.USER_ERROR('Error'));
   });
 
   it('should handle success login action', () => {
@@ -154,14 +201,16 @@ describe('User effects', () => {
       of(tokensMock)
     );
     actions$.next(
-      UserAction.LOGIN({ username: 'username', password: 'password' })
+      UserAction.LOGIN_REQUEST({ username: 'username', password: 'password' })
     );
 
     service.login$.subscribe((action) => (resultAction = action));
 
     expect(loginSpy).toHaveBeenCalled();
     expect(navigateByUrlSpy).toHaveBeenCalledWith('/main');
-    expect(resultAction).toEqual(TokensAction.LOGIN(tokensMock));
+    expect(resultAction).toEqual(
+      TokensAction.LOGIN_REQUEST_SUCCESS(tokensMock)
+    );
   });
 
   it('should get failed login action', () => {
@@ -170,15 +219,15 @@ describe('User effects', () => {
     const loginSpy = spyOn(authenticationService, 'login').and.returnValue(
       throwError('Error')
     );
-   
+
     actions$.next(
-      UserAction.LOGIN({ username: 'username', password: 'password' })
+      UserAction.LOGIN_REQUEST({ username: 'username', password: 'password' })
     );
 
     service.login$.subscribe((action) => (resultAction = action));
 
     expect(loginSpy).toHaveBeenCalled();
     expect(openSpy).toHaveBeenCalled();
-    expect(resultAction).toEqual(UserAction.ERROR('Error'));
+    expect(resultAction).toEqual(UserAction.USER_ERROR('Error'));
   });
 });

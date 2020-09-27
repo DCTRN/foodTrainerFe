@@ -4,12 +4,35 @@ import { TokensAction } from '@stores/tokens/tokens.actions';
 import { Tokens } from '@stores/tokens/tokens.model';
 import { AuthenticationTimerService } from './authentication-timer.service';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { Injectable } from '@angular/core';
+import { TokensStorageService } from './tokens-storage.service';
 
 export const initialState: Tokens = {
   access_token: undefined,
   refresh_token: undefined,
   expires_in: undefined,
 };
+
+const tokensMock: Tokens = {
+  access_token: 'access_token_login',
+  refresh_token: 'refresh_token_login',
+  expires_in: 300,
+};
+
+@Injectable()
+export class TokensStorageServiceMock {
+  private tokens: Tokens = tokensMock;
+
+  constructor() {}
+
+  public setTokens(tokens: Tokens): void {
+    this.tokens = tokens;
+  }
+
+  public getTokens(): Tokens {
+    return this.tokens;
+  }
+}
 
 describe('AuthenticationTimerService', () => {
   let injector: TestBed;
@@ -19,7 +42,13 @@ describe('AuthenticationTimerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [LoggerTestingModule],
-      providers: [provideMockStore({ initialState })],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: TokensStorageService,
+          useClass: TokensStorageServiceMock,
+        },
+      ],
     });
     injector = getTestBed();
     service = injector.inject(AuthenticationTimerService);
@@ -37,7 +66,9 @@ describe('AuthenticationTimerService', () => {
     service.start();
     tick(240 * 1000);
 
-    expect(dispatchSpy).toHaveBeenCalledWith(TokensAction.REFRESH());
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      TokensAction.REFRESH_TOKENS_REQUEST()
+    );
     expect(clearSpy).toHaveBeenCalled();
   }));
 
@@ -48,7 +79,9 @@ describe('AuthenticationTimerService', () => {
     service.clear();
     tick(240 * 1000);
 
-    expect(dispatchSpy).not.toHaveBeenCalledWith(TokensAction.REFRESH());
+    expect(dispatchSpy).not.toHaveBeenCalledWith(
+      TokensAction.REFRESH_TOKENS_REQUEST()
+    );
   }));
 
   it('should refresh token twice', fakeAsync(() => {
@@ -58,7 +91,9 @@ describe('AuthenticationTimerService', () => {
     tick(240 * 1000);
 
     expect(dispatchSpy).toHaveBeenCalledTimes(1);
-    expect(dispatchSpy).toHaveBeenCalledWith(TokensAction.REFRESH());
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      TokensAction.REFRESH_TOKENS_REQUEST()
+    );
 
     service.start();
     tick(240 * 1000);
@@ -73,7 +108,9 @@ describe('AuthenticationTimerService', () => {
     tick(240 * 1000);
 
     expect(dispatchSpy).toHaveBeenCalledTimes(1);
-    expect(dispatchSpy).toHaveBeenCalledWith(TokensAction.REFRESH());
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      TokensAction.REFRESH_TOKENS_REQUEST()
+    );
 
     service.clear();
     tick(240 * 1000);

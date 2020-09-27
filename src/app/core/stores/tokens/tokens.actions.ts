@@ -1,26 +1,41 @@
 import { createAction, props } from '@ngrx/store';
 import { Tokens } from './tokens.model';
 
-export const loginTokens = '[Tokens] Login tokens';
-export const refreshTokens = '[Tokens] Refresh tokens';
-export const updateTokens = '[Tokens] Refresh tokens update';
-export const errorTokens = '[Tokens] Error';
+const loginRequestType = '[TOKENS] LOGIN_REQUEST_SUCCESS';
+const refreshTokensRequestType = '[TOKENS] REFRESH_TOKENS_REQUEST';
+const refreshTokensRequestSuccessType =
+  '[TOKENS] REFRESH_TOKENS_REQUEST_SUCCESS';
+const refreshTokensRequestFailureType =
+  '[TOKENS] REFRESH_TOKENS_REQUEST_FAILURE';
+const clearTokensRequestType = '[TOKENS] CLEAR_TOKENS_REQUEST';
+const clearTokensRequestSuccessType = '[TOKENS] CLEAR_TOKENS_REQUEST_SUCCESS';
 
-export const login = createAction(loginTokens, props<Tokens>());
-export const refresh = createAction(refreshTokens);
-export const update = createAction(updateTokens, props<Tokens>());
-export const error = createAction(errorTokens, props<any>());
+const loginRequestSuccess = createAction(loginRequestType, props<Tokens>());
+const refreshTokensRequest = createAction(refreshTokensRequestType);
+const refreshTokensRequestSuccess = createAction(
+  refreshTokensRequestSuccessType,
+  props<Tokens>()
+);
+const refreshTokensRequestFailure = createAction(
+  refreshTokensRequestFailureType
+);
+const clearTokensRequest = createAction(clearTokensRequestType);
+const clearTokensRequestSuccess = createAction(clearTokensRequestSuccessType);
 
 export const TokensActionType = {
-  REFRESH: refreshTokens,
-  LOGIN: loginTokens,
-  UPDATE: updateTokens,
-  ERROR: errorTokens,
+  LOGIN_REQUEST_SUCCESS: loginRequestType,
+  REFRESH_TOKENS_REQUEST: refreshTokensRequestType,
+  REFRESH_TOKENS_REQUEST_SUCCESS: refreshTokensRequestSuccessType,
+  REFRESH_TOKENS_REQUEST_FAILURE: refreshTokensRequestFailureType,
+  CLEAR_TOKENS_REQUEST: clearTokensRequestType,
+  CLEAR_TOKENS_REQUEST_SUCCESS: clearTokensRequestSuccessType,
 };
 
 export const TokensAction = {
-  REFRESH: refresh,
-  LOGIN: login,
-  UPDATE: update,
-  ERROR: error,
+  LOGIN_REQUEST_SUCCESS: loginRequestSuccess,
+  REFRESH_TOKENS_REQUEST: refreshTokensRequest,
+  REFRESH_TOKENS_REQUEST_SUCCESS: refreshTokensRequestSuccess,
+  REFRESH_TOKENS_REQUEST_FAILURE: refreshTokensRequestFailure,
+  CLEAR_TOKENS_REQUEST: clearTokensRequest,
+  CLEAR_TOKENS_REQUEST_SUCCESS: clearTokensRequestSuccess,
 };

@@ -21,18 +21,18 @@ describe('userReducer', () => {
   it('should test user reducer', () => {
     const newEmail = 'newEmail@gmail.com';
 
-    let newState = userReducer(initialState, UserAction.REGISTER(userMock));
+    let newState = userReducer(initialState, UserAction.REGISTER_REQUEST(userMock));
     expect(newState.username).toEqual(userMock.username);
 
-    newState = userReducer(newState, UserAction.ERROR(userMock));
+    newState = userReducer(newState, UserAction.USER_ERROR(userMock));
     expect(newState.username).toEqual(userMock.username);
 
-    newState = userReducer(newState, UserAction.LOGIN(loginCredentialsMock));
+    newState = userReducer(newState, UserAction.LOGIN_REQUEST(loginCredentialsMock));
     expect(newState.username).toEqual(loginCredentialsMock.username);
     expect(newState.password).toEqual(loginCredentialsMock.password);
 
     userMock.email = newEmail;
-    newState = userReducer(newState, UserAction.UPDATE(userMock));
+    newState = userReducer(newState, UserAction.USER_UPDATE(userMock));
     expect(newState.email).toEqual(newEmail);
   });
 });

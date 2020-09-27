@@ -13,8 +13,27 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoginComponent } from './login.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import {
+  MatSnackBar,
+  MatSnackBarConfig,
+  MatSnackBarModule,
+  MatSnackBarRef,
+  TextOnlySnackBar,
+} from '@angular/material/snack-bar';
+import { Injectable } from '@angular/core';
 
 const initialState = undefined;
+
+@Injectable()
+class MatSnackBarMock {
+  public open(
+    message: string,
+    action?: string,
+    config?: MatSnackBarConfig
+  ): MatSnackBarRef<TextOnlySnackBar> {
+    return null;
+  }
+}
 
 describe('LoginComponent', () => {
   let injector: TestBed;
@@ -22,6 +41,7 @@ describe('LoginComponent', () => {
   let fixture: ComponentFixture<LoginComponent>;
   let router: Router;
   let store: MockStore;
+  let snackBar: MatSnackBar;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,8 +53,15 @@ describe('LoginComponent', () => {
         MatInputModule,
         BrowserAnimationsModule,
         LoggerTestingModule,
+        MatSnackBarModule,
       ],
-      providers: [provideMockStore({ initialState })],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: MatSnackBar,
+          useClass: MatSnackBarMock,
+        },
+      ],
       declarations: [LoginComponent],
     }).compileComponents();
   }));
@@ -46,6 +73,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
     router = injector.inject(Router);
     store = injector.inject(MockStore);
+    snackBar = injector.inject(MatSnackBar);
   });
 
   it('should create', () => {
@@ -66,6 +94,23 @@ describe('LoginComponent', () => {
     component.login();
 
     expect(dispatchSpy).not.toHaveBeenCalled();
+
+    component.usernameFormControl.setValue('username');
+    component.passwordFormControl.setValue('Password123');
+
+    component.login();
+
+    expect(dispatchSpy).toHaveBeenCalled();
+  });
+
+  it('should show snackbar if user tries to login without filled and valid inputs', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    const openSpy = spyOn(snackBar, 'open');
+
+    component.login();
+
+    expect(dispatchSpy).not.toHaveBeenCalled();
+    expect(openSpy).toHaveBeenCalled();
 
     component.usernameFormControl.setValue('username');
     component.passwordFormControl.setValue('Password123');

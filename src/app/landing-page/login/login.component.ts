@@ -8,11 +8,12 @@ import {
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { LoginCredentials } from '@api/authentication/login-credentials.model';
-import { login, UserActionType } from '@stores/user/user.actions';
+import { loginRequest, UserActionType } from '@stores/user/user.actions';
 import { User } from '@stores/user/user.model';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +35,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private userStore: Store<{ user: User }>,
-    private logger: NGXLogger
+    private logger: NGXLogger,
+    private snackBar: MatSnackBar
   ) {
     this.userStore.pipe(select('user')).subscribe();
   }
@@ -45,15 +47,28 @@ export class LoginComponent implements OnInit {
   }
 
   public login(): void {
-    if (!this.loginForm?.valid) {
-      return;
+    if (!this.isLoginFormValid()) {
+      this.openSnackBar('Please, fill forms with valid data.');
+    } else {
+      this.handleLogin();
     }
-    const loginCredentials: LoginCredentials = {
+  }
+
+  private handleLogin() {
+    const loginCredentials: LoginCredentials = this.extractLoginCredentials();
+    this.logger.log(`${this.signature} dispatching ${UserActionType.LOGIN_REQUEST}`);
+    this.userStore.dispatch(loginRequest(loginCredentials));
+  }
+
+  private extractLoginCredentials(): LoginCredentials {
+    return {
       username: this.usernameFormControl.value,
       password: this.passwordFormControl.value,
     };
-    this.logger.log(`${this.signature} dispatching ${UserActionType.LOGIN}`);
-    this.userStore.dispatch(login(loginCredentials));
+  }
+
+  private isLoginFormValid() {
+    return this.loginForm?.valid;
   }
 
   public navigateToMainPage(): void {
@@ -68,7 +83,7 @@ export class LoginComponent implements OnInit {
   }
 
   private createLoginFormControls() {
-    this.createusernameFormControl();
+    this.createUsernameFormControl();
     this.createPasswordFormControl();
   }
 
@@ -80,11 +95,17 @@ export class LoginComponent implements OnInit {
     ]);
   }
 
-  private createusernameFormControl() {
+  private createUsernameFormControl() {
     this.usernameFormControl = new FormControl('', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(20),
     ]);
+  }
+
+  private openSnackBar(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+    });
   }
 }

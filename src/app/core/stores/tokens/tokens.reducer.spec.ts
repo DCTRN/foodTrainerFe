@@ -1,6 +1,7 @@
 import { Tokens } from './tokens.model';
 import { tokensReducer } from './tokens.reducer';
 import { TokensAction } from './tokens.actions';
+import { cloneDeep } from 'lodash';
 
 const initialState: Tokens = {
   access_token: undefined,
@@ -22,16 +23,38 @@ const updateTokens: Tokens = {
 
 describe('tokens reducer', () => {
   it('should test tokens reducer', () => {
-    let newState = tokensReducer(initialState, TokensAction.LOGIN(loginTokens));
+    let newState = tokensReducer(
+      initialState,
+      TokensAction.LOGIN_REQUEST_SUCCESS(loginTokens)
+    );
     expect(newState.access_token).toEqual(loginTokens.access_token);
 
-    newState = tokensReducer(newState, TokensAction.REFRESH());
+    newState = tokensReducer(newState, TokensAction.REFRESH_TOKENS_REQUEST());
     expect(newState.access_token).toEqual(loginTokens.access_token);
 
-    newState = tokensReducer(newState, TokensAction.UPDATE(updateTokens));
+    newState = tokensReducer(
+      cloneDeep(newState),
+      TokensAction.REFRESH_TOKENS_REQUEST_SUCCESS(updateTokens)
+    );
     expect(newState.access_token).toEqual(updateTokens.access_token);
 
-    newState = tokensReducer(newState, TokensAction.ERROR('Error'));
+    newState = tokensReducer(
+      cloneDeep(newState),
+      TokensAction.REFRESH_TOKENS_REQUEST_FAILURE()
+    );
+
     expect(newState.access_token).toEqual(updateTokens.access_token);
+
+    newState = tokensReducer(
+      cloneDeep(newState),
+      TokensAction.CLEAR_TOKENS_REQUEST()
+    );
+    expect(newState.access_token).toEqual(null);
+
+    newState = tokensReducer(
+      cloneDeep(newState),
+      TokensAction.CLEAR_TOKENS_REQUEST_SUCCESS()
+    );
+    expect(newState.access_token).toEqual(null);
   });
 });

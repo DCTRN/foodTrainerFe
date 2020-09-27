@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -7,14 +7,17 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '@core/authentication/authentication.service';
-import { ErrorFormat } from '@core/models/error-format.model';
 import { select, Store } from '@ngrx/store';
-import { register, UserActionType } from '@stores/user/user.actions';
+import {
+  registerRequest,
+  UserAction,
+  UserActionType,
+} from '@stores/user/user.actions';
 import { User } from '@stores/user/user.model';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 import { NGXLogger } from 'ngx-logger';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged, take } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 
 @Component({
@@ -22,7 +25,7 @@ import { AppState } from 'src/app/reducers';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   public simpleErrorStateMatcher = new SimpleErrorStateMatcher();
 
   public registerForm: FormGroup;
@@ -38,42 +41,78 @@ export class RegisterComponent implements OnInit {
   public user: User;
 
   private readonly signature = '[R.C]';
+  private subscriptions = new Subscription();
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private userStore: Store<AppState>,
     private logger: NGXLogger,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private changeDectorRef: ChangeDetectorRef
   ) {}
 
   public ngOnInit(): void {
     this.createRegisterFormControls();
     this.createRegisterFormGroup();
-    this.userStore
-      .pipe(
-        select('user'),
-        filter((u: User) => !!u?.email)
-      )
-      .subscribe((u: User) => {
-        this.user = u;
-        this.usernameFormControl?.setValue(this.user.username);
-        this.emailFormControl?.setValue(this.user.email);
-        this.phoneNumberFormControl?.setValue(this.user.phoneNumber);
-        this.firstNameFormControl?.setValue(this.user.firstName);
-        this.lastNameFormControl?.setValue(this.user.lastName);
-        this.birthDateFormControl?.setValue(this.user.birthDate);
-      });
+    this.userStore.pipe(select('user'), take(1)).subscribe((u: User) => {
+      this.user = u;
+      this.usernameFormControl?.setValue(this.user.username);
+      this.emailFormControl?.setValue(this.user.email);
+      this.phoneNumberFormControl?.setValue(this.user.phoneNumber);
+      this.firstNameFormControl?.setValue(this.user.firstName);
+      this.lastNameFormControl?.setValue(this.user.lastName);
+      this.birthDateFormControl?.setValue(this.user.birthDate);
+
+      const controls = Object.keys(this.registerForm.controls);
+      for (const control of controls) {
+        if (!this.registerForm.controls[control].value) {
+          continue;
+        }
+        this.registerForm.controls[control].markAsDirty();
+        this.registerForm.controls[control].updateValueAndValidity();
+      }
+      this.registerForm.markAsDirty();
+      this.registerForm.updateValueAndValidity();
+
+      this.changeDectorRef.detectChanges();
+      this.changeDectorRef.markForCheck();
+    });
+
+    this.subscriptions.add(
+      this.registerForm.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(() => {
+          const user: User = this.extractUserDataFromForms();
+          this.userStore.dispatch(UserAction.USER_UPDATE(user));
+        })
+    );
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   public register(): void {
-    if (!this.registerForm?.valid) {
-      this.snackBar.open('Please fill form with valid data.', 'Close', {
-        duration: 5000,
-      });
-      return;
+    if (!this.isRegisterFormValid()) {
+      this.openSnackBar('Please, fill form with valid data.');
+    } else {
+      this.handleRegister();
     }
-    const user: User = {
+  }
+
+  public navigateToMainPage(): void {
+    this.router.navigateByUrl('/landing-page');
+  }
+
+  private handleRegister() {
+    const user: User = this.extractUserDataFromForms();
+    this.userStore.dispatch(registerRequest(user));
+    this.logger.log(`${this.signature} dispatching ${UserActionType.REGISTER_REQUEST}`);
+  }
+
+  private extractUserDataFromForms(): User {
+    return {
       username: this.usernameFormControl.value,
       password: this.passwordFormControl.value,
       email: this.emailFormControl.value,
@@ -82,12 +121,10 @@ export class RegisterComponent implements OnInit {
       firstName: this.firstNameFormControl.value,
       lastName: this.lastNameFormControl.value,
     };
-    this.userStore.dispatch(register(user));
-    this.logger.log(`${this.signature} dispatching ${UserActionType.REGISTER}`);
   }
 
-  public navigateToMainPage(): void {
-    this.router.navigateByUrl('/landing-page');
+  private isRegisterFormValid() {
+    return this.registerForm?.valid;
   }
 
   private createRegisterFormGroup() {
@@ -170,5 +207,11 @@ export class RegisterComponent implements OnInit {
       Validators.minLength(3),
       Validators.maxLength(20),
     ]);
+  }
+
+  private openSnackBar(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+    });
   }
 }
