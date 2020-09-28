@@ -55,38 +55,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.createRegisterFormControls();
     this.createRegisterFormGroup();
-    this.userStore.pipe(select('user'), take(1)).subscribe((u: User) => {
-      this.user = u;
-      this.usernameFormControl?.setValue(this.user.username);
-      this.emailFormControl?.setValue(this.user.email);
-      this.phoneNumberFormControl?.setValue(this.user.phoneNumber);
-      this.firstNameFormControl?.setValue(this.user.firstName);
-      this.lastNameFormControl?.setValue(this.user.lastName);
-      this.birthDateFormControl?.setValue(this.user.birthDate);
-
-      const controls = Object.keys(this.registerForm.controls);
-      for (const control of controls) {
-        if (!this.registerForm.controls[control].value) {
-          continue;
-        }
-        this.registerForm.controls[control].markAsDirty();
-        this.registerForm.controls[control].updateValueAndValidity();
-      }
-      this.registerForm.markAsDirty();
-      this.registerForm.updateValueAndValidity();
-
-      this.changeDectorRef.detectChanges();
-      this.changeDectorRef.markForCheck();
-    });
-
-    this.subscriptions.add(
-      this.registerForm.valueChanges
-        .pipe(distinctUntilChanged())
-        .subscribe(() => {
-          const user: User = this.extractUserDataFromForms();
-          this.userStore.dispatch(UserAction.USER_UPDATE(user));
-        })
-    );
+    this.getLastUserState();
+    this.subscribeToFormChanges();
   }
 
   public ngOnDestroy(): void {
@@ -101,14 +71,66 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getLastUserState() {
+    this.userStore.pipe(select('user'), take(1)).subscribe((u: User) => {
+      this.setCurrentValueInForms(u);
+      this.updateFormValidity();
+      this.updateView();
+    });
+  }
+
+  private updateFormValidity(): void {
+    const controls = Object.keys(this.registerForm.controls);
+    for (const control of controls) {
+      if (!this.registerForm.controls[control].value) {
+        continue;
+      }
+      this.registerForm.controls[control].markAsDirty();
+      this.registerForm.controls[control].updateValueAndValidity();
+    }
+  }
+
   public navigateToMainPage(): void {
     this.router.navigateByUrl('/landing-page');
+  }
+
+  private updateView() {
+    this.registerForm.markAsDirty();
+    this.registerForm.updateValueAndValidity();
+
+    this.changeDectorRef.detectChanges();
+    this.changeDectorRef.markForCheck();
+  }
+
+  private subscribeToFormChanges() {
+    this.subscriptions.add(
+      this.registerForm.valueChanges
+        .pipe(distinctUntilChanged())
+        .subscribe(() => this.updateUserStoreState())
+    );
+  }
+
+  private updateUserStoreState() {
+    const user: User = this.extractUserDataFromForms();
+    this.userStore.dispatch(UserAction.USER_UPDATE(user));
+  }
+
+  private setCurrentValueInForms(u: User) {
+    this.user = u;
+    this.usernameFormControl?.setValue(this.user.username);
+    this.emailFormControl?.setValue(this.user.email);
+    this.phoneNumberFormControl?.setValue(this.user.phoneNumber);
+    this.firstNameFormControl?.setValue(this.user.firstName);
+    this.lastNameFormControl?.setValue(this.user.lastName);
+    this.birthDateFormControl?.setValue(this.user.birthDate);
   }
 
   private handleRegister() {
     const user: User = this.extractUserDataFromForms();
     this.userStore.dispatch(registerRequest(user));
-    this.logger.log(`${this.signature} dispatching ${UserActionType.REGISTER_REQUEST}`);
+    this.logger.log(
+      `${this.signature} dispatching ${UserActionType.REGISTER_REQUEST}`
+    );
   }
 
   private extractUserDataFromForms(): User {

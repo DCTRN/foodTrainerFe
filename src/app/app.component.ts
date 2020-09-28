@@ -1,7 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Router, NavigationEnd, RouterEvent } from '@angular/router';
-import { filter, tap, map, mergeMap, skipWhile, take } from 'rxjs/operators';
+import {
+  filter,
+  tap,
+  map,
+  mergeMap,
+  skipWhile,
+  take,
+  delay,
+} from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Tokens } from '@core/stores/tokens/tokens.model';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -43,11 +51,14 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): void {
     const tokens = this.localStorageService.retrieve('tokens') as Tokens;
-    if (tokens) {
+    if (!tokens) {
+      this.showSpinner = false;
+    } else {
       this.tokensStorageService.setTokens(tokens);
       this.tokensStore.dispatch(TokensAction.REFRESH_TOKENS_REQUEST());
       of(null)
         .pipe(
+          delay(200),
           mergeMap(() => this.waitForAuthOperationToFinish()),
           mergeMap(() => this.authenticationService.getAuthState$()),
           take(1),
@@ -56,8 +67,6 @@ export class AppComponent implements OnInit {
           tap(() => this.router.navigateByUrl('/main'))
         )
         .subscribe();
-    } else {
-      this.showSpinner = false;
     }
   }
 

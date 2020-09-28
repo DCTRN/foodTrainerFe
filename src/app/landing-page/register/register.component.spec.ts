@@ -2,8 +2,10 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   async,
   ComponentFixture,
+  fakeAsync,
   getTestBed,
   TestBed,
+  tick,
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -17,6 +19,9 @@ import { User } from '@stores/user/user.model';
 import { RegisterComponent } from './register.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { UserAction } from '@core/stores/user/user.actions';
+import { ReplaySubject } from 'rxjs';
+import { provideMockActions } from '@ngrx/effects/testing';
 
 export const initialState: any = {
   user: {
@@ -42,6 +47,7 @@ const userMock: User = {
 };
 
 describe('RegisterComponent', () => {
+  const actions$ = new ReplaySubject<any>(1);
   let injector: TestBed;
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
@@ -62,18 +68,21 @@ describe('RegisterComponent', () => {
         LoggerTestingModule,
         MatSnackBarModule,
       ],
-      providers: [provideMockStore({ initialState })],
+      providers: [
+        provideMockActions(() => actions$),
+        provideMockStore({ initialState }),
+      ],
       declarations: [RegisterComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     injector = getTestBed();
-    fixture = TestBed.createComponent(RegisterComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
     router = injector.inject(Router);
     store = injector.inject(MockStore);
+    fixture = injector.createComponent(RegisterComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -107,5 +116,25 @@ describe('RegisterComponent', () => {
     component.register();
 
     expect(dispatchSpy).toHaveBeenCalled();
+  });
+
+  it('should set value from store', () => {
+    component.ngOnDestroy();
+    store.setState({
+      user: userMock,
+    });
+    store.refreshState();
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.usernameFormControl.value).toEqual(userMock.username);
+    expect(component.emailFormControl.value).toEqual(userMock.email);
+    expect(component.phoneNumberFormControl.value).toEqual(
+      userMock.phoneNumber
+    );
+    expect(component.birthDateFormControl.value).toEqual(userMock.birthDate);
+    expect(component.firstNameFormControl.value).toEqual(userMock.firstName);
+    expect(component.lastNameFormControl.value).toEqual(userMock.lastName);
   });
 });

@@ -4,7 +4,7 @@ import { getTestBed, TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { LoggerConfig, NGXLogger } from 'ngx-logger';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { Observable, ReplaySubject, of } from 'rxjs';
+import { Observable, ReplaySubject, of, throwError } from 'rxjs';
 import { AuthenticationTimerService } from '../../authentication/authentication-timer.service';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { TokensAction } from './tokens.actions';
@@ -50,6 +50,8 @@ export class TokensStorageServiceMock {
   public getTokens(): Tokens {
     return this.tokens;
   }
+
+  public clearTokens(): void {}
 }
 
 @Injectable()
@@ -72,6 +74,7 @@ describe('Tokens effects', () => {
   let authenticationService: AuthenticationService;
   let tokensStorageService: TokensStorageService;
   let router: Router;
+  let matSnackBar: MatSnackBar;
   let actions$: ReplaySubject<any> = new ReplaySubject(1);
 
   beforeEach(() => {
@@ -109,6 +112,7 @@ describe('Tokens effects', () => {
     authenticationService = injector.inject(AuthenticationService);
     authenticationTimerService = injector.inject(AuthenticationTimerService);
     tokensStorageService = injector.inject(TokensStorageService);
+    matSnackBar = injector.inject(MatSnackBar);
     router = injector.inject(Router);
     service = injector.inject(TokenEffects);
   });
@@ -116,19 +120,6 @@ describe('Tokens effects', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
-  // it('should handle login refresh tokens action', () => {
-  //   let resultAction: any;
-  //   const startSpy = spyOn(authenticationTimerService, 'start');
-  //   actions$.next(TokensAction.LOGIN_REQUEST_SUCCESS(tokensMock));
-
-  //   service.login$.subscribe((action) => (resultAction = action));
-
-  //   expect(startSpy).toHaveBeenCalled();
-  //   expect(resultAction).toEqual(
-  //     TokensAction.REFRESH_TOKENS_REQUEST_SUCCESS(tokensMock)
-  //   );
-  // });
 
   it('should handle tokens refresh action', () => {
     let resultAction: any;
@@ -148,5 +139,40 @@ describe('Tokens effects', () => {
     expect(resultAction).toEqual(
       TokensAction.REFRESH_TOKENS_REQUEST_SUCCESS(tokensMock)
     );
+  });
+
+  it('should fail to refresh token', () => {
+    let resultAction: any;
+    const refreshTokenSpy = spyOn(
+      authenticationService,
+      'refreshToken'
+    ).and.returnValue(throwError('Error'));
+    const startSpy = spyOn(authenticationTimerService, 'start');
+    const setTokensSpy = spyOn(tokensStorageService, 'setTokens');
+    const openSpy = spyOn(matSnackBar, 'open');
+
+    actions$.next(TokensAction.REFRESH_TOKENS_REQUEST());
+    service.refresh$.subscribe((action) => (resultAction = action));
+
+    expect(refreshTokenSpy).toHaveBeenCalled();
+    expect(openSpy).toHaveBeenCalled();
+    expect(startSpy).not.toHaveBeenCalled();
+    expect(setTokensSpy).not.toHaveBeenCalled();
+    expect(resultAction()).toEqual(TokensAction.CLEAR_TOKENS_REQUEST());
+  });
+
+  it('should handle tokens refresh action', () => {
+    let resultAction: any;
+    const clearSpy = spyOn(authenticationTimerService, 'clear');
+    const clearTokensSpy = spyOn(tokensStorageService, 'clearTokens');
+    const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
+
+    actions$.next(TokensAction.CLEAR_TOKENS_REQUEST());
+    service.clear$.subscribe((action) => (resultAction = action));
+
+    expect(clearSpy).toHaveBeenCalled();
+    expect(clearTokensSpy).toHaveBeenCalled();
+    expect(navigateByUrlSpy).toHaveBeenCalledWith('/login');
+    expect(resultAction).toEqual(TokensAction.CLEAR_TOKENS_REQUEST_SUCCESS());
   });
 });

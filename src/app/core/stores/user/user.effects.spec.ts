@@ -29,6 +29,7 @@ import { Router } from '@angular/router';
 import { LoginCredentials } from '@api/authentication/login-credentials.model';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
+import { AuthenticationTimerService } from '@core/authentication/authentication-timer.service';
 
 const initialState = undefined;
 
@@ -99,6 +100,12 @@ class MatSnackBarMock {
 }
 
 @Injectable()
+class AuthenticationTimerServiceMock {
+  public start(): void {}
+  public clear(): void {}
+}
+
+@Injectable()
 class AuthenticationServiceMock {
   public login(credentials: LoginCredentials): Observable<Tokens> {
     return of(tokensMock);
@@ -115,6 +122,7 @@ describe('User effects', () => {
   let authenticationService: AuthenticationService;
   let matSnackBar: MatSnackBar;
   let router: Router;
+  let authenticationTimerService: AuthenticationTimerService;
   let actions$: ReplaySubject<any> = new ReplaySubject(1);
 
   beforeEach(() => {
@@ -147,6 +155,10 @@ describe('User effects', () => {
           provide: Router,
           useClass: RouterMock,
         },
+        {
+          provide: AuthenticationTimerService,
+          useClass: AuthenticationTimerServiceMock,
+        },
       ],
     });
 
@@ -154,6 +166,7 @@ describe('User effects', () => {
     authenticationService = injector.inject(AuthenticationService);
     matSnackBar = injector.inject(MatSnackBar);
     router = injector.inject(Router);
+    authenticationTimerService = injector.inject(AuthenticationTimerService);
     service = injector.inject(UserEffects);
   });
 
@@ -196,6 +209,7 @@ describe('User effects', () => {
 
   it('should handle success login action', () => {
     let resultAction: any;
+    const startSpy = spyOn(authenticationTimerService, 'start');
     const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
     const loginSpy = spyOn(authenticationService, 'login').and.returnValue(
       of(tokensMock)
@@ -206,6 +220,7 @@ describe('User effects', () => {
 
     service.login$.subscribe((action) => (resultAction = action));
 
+    expect(startSpy).toHaveBeenCalled();
     expect(loginSpy).toHaveBeenCalled();
     expect(navigateByUrlSpy).toHaveBeenCalledWith('/main');
     expect(resultAction).toEqual(
