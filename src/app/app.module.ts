@@ -17,6 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { metaReducers, reducers } from './reducers';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ModalModule } from '@core/modal-service/modal.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +37,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSnackBarModule,
     NgxWebstorageModule.forRoot(),
     MatProgressSpinnerModule,
+    ModalModule,
   ],
   providers: [
     {

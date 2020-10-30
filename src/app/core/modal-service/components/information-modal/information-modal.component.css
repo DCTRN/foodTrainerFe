@@ -1,0 +1,131 @@
+h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 2rem;
+}
+
+.container {
+  display: grid;
+  min-width: 60vw;
+  min-height: 50vh;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 8fr 1fr;
+}
+
+.header {
+  margin: 0;
+  padding: 0rem;
+  width: 100%;
+  background-color: var(--secondary-color);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.header .mat-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
+}
+
+.content.mat-dialog-content {
+  margin: 0;
+  padding: 0 1rem;
+  width: 100%;
+  background-color: var(--primary-color);
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
+.footer.mat-dialog-actions {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0rem;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+}
+
+.left-buttons {
+  width: 50%;
+  height: 100%;
+  margin: 0;
+  padding: 0rem;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-content: center;
+  align-items: center;
+}
+
+.left-buttons button {
+  margin: 0.4rem;
+}
+
+.right-buttons {
+  width: 50%;
+  height: 100%;
+  margin: 0;
+  padding: 0rem;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-content: center;
+  align-items: center;
+}
+
+.right-buttons button {
+  margin: 0.4rem;
+}
+
+@media (max-width: 420px) {
+  .container {
+    grid-template-rows: 1fr 7fr 2fr;
+  }
+
+  .header {
+    padding: 0.4rem;
+  }
+
+  .left-buttons {
+    width: 50%;
+    height: 100%;
+    margin: 0;
+    padding: 0rem;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+
+  .left-buttons button {
+    margin: 0.4rem;
+  }
+
+  .right-buttons {
+    width: 50%;
+    height: 100%;
+    margin: 0;
+    padding: 0rem;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+
+  .right-buttons button {
+    margin: 0.4rem;
+  }
+}

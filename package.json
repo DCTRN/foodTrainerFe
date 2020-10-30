@@ -8,7 +8,8 @@
     "test": "ng test",
     "coverage": "ng test --code-coverage",
     "lint": "eslint -c .eslintrc.js --ext .ts src",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "cypress:open": "cypress open"
   },
   "private": true,
   "dependencies": {
@@ -49,6 +50,7 @@
     "@typescript-eslint/eslint-plugin-tslint": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "codelyzer": "^6.0.0",
+    "cypress": "^5.2.0",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",

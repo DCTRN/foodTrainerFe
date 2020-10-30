@@ -19,6 +19,7 @@ import { Token } from '@angular/compiler/src/ml_parser/lexer';
 import { of, interval } from 'rxjs';
 import { AuthenticationService } from '@core/authentication/authentication.service';
 import { AppState } from './reducers';
+import { ModalService } from '@core/modal-service/modal.service';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ export class AppComponent implements OnInit {
     private tokensStore: Store<AppState>,
     private localStorageService: LocalStorageService,
     private tokensStorageService: TokensStorageService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private modalService: ModalService
   ) {
     this.logger.log(`${this.signature} ${this.title} started!`);
     this.router.events
@@ -68,6 +70,10 @@ export class AppComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  public openModale(): void {
+    this.modalService.openDialog();
   }
 
   private waitForAuthOperationToFinish() {
