@@ -20,6 +20,7 @@ import { of, interval } from 'rxjs';
 import { AuthenticationService } from '@core/authentication/authentication.service';
 import { AppState } from './reducers';
 import { ModalService } from '@core/modal-service/modal.service';
+import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
 
 @Component({
   selector: 'app-root',
@@ -73,7 +74,7 @@ export class AppComponent implements OnInit {
   }
 
   public openModale(): void {
-    this.modalService.openDialog();
+    this.modalService.openDialog(new ModalConfiguration());
   }
 
   private waitForAuthOperationToFinish() {

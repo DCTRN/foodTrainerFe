@@ -7,8 +7,12 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./information-modal.component.css'],
 })
 export class InformationModalComponent implements OnInit {
+  public icon = 'info';
+  public headerClasses = [];
+  private baseHeaderClass = 'header';
   constructor(private dialogRef: MatDialogRef<InformationModalComponent>) {
     this.dialogRef.disableClose = true;
+    this.headerClasses.push(this.baseHeaderClass);
   }
 
   public ngOnInit(): void {}

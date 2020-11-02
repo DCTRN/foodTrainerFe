@@ -20,6 +20,7 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Observable, of, Subject } from 'rxjs';
 import { AppComponent } from './app.component';
+import { ModalModule } from '../app/core/modal-service/modal.module';
 
 const initialState = undefined;
 const tokensMock: Tokens = {
@@ -89,6 +90,7 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        ModalModule,
         LoggerTestingModule,
         RouterTestingModule,
         HttpClientTestingModule,
@@ -96,7 +98,6 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       providers: [
         provideMockStore({ initialState }),
-
         {
           provide: LocalStorageService,
           useClass: SyncStorageMock,

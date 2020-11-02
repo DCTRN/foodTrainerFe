@@ -1,5 +1,6 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { InformationModalComponent } from './information-modal.component';
 
 describe('InformationModalComponent', () => {
@@ -8,9 +9,17 @@ describe('InformationModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InformationModalComponent ]
-    })
-    .compileComponents();
+      imports: [MatDialogModule],
+      providers: [
+        // TODO mock properly
+        {
+          provide: MatDialogRef,
+          useValue: {},
+        },
+      ],
+      declarations: [InformationModalComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

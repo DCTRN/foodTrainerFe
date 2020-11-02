@@ -1,6 +1,6 @@
 <div class="container">
-  <header class="header">
-    <mat-icon>info</mat-icon>
+  <header [class]="this.headerClasses">
+    <mat-icon>{{ this.icon }}</mat-icon>
     <h1 mat-dialog-title>Dialog with elements</h1>
   </header>
   <div mat-dialog-content class="content">

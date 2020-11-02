@@ -4,18 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { IconRegistryModule } from '@main-content/shared/icon-registry/icon-registry.module';
-import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
-import { ErrorModalComponent } from './components/error-modal/error-modal.component';
 import { InformationModalComponent } from './components/information-modal/information-modal.component';
-import { WarningModalComponent } from './components/warning-modal/warning-modal.component';
+import { ModalService } from './modal.service';
 
 @NgModule({
-  declarations: [
-    ConfirmationModalComponent,
-    ErrorModalComponent,
-    InformationModalComponent,
-    WarningModalComponent,
-  ],
+  declarations: [InformationModalComponent],
   imports: [
     CommonModule,
     MatDialogModule,
@@ -23,11 +16,7 @@ import { WarningModalComponent } from './components/warning-modal/warning-modal.
     MatButtonModule,
     IconRegistryModule,
   ],
-  exports: [
-    ConfirmationModalComponent,
-    ErrorModalComponent,
-    InformationModalComponent,
-    WarningModalComponent,
-  ],
+  providers: [ModalService],
+  exports: [InformationModalComponent],
 })
 export class ModalModule {}
