@@ -7,10 +7,11 @@ import { ModalConfiguration } from './models/modal-configuration';
 export class ModalService {
   private modals: ModalConfiguration[] = [];
   private lastModal: ModalConfiguration;
+
   constructor(private dialog: MatDialog) {}
 
   public openDialog(modalConfiguration: ModalConfiguration): void {
-    if (this.isModalPresent(modalConfiguration.getId())) {
+    if (this.canNotAddModal(modalConfiguration.getId())) {
       return;
     }
     this.modals.push(modalConfiguration);
@@ -25,6 +26,7 @@ export class ModalService {
     }
     this.modals.splice(index, 1);
     this.sortModalsByPriorityDescending();
+    this.dialog.closeAll();
     this.open();
   }
 
@@ -32,13 +34,15 @@ export class ModalService {
     return this.modals;
   }
 
+  private canNotAddModal(id: string) {
+    return !id || this.isModalPresent(id);
+  }
+
   private open() {
-    if (
-      !this.modals.length ||
-      this.lastModal?.getId() === this.getCurrentlyFirstModalId()
-    ) {
+    if (!this.modals.length) {
       return;
     }
+
     this.lastModal = this.modals[0];
     this.dialog.open(InformationModalComponent, {
       data: {

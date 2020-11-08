@@ -8,16 +8,19 @@ export class Header {
     private color: HeaderColor = HeaderColor.PURPLE_HEADER
   ) {}
 
-  public setTitle(title: string): void {
+  public setTitle(title: string): Header {
     this.title = title;
+    return this;
   }
 
-  public setIcon(icon: Icon): void {
+  public setIcon(icon: Icon): Header {
     this.icon = icon;
+    return this;
   }
 
-  public setColor(color: HeaderColor): void {
+  public setColor(color: HeaderColor): Header {
     this.color = color;
+    return this;
   }
 
   public getTitle(): string {

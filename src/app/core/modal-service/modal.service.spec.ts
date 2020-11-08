@@ -7,12 +7,15 @@ import { ModalPriority } from './models/modal-priority.enum';
 
 class MatDialogMock {
   public open(): void {}
+  public closeAll(): void {}
 }
 
 const modalConfiguration1 = new ModalConfiguration();
 const modalConfiguration2 = new ModalConfiguration();
 const id1 = 'modal1';
 const id2 = 'modal2';
+
+// TODO eventually make close / open mechanism work better
 
 describe('ModalService', () => {
   let injector: TestBed;
@@ -45,6 +48,8 @@ describe('ModalService', () => {
   it('should open and close dialog', () => {
     let modals: ModalConfiguration[] = [];
     const openDialogSpy = spyOn(matDialog, 'open');
+    const closeAllSpy = spyOn(matDialog, 'closeAll');
+
     const modalConfiguration = new ModalConfiguration();
     const id1 = 'modal1';
     modalConfiguration.setId(id1);
@@ -59,11 +64,13 @@ describe('ModalService', () => {
     expect(modals.length).toEqual(0);
 
     expect(openDialogSpy).toHaveBeenCalled();
+    expect(closeAllSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should test if sorting and closing works properly for low - high order', () => {
     let modals: ModalConfiguration[] = [];
     const openDialogSpy = spyOn(matDialog, 'open');
+    const closeAllSpy = spyOn(matDialog, 'closeAll');
 
     modalConfiguration1.setId(id1);
     modalConfiguration1.setPriority(ModalPriority.LOW);
@@ -85,11 +92,13 @@ describe('ModalService', () => {
     expect(modals.length).toEqual(1);
     expect(modals[0].getId()).toEqual(id1);
     expect(openDialogSpy).toHaveBeenCalledTimes(3);
+    expect(closeAllSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should test if sorting and closing works properly for highy - low order', () => {
+  it('should test if sorting and closing works properly for high - low order', () => {
     let modals: ModalConfiguration[] = [];
     const openDialogSpy = spyOn(matDialog, 'open');
+    const closeAllSpy = spyOn(matDialog, 'closeAll');
 
     modalConfiguration1.setId(id1);
     modalConfiguration1.setPriority(ModalPriority.LOW);
@@ -110,6 +119,8 @@ describe('ModalService', () => {
 
     expect(modals.length).toEqual(1);
     expect(modals[0].getId()).toEqual(id1);
-    expect(openDialogSpy).toHaveBeenCalledTimes(2);
+    // TODO make it 2 to be more efficient
+    expect(openDialogSpy).toHaveBeenCalledTimes(3);
+    expect(closeAllSpy).toHaveBeenCalledTimes(1);
   });
 });

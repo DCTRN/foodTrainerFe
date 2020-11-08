@@ -10,24 +10,29 @@ export class Button {
     private position: ButtonPosition = ButtonPosition.RIGHT
   ) {}
 
-  public setId(id: string): void {
+  public setId(id: string): Button {
     this.id = id;
+    return this;
   }
 
-  public setText(text: string): void {
+  public setText(text: string): Button {
     this.text = text;
+    return this;
   }
 
-  public setCallback(callback: () => void): void {
+  public setCallback(callback: () => void): Button {
     this.callback = callback;
+    return this;
   }
 
-  public setType(type: ButtonType): void {
+  public setType(type: ButtonType): Button {
     this.type = type;
+    return this;
   }
 
-  public setPosition(position: ButtonPosition): void {
+  public setPosition(position: ButtonPosition): Button {
     this.position = position;
+    return this;
   }
 
   public getId(): string {
