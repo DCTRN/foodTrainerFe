@@ -1,0 +1,16 @@
+<div class="wrapper">
+  <mat-card matRipple class="card">
+    <div class="message">{{ this.data.getMessage() }}</div>
+    <div class="progress-bar">
+      <mat-progress-bar
+        mode="determinate"
+        [value]="this.notificationWidth"
+      ></mat-progress-bar>
+      <!-- <div
+        #progress
+        class="progress"
+        [style.width.%]="this.notificationWidth"
+      ></div> -->
+    </div>
+  </mat-card>
+</div>

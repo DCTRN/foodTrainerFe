@@ -18,6 +18,7 @@ import { AppComponent } from './app.component';
 import { metaReducers, reducers } from './reducers';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ModalModule } from '@core/modal-service/modal.module';
+import { NotificationModule } from '@core/notifications/notification.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +39,7 @@ import { ModalModule } from '@core/modal-service/modal.module';
     NgxWebstorageModule.forRoot(),
     MatProgressSpinnerModule,
     ModalModule,
+    NotificationModule,
   ],
   providers: [
     {

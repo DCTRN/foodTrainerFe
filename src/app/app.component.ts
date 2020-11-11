@@ -1,26 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
-import { Router, NavigationEnd, RouterEvent } from '@angular/router';
-import {
-  filter,
-  tap,
-  map,
-  mergeMap,
-  skipWhile,
-  take,
-  delay,
-} from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { Tokens } from '@core/stores/tokens/tokens.model';
-import { LocalStorageService } from 'ngx-webstorage';
-import { TokensAction } from '@core/stores/tokens/tokens.actions';
-import { TokensStorageService } from '@core/authentication/tokens-storage.service';
-import { Token } from '@angular/compiler/src/ml_parser/lexer';
-import { of, interval } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { AuthenticationService } from '@core/authentication/authentication.service';
-import { AppState } from './reducers';
+import { TokensStorageService } from '@core/authentication/tokens-storage.service';
 import { ModalService } from '@core/modal-service/modal.service';
 import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
+import { NotificationComponent } from '@core/notifications/component/notification.component';
+import { NotificationService } from '@core/notifications/service/notification.service';
+import { TokensAction } from '@core/stores/tokens/tokens.actions';
+import { Tokens } from '@core/stores/tokens/tokens.model';
+import { Store } from '@ngrx/store';
+import { NGXLogger } from 'ngx-logger';
+import { LocalStorageService } from 'ngx-webstorage';
+import { from, interval, of, Subject } from 'rxjs';
+import {
+  concatMap,
+  delay,
+  filter,
+  mergeMap,
+  skipWhile,
+  switchMap,
+  take,
+  tap,
+  toArray,
+} from 'rxjs/operators';
+import { AppState } from './reducers';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +43,8 @@ export class AppComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private tokensStorageService: TokensStorageService,
     private authenticationService: AuthenticationService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private notificationService: NotificationService
   ) {
     this.logger.log(`${this.signature} ${this.title} started!`);
     this.router.events
@@ -74,7 +79,9 @@ export class AppComponent implements OnInit {
   }
 
   public openModale(): void {
-    this.modalService.openDialog(new ModalConfiguration());
+    this.notificationService.success('test1', 3000);
+    // this.notificationService.success('test2');
+    // this.modalService.openDialog(new ModalConfiguration());
   }
 
   private waitForAuthOperationToFinish() {
