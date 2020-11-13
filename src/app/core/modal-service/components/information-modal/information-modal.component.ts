@@ -14,7 +14,7 @@ import { ModalConfiguration } from '@core/modal-service/models/modal-configurati
 @Component({
   selector: 'app-information-modal',
   templateUrl: './information-modal.component.html',
-  styleUrls: ['./information-modal.component.css'],
+  styleUrls: ['./information-modal.component.scss'],
 })
 export class InformationModalComponent implements OnInit {
   public id: string;

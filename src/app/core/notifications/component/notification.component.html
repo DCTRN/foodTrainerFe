@@ -1,16 +1,17 @@
 <div class="wrapper">
-  <mat-card matRipple class="card">
-    <div class="message">{{ this.data.getMessage() }}</div>
+  <mat-card matRipple class="card" [class]="this.color">
+    <div class="icon">
+      <mat-icon [ngClass]="{'show' : this.showIcon}">clear</mat-icon>
+    </div>
+    <div class="message">
+      <span>{{ this.data.getMessage() }}</span>
+    </div>
     <div class="progress-bar">
       <mat-progress-bar
+        [class]="this.color"
         mode="determinate"
         [value]="this.notificationWidth"
       ></mat-progress-bar>
-      <!-- <div
-        #progress
-        class="progress"
-        [style.width.%]="this.notificationWidth"
-      ></div> -->
     </div>
   </mat-card>
 </div>

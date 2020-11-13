@@ -41,6 +41,7 @@ export class NotificationService {
   ]);
 
   private openSnackBar$ = new Subject<NotificationHandlerMetaData>();
+  private readonly delayDelta = 200;
 
   constructor(private matSnackBar: MatSnackBar) {
     this.notificationEventsHandler();
@@ -86,7 +87,7 @@ export class NotificationService {
 
   private openNotification(d: NotificationHandlerMetaData) {
     this.notificationHandlers.get(d.type)(d.message, d.duration);
-    return of(d).pipe(delay(d.duration));
+    return of(d).pipe(delay(d.duration + this.delayDelta));
   }
 
   private openSuccessSnackBar(message: string, duration: number = 5000) {

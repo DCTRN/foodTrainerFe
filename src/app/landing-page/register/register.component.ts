@@ -23,7 +23,7 @@ import { AppState } from 'src/app/reducers';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   public simpleErrorStateMatcher = new SimpleErrorStateMatcher();

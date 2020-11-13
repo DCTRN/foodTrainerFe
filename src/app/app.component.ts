@@ -1,35 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { AuthenticationService } from '@core/authentication/authentication.service';
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
 import { ModalService } from '@core/modal-service/modal.service';
-import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
-import { NotificationComponent } from '@core/notifications/component/notification.component';
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { TokensAction } from '@core/stores/tokens/tokens.actions';
 import { Tokens } from '@core/stores/tokens/tokens.model';
 import { Store } from '@ngrx/store';
 import { NGXLogger } from 'ngx-logger';
 import { LocalStorageService } from 'ngx-webstorage';
-import { from, interval, of, Subject } from 'rxjs';
-import {
-  concatMap,
-  delay,
-  filter,
-  mergeMap,
-  skipWhile,
-  switchMap,
-  take,
-  tap,
-  toArray,
-} from 'rxjs/operators';
+import { interval, of } from 'rxjs';
+import { delay, filter, mergeMap, skipWhile, take, tap } from 'rxjs/operators';
 import { AppState } from './reducers';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   public title = 'food-trainer';
@@ -79,8 +66,13 @@ export class AppComponent implements OnInit {
   }
 
   public openModale(): void {
-    this.notificationService.success('test1', 3000);
-    // this.notificationService.success('test2');
+    this.notificationService.info(
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tortor diam, fermentum elementum velit in, consectetur porttitor ipsum. Morbi et tincidunt quam. Vivamus congue quis risus nec sollicitudin.',
+      3000
+    );
+    this.notificationService.warrning('test1');
+    this.notificationService.success('test1');
+    this.notificationService.error('test1');
     // this.modalService.openDialog(new ModalConfiguration());
   }
 

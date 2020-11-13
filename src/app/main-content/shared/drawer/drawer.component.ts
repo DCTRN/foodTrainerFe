@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-drawer',
   templateUrl: './drawer.component.html',
-  styleUrls: ['./drawer.component.css'],
+  styleUrls: ['./drawer.component.scss'],
 })
 export class DrawerComponent implements OnInit, OnDestroy {
   public menuItems = MenuItems;

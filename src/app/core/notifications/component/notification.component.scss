@@ -1,0 +1,126 @@
+// TODO match this color with global one
+$purple: #7b1fa2;
+$green: #008a37;
+$red: #800808;
+$yellow: #beab00;
+
+mat-card.mat-card {
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  grid-template-columns: auto auto 10%;
+  grid-template-rows: 10% 80% 10%;
+  grid-template-areas:
+    " . . icon"
+    " message message message"
+    "bar bar bar";
+  transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.icon {
+  grid-area: icon;
+  padding: 0.2rem;
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-end;
+}
+
+mat-icon.mat-icon {
+  visibility: hidden;
+  font-size: 1rem;
+}
+
+.message {
+  grid-area: message;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-content: center;
+  align-self: center;
+  padding: 0.4rem;
+}
+
+.progress-bar {
+  grid-area: bar;
+  width: 100%;
+  height: 100%;
+}
+
+.purple {
+  background-color: lighten($purple, 10%);
+}
+
+.green {
+  background-color: darken($green, 5%);
+}
+
+.yellow {
+  background-color: darken($yellow, 5%);
+}
+
+.red {
+  background-color: darken($red, 5%);
+}
+
+::ng-deep mat-progress-bar.mat-progress-bar {
+  height: 100%;
+  width: 100%;
+}
+/*RED*/
+::ng-deep .red .mat-progress-bar-fill::after {
+  background-color: var(--red-color) !important;
+}
+
+::ng-deep .red .mat-progress-bar-buffer {
+  background-color: lighten($red, 30%);
+}
+
+/*GREEN*/
+
+::ng-deep .green .mat-progress-bar-fill::after {
+  background-color: var(--green-color) !important;
+}
+
+::ng-deep .green .mat-progress-bar-buffer {
+  background-color: lighten($green, 30%);
+}
+
+/*YELLOW*/
+
+::ng-deep .yellow .mat-progress-bar-fill::after {
+  background-color: var(--yellow-color) !important;
+}
+
+::ng-deep .yellow .mat-progress-bar-buffer {
+  background-color: lighten($yellow, 30%);
+}
+
+/*PURPLE*/
+
+::ng-deep .purple .mat-progress-bar-fill::after {
+  background-color: var(--secondary-color) !important;
+}
+
+::ng-deep .purple .mat-progress-bar-buffer {
+  background-color: lighten($purple, 30%);
+}
+
+.show {
+  visibility: visible !important;
+}
