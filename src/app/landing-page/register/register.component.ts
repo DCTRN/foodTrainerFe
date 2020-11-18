@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { NotificationService } from '@core/notifications/service/notification.service';
 import { select, Store } from '@ngrx/store';
 import {
   registerRequest,
@@ -27,6 +28,7 @@ import { AppState } from 'src/app/reducers';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   public simpleErrorStateMatcher = new SimpleErrorStateMatcher();
+  public minDate: Date;
 
   public registerForm: FormGroup;
   public usernameFormControl: FormControl;
@@ -44,13 +46,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
+    private userStore: Store<AppState>,
     private router: Router,
     private formBuilder: FormBuilder,
-    private userStore: Store<AppState>,
     private logger: NGXLogger,
-    private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
     private changeDectorRef: ChangeDetectorRef
-  ) {}
+  ) {
+    this.setMinimalDateInDatePicker();
+  }
 
   public ngOnInit(): void {
     this.createRegisterFormControls();
@@ -65,10 +69,19 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   public register(): void {
     if (!this.isRegisterFormValid()) {
-      this.openSnackBar('Please, fill form with valid data.');
+      this.openSnackBar('Please, fill form with valid data');
     } else {
       this.handleRegister();
     }
+  }
+
+  public navigateToMainPage(): void {
+    this.router.navigateByUrl('/landing-page');
+  }
+
+  private setMinimalDateInDatePicker() {
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(currentYear - 100, 0, 1);
   }
 
   private getLastUserState() {
@@ -88,10 +101,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.registerForm.controls[control].markAsDirty();
       this.registerForm.controls[control].updateValueAndValidity();
     }
-  }
-
-  public navigateToMainPage(): void {
-    this.router.navigateByUrl('/landing-page');
   }
 
   private updateView() {
@@ -232,8 +241,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   private openSnackBar(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-    });
+    this.notificationService.info(message);
   }
 }

@@ -14,6 +14,7 @@ import { LoginCredentials } from '@api/authentication/login-credentials.model';
 import { ErrorFormat } from '@core/models/error-format.model';
 import { AuthenticationTimerService } from '@core/authentication/authentication-timer.service';
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
+import { NotificationService } from '@core/notifications/service/notification.service';
 
 @Injectable()
 export class UserEffects {
@@ -21,13 +22,15 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(UserAction.REGISTER_REQUEST),
       tap(() =>
-        this.logger.log(`${this.signature} Handling ${UserActionType.REGISTER_REQUEST}`)
+        this.logger.log(
+          `${this.signature} Handling ${UserActionType.REGISTER_REQUEST}`
+        )
       ),
       mergeMap((action: User) => {
         return this.authenticationService.register(action).pipe(
           map((user: User) => userUpdate(user)),
           tap(() =>
-            this.openSnackBar('Registered successfully! Now you can log in^^')
+            this.notificationService.success('Registered successfully! Now you can log in^^')
           ),
           tap(() => this.router.navigateByUrl('/login')),
           catchError((err: ErrorFormat) =>
@@ -45,7 +48,9 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(UserAction.LOGIN_REQUEST),
       tap(() =>
-        this.logger.log(`${this.signature} Handling ${UserActionType.LOGIN_REQUEST}`)
+        this.logger.log(
+          `${this.signature} Handling ${UserActionType.LOGIN_REQUEST}`
+        )
       ),
       mergeMap((action: LoginCredentials) => {
         return this.authenticationService
@@ -73,7 +78,7 @@ export class UserEffects {
     private authenticationService: AuthenticationService,
     private authenticationTimerService: AuthenticationTimerService,
     private tokensStorageService: TokensStorageService,
-    private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
     private router: Router,
     private logger: NGXLogger
   ) {}
@@ -88,8 +93,6 @@ export class UserEffects {
   }
 
   private openSnackBar(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-    });
+    this.notificationService.error(message);
   }
 }

@@ -1,5 +1,6 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { MatSnackBar, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { NotificationConfig } from '../models/notification-config';
 import { NotificationComponent } from './notification.component';
 
@@ -15,9 +16,15 @@ describe('NotificationComponent', () => {
       providers: [
         {
           provide: MAT_SNACK_BAR_DATA,
-          userValue: notificationConfig,
+          useValue: notificationConfig,
+        },
+        {
+          // TODO mock
+          provide: MatSnackBar,
+          useValue: MatSnackBar,
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 

@@ -3,7 +3,7 @@
     <table class="example-full-width">
       <tr>
         <td>
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
             <mat-label>Username</mat-label>
             <input
               formControlName="username"
@@ -23,7 +23,7 @@
           </mat-form-field>
         </td>
         <td>
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
             <mat-label>Password</mat-label>
             <input
               formControlName="password"
@@ -46,7 +46,7 @@
       </tr>
       <tr class="example-full-width">
         <td colspan="2" class="example-full-width">
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
             <mat-label>Confirm password</mat-label>
             <input
               formControlName="passwordConfirmation"
@@ -69,7 +69,7 @@
       </tr>
       <tr>
         <td>
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
             <mat-label>Email</mat-label>
             <input
               formControlName="email"
@@ -89,7 +89,7 @@
           </mat-form-field>
         </td>
         <td>
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
             <mat-label>Phone number</mat-label>
             <input
               formControlName="phoneNumber"
@@ -111,7 +111,7 @@
       </tr>
       <tr>
         <td>
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
             <mat-label>First name</mat-label>
             <input
               formControlName="firstName"
@@ -131,7 +131,7 @@
           </mat-form-field>
         </td>
         <td>
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
             <mat-label>Last name</mat-label>
             <input
               formControlName="lastName"
@@ -153,9 +153,10 @@
       </tr>
       <tr>
         <td colspan="2" class="example-full-width">
-          <mat-form-field appearance="fill">
+          <mat-form-field (key.enter)="register()" appearance="fill">
             <mat-label>Birth date</mat-label>
             <input
+              [min]="minDate"
               formControlName="birthDate"
               matInput
               [matDatepicker]="picker"
@@ -180,13 +181,13 @@
 
       <tr>
         <td>
-          <button (click)="navigateToMainPage()" mat-stroked-button class="btn">
-            Return to main page
+          <button (click)="register()" mat-stroked-button class="btn">
+            Register
           </button>
         </td>
         <td>
-          <button (click)="register()" mat-stroked-button class="btn">
-            Register
+          <button (click)="navigateToMainPage()" mat-stroked-button class="btn">
+            Return to main page
           </button>
         </td>
       </tr>

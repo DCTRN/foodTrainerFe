@@ -22,6 +22,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { UserAction } from '@core/stores/user/user.actions';
 import { ReplaySubject } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { NotificationService } from '@core/notifications/service/notification.service';
 
 export const initialState: any = {
   user: {
@@ -46,6 +47,10 @@ const userMock: User = {
   lastName: 'majk',
 };
 
+class NotificationServiceMock {
+  public info(message: string, duration: number = 5000): void {}
+}
+
 describe('RegisterComponent', () => {
   const actions$ = new ReplaySubject<any>(1);
   let injector: TestBed;
@@ -53,6 +58,7 @@ describe('RegisterComponent', () => {
   let fixture: ComponentFixture<RegisterComponent>;
   let router: Router;
   let store: MockStore;
+  let notificationService: NotificationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -66,9 +72,12 @@ describe('RegisterComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         LoggerTestingModule,
-        MatSnackBarModule,
       ],
       providers: [
+        {
+          provide: NotificationService,
+          useClass: NotificationServiceMock,
+        },
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
       ],
@@ -80,6 +89,7 @@ describe('RegisterComponent', () => {
     injector = getTestBed();
     router = injector.inject(Router);
     store = injector.inject(MockStore);
+    notificationService = injector.inject(NotificationService);
     fixture = injector.createComponent(RegisterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -99,10 +109,12 @@ describe('RegisterComponent', () => {
 
   it('should dispatch register action if valid form', () => {
     const dispatchSpy = spyOn(store, 'dispatch');
+    const infoSpy = spyOn(notificationService, 'info');
 
     component.register();
 
     expect(dispatchSpy).not.toHaveBeenCalled();
+    expect(infoSpy).toHaveBeenCalled();
 
     component.usernameFormControl.setValue(userMock.username);
     component.passwordFormControl.setValue('Password123');
@@ -116,6 +128,7 @@ describe('RegisterComponent', () => {
     component.register();
 
     expect(dispatchSpy).toHaveBeenCalled();
+    expect(infoSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should set value from store', () => {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ErrorFormat } from '@core/models/error-format.model';
+import { NotificationService } from '@core/notifications/service/notification.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { NGXLogger } from 'ngx-logger';
 import { of } from 'rxjs';
@@ -32,7 +33,7 @@ export class TokenEffects {
         this.logger.log(`${this.signature} Failed to refresh tokens`);
         this.openSnackBar('Failed to maintain session');
         return of(TokensAction.REFRESH_TOKENS_REQUEST_FAILURE()).pipe(
-          map(() => TokensAction.CLEAR_TOKENS_REQUEST)
+          map(() => TokensAction.CLEAR_TOKENS_REQUEST())
         );
       })
     )
@@ -62,12 +63,10 @@ export class TokenEffects {
     private tokensStorageService: TokensStorageService,
     private logger: NGXLogger,
     private router: Router,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService,
   ) {}
 
   private openSnackBar(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-    });
+    this.notificationService.error(message);
   }
 }

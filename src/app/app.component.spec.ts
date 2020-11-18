@@ -145,18 +145,13 @@ describe('AppComponent', () => {
     expect(logSpy).toHaveBeenCalled();
   });
 
-  it(`should log navigation events'`, () => {
-    const logSpy = spyOn(logger, 'log');
-    ((router as unknown) as RouterMock).eventsSource.next(
-      new NavigationEnd(1, 'randomUrlStart', 'RandomUrlEnd')
-    );
-    expect(logSpy).toHaveBeenCalled();
-  });
+  it(`should turn off spinner and navigate to landing page if tokens are upsent'`, () => {
+    const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
 
-  it(`should turn off spinner and stay on the same page if tokens are upsent'`, () => {
     component.ngOnInit();
 
     expect(component.showSpinner).toBeFalsy();
+    expect(navigateByUrlSpy).toHaveBeenCalledWith('/');
   });
 
   it(`should refresh tokens and navigate to main page successfuly'`, fakeAsync(() => {

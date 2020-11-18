@@ -3,7 +3,7 @@
     <table class="example-full-width">
       <tr>
         <td colspan="2">
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="login()" class="example-full-width">
             <mat-label>Username</mat-label>
             <input
               formControlName="username"
@@ -25,7 +25,7 @@
       </tr>
       <tr>
         <td colspan="2">
-          <mat-form-field class="example-full-width">
+          <mat-form-field (key.enter)="login()" class="example-full-width">
             <mat-label>Password</mat-label>
             <input
               formControlName="password"
@@ -49,13 +49,13 @@
 
       <tr>
         <td>
-          <button (click)="navigateToMainPage()" mat-stroked-button class="btn">
-            Return to main page
+          <button (click)="login()" mat-stroked-button class="btn">
+            Login
           </button>
         </td>
         <td>
-          <button (click)="login()" mat-stroked-button class="btn">
-            Login
+          <button (click)="navigateToMainPage()" mat-stroked-button class="btn">
+            Return to main page
           </button>
         </td>
       </tr>

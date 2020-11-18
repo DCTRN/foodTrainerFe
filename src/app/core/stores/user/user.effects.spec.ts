@@ -1,35 +1,22 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  getTestBed,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { ReplaySubject, Observable, of, throwError } from 'rxjs';
-import { UserEffects } from './user.effects';
-import { NGXLogger, LoggerConfig } from 'ngx-logger';
-import { LoggerTestingModule } from 'ngx-logger/testing';
 import { Component, Injectable } from '@angular/core';
-import { Tokens } from '../tokens/tokens.model';
-import { User } from './user.model';
-import { AuthenticationService } from '../../authentication/authentication.service';
-import { UserAction } from './user.actions';
-import { TokensAction } from '../tokens/tokens.actions';
-import {
-  MatSnackBarConfig,
-  MatSnackBarRef,
-  TextOnlySnackBar,
-  MatSnackBar,
-} from '@angular/material/snack-bar';
-import { RouterTestingModule } from '@angular/router/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { LoginCredentials } from '@api/authentication/login-credentials.model';
-import { provideMockStore } from '@ngrx/store/testing';
-import { TokensStorageService } from '@core/authentication/tokens-storage.service';
 import { AuthenticationTimerService } from '@core/authentication/authentication-timer.service';
+import { TokensStorageService } from '@core/authentication/tokens-storage.service';
+import { NotificationService } from '@core/notifications/service/notification.service';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { provideMockStore } from '@ngrx/store/testing';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { Observable, of, ReplaySubject, throwError } from 'rxjs';
+import { AuthenticationService } from '../../authentication/authentication.service';
+import { TokensAction } from '../tokens/tokens.actions';
+import { Tokens } from '../tokens/tokens.model';
+import { UserAction } from './user.actions';
+import { UserEffects } from './user.effects';
+import { User } from './user.model';
 
 const initialState = undefined;
 
@@ -89,17 +76,6 @@ export class TokensStorageServiceMock {
 }
 
 @Injectable()
-class MatSnackBarMock {
-  public open(
-    message: string,
-    action?: string,
-    config?: MatSnackBarConfig
-  ): MatSnackBarRef<TextOnlySnackBar> {
-    return null;
-  }
-}
-
-@Injectable()
 class AuthenticationTimerServiceMock {
   public start(): void {}
   public clear(): void {}
@@ -116,12 +92,17 @@ class AuthenticationServiceMock {
   }
 }
 
+class NotificationServiceMock {
+  public success(message: string, duration: number = 5000): void {}
+  public error(message: string, duration: number = 5000): void {}
+}
+
 describe('User effects', () => {
   let injector: TestBed;
   let service: UserEffects;
   let authenticationService: AuthenticationService;
-  let matSnackBar: MatSnackBar;
   let router: Router;
+  let notificationService: NotificationService;
   let authenticationTimerService: AuthenticationTimerService;
   let actions$: ReplaySubject<any> = new ReplaySubject(1);
 
@@ -144,8 +125,8 @@ describe('User effects', () => {
           useClass: AuthenticationServiceMock,
         },
         {
-          provide: MatSnackBar,
-          useClass: MatSnackBarMock,
+          provide: NotificationService,
+          useClass: NotificationServiceMock,
         },
         {
           provide: TokensStorageService,
@@ -164,8 +145,8 @@ describe('User effects', () => {
 
     injector = getTestBed();
     authenticationService = injector.inject(AuthenticationService);
-    matSnackBar = injector.inject(MatSnackBar);
     router = injector.inject(Router);
+    notificationService = injector.inject(NotificationService);
     authenticationTimerService = injector.inject(AuthenticationTimerService);
     service = injector.inject(UserEffects);
   });
@@ -230,7 +211,7 @@ describe('User effects', () => {
 
   it('should get failed login action', () => {
     let resultAction: any;
-    const openSpy = spyOn(matSnackBar, 'open');
+    const errorSpy = spyOn(notificationService, 'error');
     const loginSpy = spyOn(authenticationService, 'login').and.returnValue(
       throwError('Error')
     );
@@ -242,7 +223,7 @@ describe('User effects', () => {
     service.login$.subscribe((action) => (resultAction = action));
 
     expect(loginSpy).toHaveBeenCalled();
-    expect(openSpy).toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalled();
     expect(resultAction).toEqual(UserAction.USER_ERROR('Error'));
   });
 });

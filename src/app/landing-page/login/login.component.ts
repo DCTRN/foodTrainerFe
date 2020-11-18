@@ -14,6 +14,7 @@ import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotificationService } from '@core/notifications/service/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +37,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userStore: Store<{ user: User }>,
     private logger: NGXLogger,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService
   ) {
     this.userStore.pipe(select('user')).subscribe();
   }
@@ -48,15 +49,21 @@ export class LoginComponent implements OnInit {
 
   public login(): void {
     if (!this.isLoginFormValid()) {
-      this.openSnackBar('Please, fill forms with valid data.');
+      this.openSnackBar('Please, fill forms with valid data');
     } else {
       this.handleLogin();
     }
   }
 
+  public navigateToMainPage(): void {
+    this.router.navigateByUrl('/landing-page');
+  }
+
   private handleLogin() {
     const loginCredentials: LoginCredentials = this.extractLoginCredentials();
-    this.logger.log(`${this.signature} dispatching ${UserActionType.LOGIN_REQUEST}`);
+    this.logger.log(
+      `${this.signature} dispatching ${UserActionType.LOGIN_REQUEST}`
+    );
     this.userStore.dispatch(loginRequest(loginCredentials));
   }
 
@@ -69,10 +76,6 @@ export class LoginComponent implements OnInit {
 
   private isLoginFormValid() {
     return this.loginForm?.valid;
-  }
-
-  public navigateToMainPage(): void {
-    this.router.navigateByUrl('/landing-page');
   }
 
   private createLoginFormGroup() {
@@ -104,8 +107,6 @@ export class LoginComponent implements OnInit {
   }
 
   private openSnackBar(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-    });
+    this.notificationService.info(message);
   }
 }

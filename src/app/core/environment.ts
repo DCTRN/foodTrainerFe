@@ -5,7 +5,12 @@ enum AuthUrl {
   REFRESH = 'auth/refresh',
 }
 
+enum UsersUrl {
+  USERS = 'users',
+}
+
 export abstract class Environment {
   public static apiUrl = 'http://localhost:4000/';
   public static authUrl = AuthUrl;
+  public static userUrl = UsersUrl;
 }
