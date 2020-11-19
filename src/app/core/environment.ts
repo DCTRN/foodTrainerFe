@@ -7,6 +7,7 @@ enum AuthUrl {
 
 enum UsersUrl {
   USERS = 'users',
+  USER_FRIENDS = 'userFriends',
 }
 
 export abstract class Environment {

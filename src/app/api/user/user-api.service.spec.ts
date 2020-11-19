@@ -48,7 +48,7 @@ const userMockData: Array<User> = [userMock1];
 
 describe('UserApiService', () => {
   const apiUrl = Environment.apiUrl;
-  const usersUrl = apiUrl + Environment.userUrl;
+  const usersUrl = apiUrl + Environment.userUrl.USERS;
   let injector: TestBed;
   let service: UserApiService;
   let httpTestingController: HttpTestingController;
