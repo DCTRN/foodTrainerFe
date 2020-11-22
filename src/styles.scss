@@ -65,5 +65,14 @@ mat-dialog-container.mat-dialog-container {
 snack-bar-container.mat-snack-bar-container {
   padding: 0;
   margin: 1rem;
-  // box-shadow: none;
+}
+
+.mat-tooltip {
+  font-size: 0.8rem;
+}
+
+@media (min-width: 768px) {
+  .mat-tooltip {
+    font-size: 1rem;
+  }
 }

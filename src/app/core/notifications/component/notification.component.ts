@@ -45,14 +45,12 @@ export class NotificationComponent implements OnInit, AfterViewInit {
   @HostListener('mouseenter', ['$event'])
   public mouseEnterHandler(event: Event): void {
     this.showIcon = true;
-    console.log('mouseenter', this.showIcon);
     this.cdref.detectChanges();
   }
 
   @HostListener('mouseleave', ['$event'])
   public mouseLeaveHandler(event: Event): void {
     this.showIcon = false;
-    console.log('mouseleave', this.showIcon);
     this.cdref.detectChanges();
   }
 

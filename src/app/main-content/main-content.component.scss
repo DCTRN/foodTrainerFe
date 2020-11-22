@@ -1,8 +1,31 @@
+.content-wrapper,
 .wrapper {
-  width: 100%;
-  min-height: 100% !important;
+  width: 100vw;
+  min-height: 100vh !important;
 }
 
 .drawer {
   width: 75%;
+}
+
+.toolbar {
+  grid-area: toolbar;
+}
+
+.grid.content {
+  grid-area: content;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.content-wrapper {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 4rem auto 5rem;
+  grid-template-areas:
+    "toolbar"
+    "content"
+    "footer";
 }

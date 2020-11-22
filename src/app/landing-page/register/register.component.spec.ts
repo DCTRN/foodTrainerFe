@@ -2,10 +2,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   async,
   ComponentFixture,
-  fakeAsync,
   getTestBed,
   TestBed,
-  tick,
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -14,15 +12,13 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NotificationService } from '@core/notifications/service/notification.service';
+import { provideMockActions } from '@ngrx/effects/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { User } from '@stores/user/user.model';
-import { RegisterComponent } from './register.component';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { UserAction } from '@core/stores/user/user.actions';
 import { ReplaySubject } from 'rxjs';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { NotificationService } from '@core/notifications/service/notification.service';
+import { RegisterComponent } from './register.component';
 
 export const initialState: any = {
   user: {

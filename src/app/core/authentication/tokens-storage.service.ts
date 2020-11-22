@@ -32,4 +32,15 @@ export class TokensStorageService {
     this.localStorageService.clear('tokens');
     this.tokens = null;
   }
+
+  public getUsername(): string {
+    return this.localStorageService.retrieve('username') as string;
+  }
+
+  public setUsername(username: string): void {
+    this.logger.log(
+      `${this.signature} setting username: ${JSON.stringify(username)}`
+    );
+    this.localStorageService.store('username', username);
+  }
 }

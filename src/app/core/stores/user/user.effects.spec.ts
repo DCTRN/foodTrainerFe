@@ -4,6 +4,7 @@ import { getTestBed, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoginCredentials } from '@api/authentication/login-credentials.model';
+import { UserApiService } from '@api/user/user-api.service';
 import { AuthenticationTimerService } from '@core/authentication/authentication-timer.service';
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
 import { NotificationService } from '@core/notifications/service/notification.service';
@@ -63,6 +64,7 @@ export const tokensMock = {
 @Injectable()
 export class TokensStorageServiceMock {
   private tokens: Tokens = tokensMock;
+  private username = 'username';
 
   constructor() {}
 
@@ -72,6 +74,14 @@ export class TokensStorageServiceMock {
 
   public getTokens(): Tokens {
     return this.tokens;
+  }
+
+  public setUsername(username: string): void {
+    this.username = username;
+  }
+
+  public getUsername(): string {
+    return this.username;
   }
 }
 
@@ -97,6 +107,29 @@ class NotificationServiceMock {
   public error(message: string, duration: number = 5000): void {}
 }
 
+export class UserApiServiceMock {
+  public getUserCredentialsByUsername(username: string): Observable<User> {
+    return of(null);
+  }
+  public findUsersBy(searchText: string): Observable<Array<User>> {
+    return of(null);
+  }
+  public updateUserCredentials(user: User): Observable<User> {
+    return of(null);
+  }
+}
+
+const userMock1 = {
+  id: 5,
+  username: 'mike98',
+  email: 'mike98@gmail.com',
+  birthDate: new Date(),
+  phoneNumber: '111222333',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  authenticationLevel: 1,
+};
+
 describe('User effects', () => {
   let injector: TestBed;
   let service: UserEffects;
@@ -104,6 +137,8 @@ describe('User effects', () => {
   let router: Router;
   let notificationService: NotificationService;
   let authenticationTimerService: AuthenticationTimerService;
+  let userApiService: UserApiService;
+  let tokensStorageService: TokensStorageService;
   let actions$: ReplaySubject<any> = new ReplaySubject(1);
 
   beforeEach(() => {
@@ -140,6 +175,10 @@ describe('User effects', () => {
           provide: AuthenticationTimerService,
           useClass: AuthenticationTimerServiceMock,
         },
+        {
+          provide: UserApiService,
+          useClass: UserApiServiceMock,
+        },
       ],
     });
 
@@ -148,6 +187,8 @@ describe('User effects', () => {
     router = injector.inject(Router);
     notificationService = injector.inject(NotificationService);
     authenticationTimerService = injector.inject(AuthenticationTimerService);
+    userApiService = injector.inject(UserApiService);
+    tokensStorageService = injector.inject(TokensStorageService);
     service = injector.inject(UserEffects);
   });
 
@@ -192,6 +233,8 @@ describe('User effects', () => {
     let resultAction: any;
     const startSpy = spyOn(authenticationTimerService, 'start');
     const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
+    const setUsernameSpy = spyOn(tokensStorageService, 'setUsername');
+    const setTokensSpy = spyOn(tokensStorageService, 'setTokens');
     const loginSpy = spyOn(authenticationService, 'login').and.returnValue(
       of(tokensMock)
     );
@@ -203,6 +246,8 @@ describe('User effects', () => {
 
     expect(startSpy).toHaveBeenCalled();
     expect(loginSpy).toHaveBeenCalled();
+    expect(setUsernameSpy).toHaveBeenCalled();
+    expect(setTokensSpy).toHaveBeenCalled();
     expect(navigateByUrlSpy).toHaveBeenCalledWith('/main');
     expect(resultAction).toEqual(
       TokensAction.LOGIN_REQUEST_SUCCESS(tokensMock)
@@ -225,5 +270,69 @@ describe('User effects', () => {
     expect(loginSpy).toHaveBeenCalled();
     expect(errorSpy).toHaveBeenCalled();
     expect(resultAction).toEqual(UserAction.USER_ERROR('Error'));
+  });
+
+  it('should make get user credentials request', () => {
+    let resultAction: any;
+    const getUserCredentialsByUsernameSpy = spyOn(
+      userApiService,
+      'getUserCredentialsByUsername'
+    ).and.returnValue(of(userMock1));
+
+    actions$.next(UserAction.GET_CREDENTIALS_REQUEST());
+
+    service.getCredentials$.subscribe((action) => (resultAction = action));
+
+    expect(getUserCredentialsByUsernameSpy).toHaveBeenCalled();
+    expect(resultAction).toEqual(UserAction.USER_UPDATE(userMock1));
+  });
+
+  it('should fail to get user credentials', () => {
+    let resultAction: any;
+    const errorSpy = spyOn(notificationService, 'error');
+    const getUserCredentialsByUsernameSpy = spyOn(
+      userApiService,
+      'getUserCredentialsByUsername'
+    ).and.returnValue(throwError('Error'));
+
+    actions$.next(UserAction.GET_CREDENTIALS_REQUEST());
+
+    service.getCredentials$.subscribe((action) => (resultAction = action));
+
+    expect(getUserCredentialsByUsernameSpy).toHaveBeenCalled();
+    expect(resultAction).toEqual(UserAction.USER_ERROR('Error'));
+    expect(errorSpy).toHaveBeenCalled();
+  });
+
+  it('should make user patch credentials request', () => {
+    let resultAction: any;
+    const updateUserCredentialsSpy = spyOn(
+      userApiService,
+      'updateUserCredentials'
+    ).and.returnValue(of(userMock1));
+
+    actions$.next(UserAction.PATCH_CREDENTIALS_REQUEST(userMock1));
+
+    service.patchCredentials$.subscribe((action) => (resultAction = action));
+
+    expect(updateUserCredentialsSpy).toHaveBeenCalled();
+    expect(resultAction).toEqual(UserAction.USER_UPDATE(userMock1));
+  });
+
+  it('should fail to patch user credentials', () => {
+    let resultAction: any;
+    const errorSpy = spyOn(notificationService, 'error');
+    const updateUserCredentialsSpy = spyOn(
+      userApiService,
+      'updateUserCredentials'
+    ).and.returnValue(throwError('Error'));
+
+    actions$.next(UserAction.PATCH_CREDENTIALS_REQUEST(userMock1));
+
+    service.patchCredentials$.subscribe((action) => (resultAction = action));
+
+    expect(updateUserCredentialsSpy).toHaveBeenCalled();
+    expect(resultAction).toEqual(UserAction.USER_ERROR('Error'));
+    expect(errorSpy).toHaveBeenCalled();
   });
 });

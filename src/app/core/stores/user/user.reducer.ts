@@ -3,13 +3,13 @@ import { UserAction } from './user.actions';
 import { User } from './user.model';
 
 export const initialState: User = {
+  id: undefined,
   username: undefined,
   email: undefined,
   birthDate: undefined,
   phoneNumber: undefined,
   firstName: undefined,
   lastName: undefined,
-  id: undefined,
   authenticationLevel: undefined,
 };
 
@@ -18,7 +18,12 @@ const _userReducer = createReducer(
   on(UserAction.REGISTER_REQUEST, (state, action) => action),
   on(UserAction.LOGIN_REQUEST, (state, action) => ({ ...state, ...action })),
   on(UserAction.USER_UPDATE, (state, action) => action),
-  on(UserAction.USER_ERROR, (state, action) => state)
+  on(UserAction.GET_CREDENTIALS_REQUEST, (state) => state),
+  on(UserAction.PATCH_CREDENTIALS_REQUEST, (state, action) => ({
+    ...state,
+    ...action,
+  })),
+  on(UserAction.USER_ERROR, (state) => ({ ...state }))
 );
 
 export function userReducer(state, action) {

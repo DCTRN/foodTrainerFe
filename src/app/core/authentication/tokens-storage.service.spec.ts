@@ -11,6 +11,12 @@ const loginTokens: Tokens = {
   expires_in: 300,
 };
 
+class LocalStorageServiceMock {
+  public retrieve(key: string): any {}
+  public store(key: string, value: any): any {}
+  public clear(key?: string): void {}
+}
+
 describe('TokensStorageService', () => {
   let injector: TestBed;
   let service: TokensStorageService;
@@ -20,7 +26,12 @@ describe('TokensStorageService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [LoggerTestingModule],
-      providers: [LocalStorageService],
+      providers: [
+        {
+          provide: LocalStorageService,
+          useClass: LocalStorageServiceMock,
+        },
+      ],
     });
   });
 
@@ -64,5 +75,19 @@ describe('TokensStorageService', () => {
     expect(logSpy).toHaveBeenCalled();
     expect(storeSpy).toHaveBeenCalled();
     expect(clearSpy).toHaveBeenCalled();
+  });
+
+  it('should set and get username', () => {
+    let tokens: Tokens;
+    const logSpy = spyOn(logger, 'log');
+    const storeSpy = spyOn(localStorageService, 'store');
+    const retrieveSpy = spyOn(localStorageService, 'retrieve');
+
+    service.setUsername('username');
+    service.getUsername();
+
+    expect(logSpy).toHaveBeenCalled();
+    expect(storeSpy).toHaveBeenCalled();
+    expect(retrieveSpy).toHaveBeenCalled();
   });
 });
