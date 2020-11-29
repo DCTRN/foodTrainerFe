@@ -1,5 +1,5 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FindFriendComponent } from './find-friend.component';
 
 describe('FindFriendComponent', () => {
@@ -8,9 +8,9 @@ describe('FindFriendComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FindFriendComponent ]
-    })
-    .compileComponents();
+      declarations: [FindFriendComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

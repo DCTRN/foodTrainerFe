@@ -63,7 +63,7 @@ export class TokenEffects {
     private tokensStorageService: TokensStorageService,
     private logger: NGXLogger,
     private router: Router,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {}
 
   private openSnackBar(message: string) {

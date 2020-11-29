@@ -36,33 +36,37 @@ export const getAllFriendsError = createAction(getAllFriendsErrorType);
 
 export const sendFriendRequest = createAction(
   sendFriendRequestType,
-  props<Number>()
+  props<{ id: number }>()
 );
 export const sendFriendRequestSuccess = createAction(
-  sendFriendRequestType,
-  props<Friend>()
+  sendFriendRequestSuccessType,
+  props<{ friend: Friend }>()
 );
 export const sendFriendRequestError = createAction(sendFriendRequestType);
 
 export const acceptFriendRequest = createAction(
   acceptFriendRequestType,
-  props<Number>()
+  props<{ id: number }>()
 );
 export const acceptFriendRequestSuccess = createAction(
-  acceptFriendRequestType,
-  props<Friend>()
+  acceptFriendRequestSuccessType,
+  props<{ friend: Friend }>()
 );
-export const acceptFriendRequestError = createAction(acceptFriendRequestType);
+export const acceptFriendRequestError = createAction(
+  acceptFriendRequestErrorType
+);
 
 export const deleteFriendRequest = createAction(
   deleteFriendRequestType,
-  props<{id}>()
+  props<{ id: number }>()
 );
 export const deleteFriendRequestSuccess = createAction(
-  deleteFriendRequestType,
-  props<{id}>()
+  deleteFriendRequestSuccessType,
+  props<{ id: number }>()
 );
-export const deleteFriendRequestError = createAction(deleteFriendRequestType);
+export const deleteFriendRequestError = createAction(
+  deleteFriendRequestErrorType
+);
 
 export const FriendsActionType = {
   GET_ALL_FRIENDS_REQUEST: getAllFriendsType,
@@ -71,7 +75,7 @@ export const FriendsActionType = {
   SEND_FRIEND_REQUEST: sendFriendRequestType,
   SEND_FRIEND_REQUEST_SUCCESS: sendFriendRequestSuccessType,
   SEND_FRIEND_REQUEST_ERROR: sendFriendRequestErrorType,
-  ACCEPT_FRIEND_REQUEST_: acceptFriendRequestType,
+  ACCEPT_FRIEND_REQUEST: acceptFriendRequestType,
   ACCEPT_FRIEND_REQUEST_SUCCESS: acceptFriendRequestSuccessType,
   ACCEPT_FRIEND_REQUEST_ERROR: acceptFriendRequestErrorType,
   DELETE_FRIEND_REQUEST: deleteFriendRequestType,
@@ -86,7 +90,7 @@ export const FriendsAction = {
   SEND_FRIEND_REQUEST: sendFriendRequest,
   SEND_FRIEND_REQUEST_SUCCESS: sendFriendRequestSuccess,
   SEND_FRIEND_REQUEST_ERROR: sendFriendRequestError,
-  ACCEPT_FRIEND_REQUEST_: acceptFriendRequest,
+  ACCEPT_FRIEND_REQUEST: acceptFriendRequest,
   ACCEPT_FRIEND_REQUEST_SUCCESS: acceptFriendRequestSuccess,
   ACCEPT_FRIEND_REQUEST_ERROR: acceptFriendRequestError,
   DELETE_FRIEND_REQUEST: deleteFriendRequest,

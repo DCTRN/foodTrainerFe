@@ -5,7 +5,7 @@ import {
   getTestBed,
   TestBed,
 } from '@angular/core/testing';
-import { Friend } from '@core/stores/user-friends/user-friends.model';
+import { Friend } from '@core/stores/friends/friends.model';
 import {
   UserCardButtonAction,
   UserCardButtonActionType,

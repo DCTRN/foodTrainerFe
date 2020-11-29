@@ -10,6 +10,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TokenEffects } from '@stores/tokens/tokens.effects';
 import { UserEffects } from '@stores/user/user.effects';
+import { FriendsEffects } from '@stores/friends/friends.effects';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { environment } from '../environments/environment';
@@ -34,7 +35,7 @@ import { NotificationModule } from '@core/notifications/notification.module';
     }),
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
-    EffectsModule.forRoot([UserEffects, TokenEffects]),
+    EffectsModule.forRoot([UserEffects, TokenEffects, FriendsEffects]),
     MatSnackBarModule,
     NgxWebstorageModule.forRoot(),
     MatProgressSpinnerModule,

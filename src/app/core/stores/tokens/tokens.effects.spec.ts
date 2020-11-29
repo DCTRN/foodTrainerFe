@@ -21,7 +21,6 @@ const tokensMock: Tokens = {
   expires_in: 300,
 };
 
-@Injectable()
 export class TokensStorageServiceMock {
   private tokens: Tokens = tokensMock;
 
@@ -38,14 +37,12 @@ export class TokensStorageServiceMock {
   public clearTokens(): void {}
 }
 
-@Injectable()
 class AuthenticationServiceMock {
   public refreshToken(): Observable<Tokens> {
     return null;
   }
 }
 
-@Injectable()
 class AuthenticationTimerServiceMock {
   public start(): void {}
   public clear(): void {}

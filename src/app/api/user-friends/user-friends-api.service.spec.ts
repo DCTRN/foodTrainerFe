@@ -15,7 +15,7 @@ import {
   Friend,
   FriendRequest,
   UserFriend
-} from "../../core/stores/user-friends/user-friends.model";
+} from "@core/stores/friends/friends.model";
 
 const friendRequest: FriendRequest = {
   userId: 1,

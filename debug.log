@@ -31,3 +31,13 @@
 [1126/225657.334:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
 [1128/184735.571:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
 [1128/214936.662:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[1129/014525.053:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[1129/124707.559:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[1129/130711.138:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[1129/134638.118:ERROR:process_info.cc(359)] UncheckedAllocate
+[1129/134638.132:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\micha\AppData\Local\Temp\karma-54435653\Crashpad\attachments\8642c65d-949e-4e27-8658-766786a7b1cd: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[1129/134638.138:ERROR:process_info.cc(359)] UncheckedAllocate
+[1129/134727.163:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\micha\AppData\Local\Temp\karma-58917325\Crashpad\attachments\ccf273a9-4b10-4c3e-8fce-535a08160eea: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[1129/134749.529:ERROR:process_info.cc(359)] UncheckedAllocate
+[1129/140031.620:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
+[1129/205636.522:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie mo¿e odnaleŸæ okreœlonej œcie¿ki. (0x3)
