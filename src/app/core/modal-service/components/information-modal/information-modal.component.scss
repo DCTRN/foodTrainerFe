@@ -22,8 +22,8 @@ h1 {
 
 .container {
   display: grid;
-  min-width: 30vw;
-  min-height: 30vh;
+  // min-width: 30vw;
+  // min-height: 30vh;
   grid-template-columns: 1fr;
   grid-template-rows: 4rem auto 4rem;
 }
@@ -124,42 +124,44 @@ button {
 
 @media (max-width: 767px) {
   .container {
-    grid-template-rows: 1fr 7fr 2fr;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 20% auto 25%;
   }
 
   .header {
     padding: 0.4rem;
   }
 
-  .left-buttons {
-    width: 50%;
-    height: 100%;
-    margin: 0;
-    padding: 0rem;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
+  h1 {
+    font-size: 1.2rem;
   }
 
+  .header .mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.2rem;
+  }
+
+  .content.mat-dialog-content {
+    margin: 0;
+    padding: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .footer {
+    font-size: 0.8rem;
+  }
+
+
   .left-buttons button {
+    font-size: 0.8rem;
     margin: 0.4rem;
   }
 
-  .right-buttons {
-    width: 50%;
-    height: 100%;
-    margin: 0;
-    padding: 0rem;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-  }
-
   .right-buttons button {
+    font-size: 0.8rem;
     margin: 0.4rem;
   }
 }

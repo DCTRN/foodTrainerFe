@@ -1,0 +1,28 @@
+mat-card.mat-card {
+  padding: 0;
+}
+
+.wrapper {
+  width: 100%;
+  min-height: 10vh;
+  display: flex;
+  flex-flow: row;
+  justify-self: center;
+  justify-items: center;
+  justify-content: space-around;
+  align-items: center;
+  align-self: center;
+}
+
+.user-info,
+.text,
+.actions {
+  min-width: 33%;
+  min-height: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
+  align-self: center;
+}

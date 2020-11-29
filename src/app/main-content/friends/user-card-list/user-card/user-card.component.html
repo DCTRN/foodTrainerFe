@@ -1,0 +1,44 @@
+<mat-card matRipple>
+  <div class="wrapper">
+    <div class="user-info">{{ friend?.friend?.username }}</div>
+    <div class="text">Friend request already send.</div>
+    <div class="actions">
+      <button
+        *ngIf="this.add.isDisplayed"
+        [disabled]="this.add.isDisabled"
+        mat-button
+        color="accent"
+        (click)="this.onButtonClick(this.action.ADD)"
+      >
+        >Add
+      </button>
+      <button
+        *ngIf="this.delete.isDisplayed"
+        [disabled]="this.delete.isDisabled"
+        mat-button
+        color="warn"
+        (click)="this.onButtonClick(this.action.DELETE)"
+      >
+        Delete
+      </button>
+      <button
+        *ngIf="this.accept.isDisplayed"
+        [disabled]="this.accept.isDisabled"
+        mat-button
+        color="accent"
+        (click)="this.onButtonClick(this.action.ACCEPT)"
+      >
+        Accept
+      </button>
+      <button
+        *ngIf="this.discard.isDisplayed"
+        [disabled]="this.discard.isDisabled"
+        mat-button
+        color="warn"
+        (click)="this.onButtonClick(this.action.DISCARD)"
+      >
+        Discard
+      </button>
+    </div>
+  </div>
+</mat-card>

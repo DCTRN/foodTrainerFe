@@ -1,7 +1,7 @@
 <mat-card class="drawer__header">
   <div class="drawer__header__title">Food Trainer</div>
-  <div class="drawer__header__user-details">Mike1998</div>
-  <div class="drawer__header__user-details email">mike1998@gmail.com</div>
+  <div class="drawer__header__user-details">{{ this.user?.username }}</div>
+  <div class="drawer__header__user-details email">{{ this.user?.email }}</div>
 </mat-card>
 <div class="drawer__content">
   <mat-card

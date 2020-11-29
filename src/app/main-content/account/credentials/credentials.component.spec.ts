@@ -6,15 +6,15 @@ import {
   fakeAsync,
   getTestBed,
   TestBed,
-  tick,
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
-import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ModalService } from '@core/modal-service/modal.service';
+import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
@@ -45,6 +45,14 @@ class NotificationServiceMock {
   public info(message: string, duration: number = 5000): void {}
 }
 
+export class ModalServiceMock {
+  public openDialog(modalConfiguration: ModalConfiguration): void {}
+  public closeDialog(modalId: string): void {}
+  public getDialogs(): ModalConfiguration[] {
+    return null;
+  }
+}
+
 describe('CredentialsComponent', () => {
   const actions$ = new ReplaySubject(1);
   let injector: TestBed;
@@ -52,6 +60,7 @@ describe('CredentialsComponent', () => {
   let fixture: ComponentFixture<CredentialsComponent>;
   let store: MockStore;
   let notificationService: NotificationService;
+  let modalService: ModalService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -72,6 +81,10 @@ describe('CredentialsComponent', () => {
           provide: NotificationService,
           useClass: NotificationServiceMock,
         },
+        {
+          provide: ModalService,
+          useClass: ModalServiceMock,
+        },
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
       ],
@@ -81,6 +94,7 @@ describe('CredentialsComponent', () => {
 
   beforeEach(() => {
     injector = getTestBed();
+    modalService = injector.inject(ModalService);
     notificationService = injector.inject(NotificationService);
     store = injector.inject(MockStore);
     fixture = injector.createComponent(CredentialsComponent);
@@ -107,8 +121,12 @@ describe('CredentialsComponent', () => {
   });
 
   it('should send update credentials action', () => {
+    let modalConfiguration: ModalConfiguration;
     const dispatchSpy = spyOn(store, 'dispatch');
     const infoSpy = spyOn(notificationService, 'info');
+    const openDialogSpy = spyOn(modalService, 'openDialog').and.callFake(
+      (mc) => (modalConfiguration = mc)
+    );
 
     component.firstNameFormControl.setValue('a');
     component.lastNameFormControl.setValue('a');
@@ -125,28 +143,14 @@ describe('CredentialsComponent', () => {
 
     component.updateCredentials();
 
-    expect(infoSpy).toHaveBeenCalledTimes(1);
-    expect(dispatchSpy).toHaveBeenCalledTimes(1);
-  });
+    expect(modalConfiguration).toBeTruthy();
+    expect(openDialogSpy).toHaveBeenCalled();
 
-  it('should send update credentials action', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
-    const infoSpy = spyOn(notificationService, 'info');
+    const buttons = modalConfiguration.getFooter().getButtons();
 
-    component.firstNameFormControl.setValue('a');
-    component.lastNameFormControl.setValue('a');
+    expect(buttons.length).toEqual(2);
 
-    fixture.detectChanges();
-
-    component.updateCredentials();
-
-    expect(infoSpy).toHaveBeenCalled();
-    expect(dispatchSpy).not.toHaveBeenCalled();
-
-    component.firstNameFormControl.setValue('changedFirstName');
-    component.lastNameFormControl.setValue('changedLastName');
-
-    component.updateCredentials();
+    buttons[1].getCallback()();
 
     expect(infoSpy).toHaveBeenCalledTimes(1);
     expect(dispatchSpy).toHaveBeenCalledTimes(1);

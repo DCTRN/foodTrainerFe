@@ -51,10 +51,6 @@ export class ModalService {
     });
   }
 
-  private getCurrentlyFirstModalId() {
-    return this.modals[0].getId();
-  }
-
   private sortModalsByPriorityDescending() {
     this.modals = this.modals.sort(
       (a: ModalConfiguration, b: ModalConfiguration) => {

@@ -5,18 +5,34 @@ import {
   getTestBed,
   TestBed,
 } from '@angular/core/testing';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { User } from '@core/stores/user/user.model';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { BehaviorSubject, Observable } from 'rxjs';
 import {
   MenuItems,
   NavigationMediatorService,
 } from '../services/navigation-mediator/navigation-mediator.service';
 import { DrawerComponent } from './drawer.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+
+const userInitial: User = {
+  username: 'mike8',
+  email: 'michal.kowalski@gmail.com',
+  phoneNumber: '123123123',
+  birthDate: new Date(),
+  firstName: 'majkel',
+  lastName: 'majk',
+  id: 5,
+  authenticationLevel: 1,
+};
+export const initialState: any = {
+  user: userInitial,
+};
 
 @Injectable()
 class NavigationMediatorServiceMock {
@@ -43,6 +59,7 @@ describe('DrawerComponent', () => {
   let component: DrawerComponent;
   let fixture: ComponentFixture<DrawerComponent>;
   let navigationMediatorService: NavigationMediatorService;
+  let store: MockStore;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -58,13 +75,15 @@ describe('DrawerComponent', () => {
           provide: NavigationMediatorService,
           useClass: NavigationMediatorServiceMock,
         },
+        provideMockStore({ initialState }),
       ],
-      // schemas: [NO_ERRORS_SCHEMA],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     injector = getTestBed();
+    store = injector.inject(MockStore);
     navigationMediatorService = injector.inject(NavigationMediatorService);
     fixture = injector.createComponent(DrawerComponent);
     component = fixture.componentInstance;
@@ -84,7 +103,6 @@ describe('DrawerComponent', () => {
     const isSelected = classes.find((c: string) => c === 'selected');
 
     expect(isSelected).toBeTruthy();
-    expect(component).toBeTruthy();
   });
 
   it('should notify about clicked item', () => {
@@ -104,6 +122,16 @@ describe('DrawerComponent', () => {
 
     expect(isSelected).toBeTruthy();
     expect(setMenuItemSpy).toHaveBeenCalledWith(MenuItems.MAIN_PAGE);
-    expect(component).toBeTruthy();
+  });
+
+  it('should fetch user credentials and dsiplay them', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(dispatchSpy).toBeTruthy();
+    expect(component.user.username).toEqual(userInitial.username);
+    expect(component.user.email).toEqual(userInitial.email);
   });
 });

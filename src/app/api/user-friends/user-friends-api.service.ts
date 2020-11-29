@@ -1,29 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Environment } from '@core/environment';
-import { User } from '@core/stores/user/user.model';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { propagateError } from '../../core/rxjs-operators/propagate-error';
-
-export interface FriendRequest {
-  userId: number;
-  friendId: number;
-}
-
-export interface Friend {
-  id: number;
-  isAccepted: boolean;
-  friend: User;
-  friendshipRequesterId: number;
-  friendshipRequestDate: Date;
-  friendshipAcceptDate: Date;
-}
-
-export interface UserFriend extends Friend {
-  user: User;
-}
+import { propagateError } from '@core/rxjs-operators/propagate-error';
+import { FriendRequest, UserFriend, Friend } from '@core/stores/friends/friends.model';
 
 @Injectable({
   providedIn: 'root',

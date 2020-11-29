@@ -9,11 +9,13 @@ import { ErrorFormat } from '@core/models/error-format.model';
 import { LoggerConfig, NGXLogger } from 'ngx-logger';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import {
-  Friend,
-  FriendRequest,
-  UserFriend,
   UserFriendsApiService,
 } from './user-friends-api.service';
+import {
+  Friend,
+  FriendRequest,
+  UserFriend
+} from "../../core/stores/user-friends/user-friends.model";
 
 const friendRequest: FriendRequest = {
   userId: 1,

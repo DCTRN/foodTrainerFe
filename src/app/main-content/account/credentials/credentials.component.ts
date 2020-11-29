@@ -87,7 +87,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     .setFooter(this.modalFooter);
 
   constructor(
-    private userStore: Store<AppState>,
+    private store: Store<AppState>,
     private formBuilder: FormBuilder,
     private logger: NGXLogger,
     private notificationService: NotificationService,
@@ -115,15 +115,14 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       this.openSnackBar('Please, fill form with valid data');
     } else {
       this.modalService.openDialog(this.modalConfig);
-      // this.handleUpdateCredentials();
     }
   }
 
   private initializeComponent(): void {
     this.createUpdateCredentialsFormControls();
-    this.createUpdateCredentialsRegisterFormGroup();
+    this.createUpdateCredentialsFormGroup();
     this.subscribeToUserStore();
-    this.userStore.dispatch(UserAction.GET_CREDENTIALS_REQUEST());
+    this.store.dispatch(UserAction.GET_CREDENTIALS_REQUEST());
     this.subscribeToFormChanges();
   }
 
@@ -219,7 +218,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   private subscribeToUserStore() {
     this.subscriptions.add(
-      this.userStore.pipe(select('user')).subscribe((user) => {
+      this.store.pipe(select('user')).subscribe((user) => {
         this.user = user;
         this.updateForm(user);
       })
@@ -268,7 +267,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   private handleUpdateCredentials() {
     const user: User = this.extractUserDataFromForms();
     user.id = this.user.id;
-    this.userStore.dispatch(UserAction.PATCH_CREDENTIALS_REQUEST(user));
+    this.store.dispatch(UserAction.PATCH_CREDENTIALS_REQUEST(user));
     this.closeChangeWarrningDialog();
     this.logger.log(
       `${this.signature} dispatching ${UserActionType.PATCH_CREDENTIALS_REQUEST}`
@@ -290,7 +289,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     return this.updateCredentialsForm?.valid;
   }
 
-  private createUpdateCredentialsRegisterFormGroup() {
+  private createUpdateCredentialsFormGroup() {
     this.updateCredentialsForm = this.formBuilder.group({
       username: this.usernameFormControl,
       email: this.emailFormControl,
