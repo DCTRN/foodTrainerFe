@@ -5,29 +5,22 @@ import {
   getTestBed,
   TestBed,
 } from '@angular/core/testing';
-import { Friend } from '@core/stores/friends/friends.model';
+import { User } from '@core/stores/user/user.model';
 import {
   UserCardButtonAction,
   UserCardButtonActionType,
   UserCardComponent,
 } from './user-card.component';
 
-const friend: Friend = {
-  id: 1,
-  isAccepted: false,
-  friend: {
-    id: 5,
-    username: 'mike98',
-    email: 'mike98@gmail.com',
-    birthDate: new Date(),
-    phoneNumber: '111222333',
-    firstName: 'Michal1',
-    lastName: 'Pytlik1',
-    authenticationLevel: 1,
-  },
-  friendshipRequesterId: 5,
-  friendshipRequestDate: new Date(),
-  friendshipAcceptDate: new Date(),
+const user: User = {
+  id: 5,
+  username: 'mike98',
+  email: 'mike98@gmail.com',
+  birthDate: new Date(),
+  phoneNumber: '111222333',
+  firstName: 'Michal1',
+  lastName: 'Pytlik1',
+  authenticationLevel: 1,
 };
 
 describe('UserCardComponent', () => {
@@ -46,7 +39,7 @@ describe('UserCardComponent', () => {
     injector = getTestBed();
     fixture = TestBed.createComponent(UserCardComponent);
     component = fixture.componentInstance;
-    component.friend = friend;
+    component.user = user;
     fixture.detectChanges();
   });
 

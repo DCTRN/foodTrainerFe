@@ -1,1 +1,64 @@
-<p>user-card-list works!</p>
+<div class="wrapper">
+  <ng-container *ngIf="this.listType === this.type.ALL_USERS">
+    <ng-container *ngFor="let user of this.users">
+      <ng-container [ngSwitch]="this.generateListType(user)">
+        <app-user-card
+          *ngSwitchCase="this.type.FRIENDS"
+          [user]="user"
+          [delete]="this.enable"
+        ></app-user-card>
+        <app-user-card
+          *ngSwitchCase="this.type.FRIEND_REQUEST_SENT"
+          [user]="user"
+          [discard]="this.enable"
+        ></app-user-card>
+        <app-user-card
+          *ngSwitchCase="this.type.FRIEND_REQUEST_RECEIVED"
+          [user]="user"
+          [accept]="this.enable"
+          [discard]="this.enable"
+        ></app-user-card>
+        <app-user-card
+          *ngSwitchCase="this.type.ALL_USERS"
+          [user]="user"
+          [add]="this.enable"
+        ></app-user-card>
+        <app-user-card
+          *ngSwitchDefault
+          [user]="user"
+          [add]="this.enable"
+        ></app-user-card>
+      </ng-container>
+
+      <app-user-card [user]="user"></app-user-card>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="this.listType === this.type.FRIENDS">
+    <ng-container *ngFor="let friend of this.getFriends()">
+      <app-user-card
+        [user]="friend.friend"
+        [delete]="this.enable"
+      ></app-user-card>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="this.listType === this.type.FRIEND_REQUEST_SENT">
+    <ng-container *ngFor="let friend of this.getSentFriendRequest()">
+      <app-user-card
+        [user]="friend.friend"
+        [discard]="this.enable"
+      ></app-user-card>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="this.listType === this.type.FRIEND_REQUEST_RECEIVED">
+    <ng-container *ngFor="let friend of this.getReceivedFriendRequest()">
+      <app-user-card
+        [user]="friend.friend"
+        [accept]="this.enable"
+        [discard]="this.enable"
+      ></app-user-card>
+    </ng-container>
+  </ng-container>
+</div>

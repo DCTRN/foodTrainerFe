@@ -40,5 +40,6 @@ import { MatRippleModule } from '@angular/material/core';
     MatCardModule,
     MatRippleModule,
   ],
+  exports: [FriendsComponent],
 })
 export class FriendsModule {}

@@ -1,1 +1,7 @@
-<p>friend-requests works!</p>
+<app-user-card-list
+  [listType]="this.type.FRIEND_REQUEST_RECEIVED"
+></app-user-card-list>
+<hr />
+<app-user-card-list
+  [listType]="this.type.FRIEND_REQUEST_SENT"
+></app-user-card-list>

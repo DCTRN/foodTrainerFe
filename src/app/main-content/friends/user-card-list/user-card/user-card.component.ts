@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Friend } from '@core/stores/friends/friends.model';
+import { User } from '@core/stores/user/user.model';
 
 export enum UserCardButtonActionType {
   ADD,
@@ -10,7 +10,7 @@ export enum UserCardButtonActionType {
 
 export interface UserCardButtonAction {
   action: UserCardButtonActionType;
-  friend: Friend;
+  user: User;
 }
 
 export interface UserCardButton {
@@ -24,7 +24,7 @@ export interface UserCardButton {
   styleUrls: ['./user-card.component.scss'],
 })
 export class UserCardComponent implements OnInit {
-  @Input() friend: Friend;
+  @Input() user: User;
   @Input() add: Partial<UserCardButton> = {
     isDisabled: false,
     isDisplayed: false,
@@ -49,6 +49,6 @@ export class UserCardComponent implements OnInit {
   public ngOnInit(): void {}
 
   public onButtonClick(action: UserCardButtonActionType): void {
-    this.actions.emit({ action, friend: this.friend });
+    this.actions.emit({ action, user: this.user });
   }
 }
