@@ -37,7 +37,7 @@ export class UserApiService {
   public findUsersBy(searchText: string): Observable<Array<User>> {
     const params = new HttpParams().append('findBy', searchText);
     return this.http.get(this.usersUrl, { params }).pipe(
-      mergeMap((u: User[]) => (u?.length ? of(u) : of([this.nullUser]))),
+      mergeMap((u: User[]) => (u?.length ? of(u) : of([]))),
       propagateError()
     );
   }

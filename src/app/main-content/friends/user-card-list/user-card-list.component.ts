@@ -1,13 +1,29 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FriendsAction } from '@core/stores/friends/friends.actions';
 import { Friend } from '@core/stores/friends/friends.model';
 import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
-import { UserCardButton } from './user-card/user-card.component';
+import {
+  UserCardButton,
+  UserCardButtonAction,
+  UserCardButtonActionType,
+} from './user-card/user-card.component';
+
+export interface UserCardButtonListAction {
+  action: UserCardButtonActionType;
+  friend: Partial<Friend>;
+}
 
 export enum ListType {
   ALL_USERS,
@@ -24,8 +40,16 @@ export enum ListType {
 export class UserCardListComponent implements OnInit, OnDestroy {
   @Input() public listType: ListType;
   @Input() public users: Array<User>;
+  @Output()
+  action: EventEmitter<UserCardButtonListAction> = new EventEmitter<UserCardButtonListAction>();
   public type = ListType;
   public currentUser: User;
+  public readonly userAddFriendText = 'You can invite this user to you friends';
+  public readonly userFriendText = 'You are friends already';
+  public readonly userFriendSentText =
+    'You have already sent friend request to this user';
+  public readonly userFriendReceivedText =
+    'This user has sent you friend request';
   public friends: Array<Friend> = [];
   public enable: Partial<UserCardButton> = {
     isDisabled: false,
@@ -42,7 +66,16 @@ export class UserCardListComponent implements OnInit, OnDestroy {
     this.subscribeToFriends();
   }
 
-  public ngOnDestroy(): void {}
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  public onAction(action: UserCardButtonAction): void {
+    const friend =
+      this.friends.find((friend) => friend.friend.id === action.user.id) ||
+      this.generatePartialFriend(action);
+    this.action.emit({ action: action.action, friend });
+  }
 
   public getFriends(): Array<Friend> {
     return this.friends.filter((f) => f.isAccepted);
@@ -82,7 +115,7 @@ export class UserCardListComponent implements OnInit, OnDestroy {
       this.store
         .pipe(
           select('friends'),
-          filter((f) => !!f.friends.length)
+          // filter((f) => !!f.friends.length)
         )
         .subscribe((f) => (this.friends = f.friends))
     );
@@ -97,5 +130,16 @@ export class UserCardListComponent implements OnInit, OnDestroy {
   private dispatchInitialActions(): void {
     this.store.dispatch(UserAction.GET_CREDENTIALS_REQUEST());
     this.store.dispatch(FriendsAction.GET_ALL_FRIENDS_REQUEST());
+  }
+
+  private generatePartialFriend(action: UserCardButtonAction): Friend {
+    return {
+      id: null,
+      isAccepted: null,
+      friendshipRequesterId: null,
+      friendshipRequestDate: null,
+      friendshipAcceptDate: null,
+      friend: action.user,
+    };
   }
 }

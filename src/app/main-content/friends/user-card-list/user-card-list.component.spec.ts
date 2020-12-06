@@ -11,7 +11,15 @@ import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { isEqual } from 'lodash';
-import { ListType, UserCardListComponent } from './user-card-list.component';
+import {
+  ListType,
+  UserCardButtonListAction,
+  UserCardListComponent,
+} from './user-card-list.component';
+import {
+  UserCardButtonAction,
+  UserCardButtonActionType,
+} from './user-card/user-card.component';
 
 const randomUser: User = {
   id: 66,
@@ -105,6 +113,25 @@ export const initialState: any = {
   friends: friendsInitial,
 };
 
+const randomFriendMock: Friend = {
+  id: 88,
+  isAccepted: false,
+  friend: randomUser,
+  friendshipRequesterId: 5,
+  friendshipRequestDate: null,
+  friendshipAcceptDate: null,
+};
+
+const actionReceivedMock: UserCardButtonAction = {
+  action: UserCardButtonActionType.ADD,
+  user: randomUser,
+};
+
+const actionSentMock: UserCardButtonListAction = {
+  action: UserCardButtonActionType.ADD,
+  friend: randomFriend,
+};
+
 describe('UserCardListComponent', () => {
   let injector: TestBed;
   let component: UserCardListComponent;
@@ -183,5 +210,17 @@ describe('UserCardListComponent', () => {
       const t = component.generateListType(u.friend);
       expect(t).toEqual(expectations[i]);
     });
+  });
+
+  it('should emit action on card click', () => {
+    const initialStateMock: any = {
+      user: userInitial,
+      friends: { friends: [randomFriend] },
+    };
+    store.setState(initialStateMock);
+    spyOn(component.action, 'emit');
+    component.onAction(actionReceivedMock);
+
+    expect(component.action.emit).toHaveBeenCalledWith(actionSentMock);
   });
 });

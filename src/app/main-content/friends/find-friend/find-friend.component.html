@@ -1,1 +1,46 @@
+<div class="friend-wrapper">
+  <div class="search-box">
+    <mat-form-field (keyup.enter)="this.onFindClick()">
+      <mat-label>Username</mat-label>
+      <input
+        [formControl]="this.searchTextFormControl"
+        [(ngModel)]="this.searchText"
+        matInput
+        [errorStateMatcher]="simpleErrorStateMatcher"
+      />
+    </mat-form-field>
 
+    <div
+      [matTooltip]="toolTipContent"
+      [matTooltipPosition]="toolTipPosition"
+      [matTooltipHideDelay]="toolTipDelay"
+      [matTooltipDisabled]="!disabled"
+    >
+      <button
+        (click)="this.onFindClick()"
+        (key.enter)="this.onFindClick()"
+        mat-stroked-button
+        [disabled]="this.disabled"
+        class="btn"
+      >
+        Find
+      </button>
+    </div>
+  </div>
+  <div class="users">
+    <app-user-card-list
+      (action)="this.onAction($event)"
+      [users]="this.users"
+      [listType]="this.type.ALL_USERS"
+    ></app-user-card-list>
+  </div>
+  <button
+    (click)="this.clear()"
+    [disabled]="this.disabled"
+    mat-fab
+    color="primary"
+    class="float"
+  >
+    Clear
+  </button>
+</div>

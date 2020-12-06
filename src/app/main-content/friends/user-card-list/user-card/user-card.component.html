@@ -1,7 +1,9 @@
 <mat-card matRipple>
   <div class="wrapper">
     <div class="user-info">{{ user?.username }}</div>
-    <div class="text">Friend request already send.</div>
+    <ng-container *ngIf="this.text">
+      <div class="text">{{ this.text }}</div>
+    </ng-container>
     <div class="actions">
       <button
         *ngIf="this.add.isDisplayed"
@@ -10,7 +12,7 @@
         color="accent"
         (click)="this.onButtonClick(this.action.ADD)"
       >
-        >Add
+        Add
       </button>
       <button
         *ngIf="this.delete.isDisplayed"

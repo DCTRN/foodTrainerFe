@@ -2,63 +2,96 @@
   <ng-container *ngIf="this.listType === this.type.ALL_USERS">
     <ng-container *ngFor="let user of this.users">
       <ng-container [ngSwitch]="this.generateListType(user)">
-        <app-user-card
-          *ngSwitchCase="this.type.FRIENDS"
-          [user]="user"
-          [delete]="this.enable"
-        ></app-user-card>
-        <app-user-card
-          *ngSwitchCase="this.type.FRIEND_REQUEST_SENT"
-          [user]="user"
-          [discard]="this.enable"
-        ></app-user-card>
-        <app-user-card
-          *ngSwitchCase="this.type.FRIEND_REQUEST_RECEIVED"
-          [user]="user"
-          [accept]="this.enable"
-          [discard]="this.enable"
-        ></app-user-card>
-        <app-user-card
-          *ngSwitchCase="this.type.ALL_USERS"
-          [user]="user"
-          [add]="this.enable"
-        ></app-user-card>
-        <app-user-card
-          *ngSwitchDefault
-          [user]="user"
-          [add]="this.enable"
-        ></app-user-card>
-      </ng-container>
+        <div class="card">
+          <app-user-card
+            *ngSwitchCase="this.type.FRIENDS"
+            (actions)="this.onAction($event)"
+            [user]="user"
+            [text]="this.userFriendText"
+            [delete]="this.enable"
+          ></app-user-card>
+        </div>
 
-      <app-user-card [user]="user"></app-user-card>
+        <div class="card">
+          <app-user-card
+            *ngSwitchCase="this.type.FRIEND_REQUEST_SENT"
+            (actions)="this.onAction($event)"
+            [user]="user"
+            [text]="this.userFriendSentText"
+            [discard]="this.enable"
+          ></app-user-card>
+        </div>
+
+        <div class="card">
+          <app-user-card
+            *ngSwitchCase="this.type.FRIEND_REQUEST_RECEIVED"
+            (actions)="this.onAction($event)"
+            [user]="user"
+            [text]="this.userFriendReceivedText"
+            [accept]="this.enable"
+            [discard]="this.enable"
+          ></app-user-card>
+        </div>
+
+        <div class="card">
+          <app-user-card
+            *ngSwitchCase="this.type.ALL_USERS"
+            (actions)="this.onAction($event)"
+            [user]="user"
+            [text]="this.userAddFriendText"
+            [add]="this.enable"
+          ></app-user-card>
+        </div>
+
+        <div class="card">
+          <app-user-card
+            *ngSwitchDefault
+            (actions)="this.onAction($event)"
+            [user]="user"
+            [add]="this.enable"
+          ></app-user-card>
+        </div>
+      </ng-container>
     </ng-container>
   </ng-container>
 
   <ng-container *ngIf="this.listType === this.type.FRIENDS">
     <ng-container *ngFor="let friend of this.getFriends()">
-      <app-user-card
-        [user]="friend.friend"
-        [delete]="this.enable"
-      ></app-user-card>
+      <div class="card">
+        <app-user-card
+          (actions)="this.onAction($event)"
+          [user]="friend.friend"
+          [text]="this.userFriendText"
+          [delete]="this.enable"
+        ></app-user-card>
+      </div>
     </ng-container>
   </ng-container>
 
   <ng-container *ngIf="this.listType === this.type.FRIEND_REQUEST_SENT">
     <ng-container *ngFor="let friend of this.getSentFriendRequest()">
-      <app-user-card
-        [user]="friend.friend"
-        [discard]="this.enable"
-      ></app-user-card>
+      <div class="card">
+        <app-user-card
+          (actions)="this.onAction($event)"
+          [user]="friend.friend"
+          [text]="this.userFriendSentText"
+          [discard]="this.enable"
+        ></app-user-card>
+      </div>
     </ng-container>
   </ng-container>
 
   <ng-container *ngIf="this.listType === this.type.FRIEND_REQUEST_RECEIVED">
     <ng-container *ngFor="let friend of this.getReceivedFriendRequest()">
-      <app-user-card
-        [user]="friend.friend"
-        [accept]="this.enable"
-        [discard]="this.enable"
-      ></app-user-card>
+      <div class="card">
+        <app-user-card
+          (actions)="this.onAction($event)"
+          [user]="friend.friend"
+          [text]="this.userFriendReceivedText"
+          [accept]="this.enable"
+          [discard]="this.enable"
+        ></app-user-card>
+      </div>
     </ng-container>
   </ng-container>
 </div>

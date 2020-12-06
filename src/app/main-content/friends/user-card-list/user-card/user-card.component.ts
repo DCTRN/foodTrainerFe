@@ -25,6 +25,7 @@ export interface UserCardButton {
 })
 export class UserCardComponent implements OnInit {
   @Input() user: User;
+  @Input() text: string;
   @Input() add: Partial<UserCardButton> = {
     isDisabled: false,
     isDisplayed: false,
@@ -44,6 +45,7 @@ export class UserCardComponent implements OnInit {
   @Output()
   actions: EventEmitter<UserCardButtonAction> = new EventEmitter<UserCardButtonAction>();
   public action = UserCardButtonActionType;
+
   constructor() {}
 
   public ngOnInit(): void {}
