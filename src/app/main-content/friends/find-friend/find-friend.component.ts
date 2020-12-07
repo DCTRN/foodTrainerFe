@@ -74,7 +74,6 @@ export class FindFriendComponent implements OnInit, OnDestroy {
   }
 
   private addHandler(action: UserCardButtonListAction): void {
-    console.warn('dupa', action);
     this.store.dispatch(
       FriendsAction.SEND_FRIEND_REQUEST({ id: action.friend.friend.id })
     );

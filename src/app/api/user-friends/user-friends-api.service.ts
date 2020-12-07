@@ -3,9 +3,13 @@ import { Injectable } from '@angular/core';
 import { Environment } from '@core/environment';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, take, tap } from 'rxjs/operators';
 import { propagateError } from '@core/rxjs-operators/propagate-error';
-import { FriendRequest, UserFriend, Friend } from '@core/stores/friends/friends.model';
+import {
+  FriendRequest,
+  UserFriend,
+  Friend,
+} from '@core/stores/friends/friends.model';
 
 @Injectable({
   providedIn: 'root',

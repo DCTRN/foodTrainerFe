@@ -219,6 +219,7 @@ describe('UserCardListComponent', () => {
     };
     store.setState(initialStateMock);
     spyOn(component.action, 'emit');
+
     component.onAction(actionReceivedMock);
 
     expect(component.action.emit).toHaveBeenCalledWith(actionSentMock);

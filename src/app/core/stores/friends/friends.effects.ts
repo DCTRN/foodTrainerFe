@@ -7,7 +7,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { NGXLogger } from 'ngx-logger';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 import { User } from '../user/user.model';
 import { FriendsAction, FriendsActionType } from './friends.actions';
@@ -18,53 +18,58 @@ export class FriendsEffects {
   public getAllFriends$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FriendsAction.GET_ALL_FRIENDS_REQUEST),
-      tap(() =>
+      tap(() => {
         this.logger.log(
           `${this.signature} Handling ${FriendsActionType.GET_ALL_FRIENDS_REQUEST}`
+        );
+      }),
+      switchMap(() => this.store.pipe(take(1), select('user'))),
+      switchMap((u) =>
+        this.userFriendsApiService.getFriendsByUserId(u?.id).pipe(
+          map((friends) =>
+            FriendsAction.GET_ALL_FRIENDS_REQUEST_SUCCESS({ friends })
+          ),
+          catchError((error: ErrorFormat) => {
+            this.logger.log(`${this.signature} Failed to get friends`, error);
+            this.openSnackBar('Failed to get friends');
+            return of(FriendsAction.GET_ALL_FRIENDS_REQUEST_ERROR());
+          })
         )
-      ),
-      switchMap(() => this.store.pipe(select('user'))),
-      switchMap((u) => this.userFriendsApiService.getFriendsByUserId(u?.id)),
-      map((friends) =>
-        FriendsAction.GET_ALL_FRIENDS_REQUEST_SUCCESS({ friends })
-      ),
-      catchError((error: ErrorFormat) => {
-        this.logger.log(`${this.signature} Failed to get friends`, error);
-        this.openSnackBar('Failed to get friends');
-        return of(FriendsAction.GET_ALL_FRIENDS_REQUEST_ERROR());
-      })
+      )
     )
   );
 
   public sendFriendRequest$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FriendsAction.SEND_FRIEND_REQUEST),
-      tap(() =>
+      tap(() => {
         this.logger.log(
           `${this.signature} Handling ${FriendsActionType.SEND_FRIEND_REQUEST}`
-        )
-      ),
+        );
+      }),
       switchMap((action) =>
         this.store.pipe(
+          take(1),
           select('user'),
           map((user: User) => this.createFriendRequest(user, action.id))
         )
       ),
       switchMap((friendRequest) =>
-        this.userFriendsApiService.sendFriendRequest(friendRequest)
-      ),
-      map((userFriend: UserFriend) => {
-        const friend: Friend = this.createFriend(userFriend);
-        return FriendsAction.SEND_FRIEND_REQUEST_SUCCESS({ friend });
-      }),
-      catchError((error: ErrorFormat) => {
-        this.logger.log(
-          `${this.signature} Failed to send friend request`,
-          error
-        );
-        this.openSnackBar('Failed to send friend request');
-        return of(FriendsAction.SEND_FRIEND_REQUEST_ERROR());
-      })
+        this.userFriendsApiService.sendFriendRequest(friendRequest).pipe(
+          map((userFriend: UserFriend) => {
+            const friend: Friend = this.createFriend(userFriend);
+            return FriendsAction.SEND_FRIEND_REQUEST_SUCCESS({ friend });
+          }),
+          catchError((error: ErrorFormat) => {
+            this.logger.log(
+              `${this.signature} Failed to send friend request`,
+              error
+            );
+            this.openSnackBar('Failed to send friend request');
+            return of(FriendsAction.SEND_FRIEND_REQUEST_ERROR());
+          })
+        )
+      )
     )
   );
 
@@ -77,20 +82,21 @@ export class FriendsEffects {
         )
       ),
       switchMap((action) =>
-        this.userFriendsApiService.acceptFriendRequest(action.id)
-      ),
-      map((userFriend: UserFriend) => {
-        const friend: Friend = this.createFriend(userFriend);
-        return FriendsAction.ACCEPT_FRIEND_REQUEST_SUCCESS({ friend });
-      }),
-      catchError((error: ErrorFormat) => {
-        this.logger.log(
-          `${this.signature} Failed to accept friend request`,
-          error
-        );
-        this.openSnackBar('Failed to accept friend request');
-        return of(FriendsAction.ACCEPT_FRIEND_REQUEST_ERROR());
-      })
+        this.userFriendsApiService.acceptFriendRequest(action.id).pipe(
+          map((userFriend: UserFriend) => {
+            const friend: Friend = this.createFriend(userFriend);
+            return FriendsAction.ACCEPT_FRIEND_REQUEST_SUCCESS({ friend });
+          }),
+          catchError((error: ErrorFormat) => {
+            this.logger.log(
+              `${this.signature} Failed to accept friend request`,
+              error
+            );
+            this.openSnackBar('Failed to accept friend request');
+            return of(FriendsAction.ACCEPT_FRIEND_REQUEST_ERROR());
+          })
+        )
+      )
     )
   );
 
@@ -99,26 +105,24 @@ export class FriendsEffects {
       ofType(FriendsAction.DELETE_FRIEND_REQUEST),
       tap(() =>
         this.logger.log(
-          `${this.signature} Handling ${FriendsActionType.ACCEPT_FRIEND_REQUEST}`
+          `${this.signature} Handling ${FriendsActionType.DELETE_FRIEND_REQUEST}`
         )
       ),
       switchMap((action) =>
-        this.userFriendsApiService
-          .deleteFriendById(action.id)
-          .pipe(
-            map((userFriend: UserFriend) =>
-              FriendsAction.DELETE_FRIEND_REQUEST_SUCCESS({ id: action.id })
-            )
-          )
-      ),
-      catchError((error: ErrorFormat) => {
-        this.logger.log(
-          `${this.signature} Failed to delete friend request`,
-          error
-        );
-        this.openSnackBar('Failed to delete friend request');
-        return of(FriendsAction.DELETE_FRIEND_REQUEST_ERROR());
-      })
+        this.userFriendsApiService.deleteFriendById(action.id).pipe(
+          map(() =>
+            FriendsAction.DELETE_FRIEND_REQUEST_SUCCESS({ id: action.id })
+          ),
+          catchError((error: ErrorFormat) => {
+            this.logger.log(
+              `${this.signature} Failed to delete friend request`,
+              error
+            );
+            this.openSnackBar('Failed to delete friend request');
+            return of(FriendsAction.DELETE_FRIEND_REQUEST_ERROR());
+          })
+        )
+      )
     )
   );
 

@@ -56,7 +56,7 @@
   </ng-container>
 
   <ng-container *ngIf="this.listType === this.type.FRIENDS">
-    <ng-container *ngFor="let friend of this.getFriends()">
+    <ng-container *ngFor="let friend of this.acceptedFriends">
       <div class="card">
         <app-user-card
           (actions)="this.onAction($event)"
@@ -69,7 +69,7 @@
   </ng-container>
 
   <ng-container *ngIf="this.listType === this.type.FRIEND_REQUEST_SENT">
-    <ng-container *ngFor="let friend of this.getSentFriendRequest()">
+    <ng-container *ngFor="let friend of this.sentFriends">
       <div class="card">
         <app-user-card
           (actions)="this.onAction($event)"
@@ -82,7 +82,7 @@
   </ng-container>
 
   <ng-container *ngIf="this.listType === this.type.FRIEND_REQUEST_RECEIVED">
-    <ng-container *ngFor="let friend of this.getReceivedFriendRequest()">
+    <ng-container *ngFor="let friend of this.receivedFriends">
       <div class="card">
         <app-user-card
           (actions)="this.onAction($event)"

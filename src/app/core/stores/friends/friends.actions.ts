@@ -42,7 +42,7 @@ export const sendFriendRequestSuccess = createAction(
   sendFriendRequestSuccessType,
   props<{ friend: Friend }>()
 );
-export const sendFriendRequestError = createAction(sendFriendRequestType);
+export const sendFriendRequestError = createAction(sendFriendRequestErrorType);
 
 export const acceptFriendRequest = createAction(
   acceptFriendRequestType,

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -12,13 +13,15 @@ import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, take, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 import {
   UserCardButton,
   UserCardButtonAction,
   UserCardButtonActionType,
 } from './user-card/user-card.component';
+
+import { cloneDeep } from 'lodash';
 
 export interface UserCardButtonListAction {
   action: UserCardButtonActionType;
@@ -55,10 +58,16 @@ export class UserCardListComponent implements OnInit, OnDestroy {
     isDisabled: false,
     isDisplayed: true,
   };
+  public sentFriends: Array<Friend> = [];
+  public receivedFriends: Array<Friend> = [];
+  public acceptedFriends: Array<Friend> = [];
 
   private subscriptions = new Subscription();
 
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>,
+    private changeDectorRef: ChangeDetectorRef
+  ) {}
 
   public ngOnInit(): void {
     this.dispatchInitialActions();
@@ -88,9 +97,14 @@ export class UserCardListComponent implements OnInit, OnDestroy {
   }
 
   public getReceivedFriendRequest(): Array<Friend> {
-    return this.friends
+    const notAccepted = this.friends.filter((f) => !f.isAccepted);
+    const received = this.friends.filter(
+      (f) => f.friendshipRequesterId !== this.currentUser.id
+    );
+    const result = this.friends
       .filter((f) => !f.isAccepted)
       .filter((f) => f.friendshipRequesterId !== this.currentUser.id);
+    return result;
   }
 
   public generateListType(user: User): ListType {
@@ -112,12 +126,13 @@ export class UserCardListComponent implements OnInit, OnDestroy {
 
   private subscribeToFriends(): void {
     this.subscriptions.add(
-      this.store
-        .pipe(
-          select('friends'),
-          // filter((f) => !!f.friends.length)
-        )
-        .subscribe((f) => (this.friends = f.friends))
+      this.store.pipe(select('friends')).subscribe((f) => {
+        this.friends = cloneDeep(f.friends);
+        this.acceptedFriends = this.getFriends();
+        this.sentFriends = this.getSentFriendRequest();
+        this.receivedFriends = this.getReceivedFriendRequest();
+        this.changeDectorRef.detectChanges();
+      })
     );
   }
 
