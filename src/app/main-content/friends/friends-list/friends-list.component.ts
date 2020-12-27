@@ -50,6 +50,7 @@ export class FriendsListComponent implements OnInit {
       FriendsAction.ACCEPT_FRIEND_REQUEST({ id: action.friend.id })
     );
   }
+
   private discardHandler(action: UserCardButtonListAction): void {
     this.store.dispatch(
       FriendsAction.DELETE_FRIEND_REQUEST({ id: action.friend.id })
