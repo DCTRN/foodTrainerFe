@@ -6,12 +6,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AppState } from 'src/app/reducers';
 
 export enum MenuItems {
-  MAIN_PAGE = '/main/home',
   DIARY = '/main/diary',
+  PRODUCTS = '/main/products',
   REPORTS = '/main/reports',
   FRIENDS = '/main/friends',
   ACCOUNT = '/main/account',
   LOG_OUT = '/landing-page',
+  MAIN_PAGE = '/main/home',
 }
 
 @Injectable({

@@ -72,7 +72,7 @@ describe('BottomNavComponent', () => {
     fixture.detectChanges();
     const diaryMenuItem = fixture.debugElement.queryAll(
       By.css('.bottom-nav__item')
-    )[1] as DebugElement;
+    )[0] as DebugElement;
     const classes = Object.keys(diaryMenuItem.classes);
     const isSelected = classes.find((c: string) => c === 'selected');
 
@@ -87,7 +87,7 @@ describe('BottomNavComponent', () => {
     ).and.callThrough();
 
     fixture.detectChanges();
-    component.onMenuItemClick(MenuItems.MAIN_PAGE);
+    component.onMenuItemClick(MenuItems.DIARY);
     fixture.detectChanges();
     const diaryMenuItem = fixture.debugElement.queryAll(
       By.css('.bottom-nav__item')
@@ -96,7 +96,7 @@ describe('BottomNavComponent', () => {
     const isSelected = classes.find((c: string) => c === 'selected');
 
     expect(isSelected).toBeTruthy();
-    expect(setMenuItemSpy).toHaveBeenCalledWith(MenuItems.MAIN_PAGE);
+    expect(setMenuItemSpy).toHaveBeenCalledWith(MenuItems.DIARY);
     expect(component).toBeTruthy();
   });
 });

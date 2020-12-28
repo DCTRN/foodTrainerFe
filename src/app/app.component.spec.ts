@@ -6,7 +6,7 @@ import {
   fakeAsync,
   getTestBed,
   TestBed,
-  tick,
+  tick
 } from '@angular/core/testing';
 import { NavigationEnd, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -73,14 +73,17 @@ class RouterMock {
 
 @Injectable()
 class SyncStorageMock {
-  private storage;
+  private storage = new Map<string, any>([
+    ['username', 'username'],
+    ['tokens', tokensMock],
+  ]);
 
   public retrieve(key: string): any {
     return this.storage;
   }
 
   public store(key: string, value: any): any {
-    this.storage = value;
+    this.storage.set(key, value);
   }
 }
 
@@ -179,25 +182,29 @@ describe('AppComponent', () => {
     expect(logSpy).toHaveBeenCalled();
   });
 
-  it(`should turn off spinner and do not navigate to landing page if tokens are upsent'`, () => {
+  it(`should turn off spinner and do not navigate to landing page if tokens are upsent'`, fakeAsync(() => {
+    spyOn(localStorageService, 'retrieve').and.returnValue(null);
     const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
     router.setUrl(landingPageUrl);
 
     component.ngOnInit();
+    tick(3000);
 
     expect(component.showSpinner).toBeFalsy();
     expect(navigateByUrlSpy).not.toHaveBeenCalledWith('/');
-  });
+  }));
 
-  it(`should turn off spinner and  navigate to landing page if tokens are upsent'`, () => {
+  it(`should turn off spinner and  navigate to landing page if tokens are upsent'`, fakeAsync(() => {
+    spyOn(localStorageService, 'retrieve').and.returnValue(null);
     const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
     router.setUrl(diaryPageUrl);
 
     component.ngOnInit();
+    tick(3000);
 
     expect(component.showSpinner).toBeFalsy();
     expect(navigateByUrlSpy).toHaveBeenCalledWith('/');
-  });
+  }));
 
   it('should refresh tokens and do not navigate to main page', fakeAsync(() => {
     const navigateByUrlSpy = spyOn(router, 'navigateByUrl');

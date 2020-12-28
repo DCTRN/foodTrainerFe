@@ -1,15 +1,5 @@
 <mat-card class="bottom-nav">
   <mat-card
-    (click)="onMenuItemClick(menuItems.MAIN_PAGE)"
-    [ngClass]="{
-      selected: this.currentlySelectedMenuItem === menuItems.MAIN_PAGE
-    }"
-    class="bottom-nav__item"
-  >
-    <mat-icon>home</mat-icon>
-    <span>Main page</span>
-  </mat-card>
-  <mat-card
     (click)="onMenuItemClick(menuItems.DIARY)"
     [ngClass]="{ selected: this.currentlySelectedMenuItem === menuItems.DIARY }"
     class="bottom-nav__item"
@@ -26,6 +16,16 @@
   >
     <mat-icon>insert_chart</mat-icon>
     <span>Reports</span>
+  </mat-card>
+  <mat-card
+    (click)="onMenuItemClick(menuItems.PRODUCTS)"
+    [ngClass]="{
+      selected: this.currentlySelectedMenuItem === menuItems.PRODUCTS
+    }"
+    class="bottom-nav__item"
+  >
+    <mat-icon>assignment</mat-icon>
+    <span>Products</span>
   </mat-card>
   <mat-card
     (click)="onMenuItemClick(menuItems.FRIENDS)"

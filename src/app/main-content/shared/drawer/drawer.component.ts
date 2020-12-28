@@ -31,19 +31,19 @@ export class DrawerComponent implements OnInit, OnDestroy {
     this.store.pipe(select('user')).subscribe((u: User) => (this.user = u));
   }
 
-  private subscribeToCurrentlySelectedMenuItem() {
-    this.subscriptions.add(
-      this.navigationMediatorService
-        .getCurrentlySelectedMenuItem$()
-        .subscribe((item: MenuItems) => (this.currentlySelectedMenuItem = item))
-    );
-  }
-
   public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
   public onMenuItemClick(menuItem: MenuItems): void {
     this.navigationMediatorService.setClickedMenuItem(menuItem);
+  }
+
+  private subscribeToCurrentlySelectedMenuItem(): void {
+    this.subscriptions.add(
+      this.navigationMediatorService
+        .getCurrentlySelectedMenuItem$()
+        .subscribe((item: MenuItems) => (this.currentlySelectedMenuItem = item))
+    );
   }
 }

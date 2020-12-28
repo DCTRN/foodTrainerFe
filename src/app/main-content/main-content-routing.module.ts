@@ -9,8 +9,8 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/main/diary',
         pathMatch: 'full',
+        redirectTo: '/main/diary',
       },
       {
         path: 'diary',
@@ -18,14 +18,14 @@ const routes: Routes = [
           import('./diary/diary.module').then((m) => m.DiaryModule),
       },
       {
-        path: 'home',
-        loadChildren: () =>
-          import('./home/home.module').then((m) => m.HomeModule),
-      },
-      {
         path: 'reports',
         loadChildren: () =>
           import('./reports/reports.module').then((m) => m.ReportsModule),
+      },
+      {
+        path: 'products',
+        loadChildren: () =>
+          import('./products/products.module').then((m) => m.ProductsModule),
       },
       {
         path: 'friends',
@@ -36,6 +36,12 @@ const routes: Routes = [
         path: 'account',
         loadChildren: () =>
           import('./account/account.module').then((m) => m.AccountModule),
+      },
+      // TODO block this path
+      {
+        path: 'home',
+        loadChildren: () =>
+          import('./home/home.module').then((m) => m.HomeModule),
       },
     ],
   },

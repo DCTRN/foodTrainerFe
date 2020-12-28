@@ -98,7 +98,7 @@ describe('DrawerComponent', () => {
     fixture.detectChanges();
     const diaryMenuItem = fixture.debugElement.queryAll(
       By.css('.drawer__content__item')
-    )[1] as DebugElement;
+    )[0] as DebugElement;
     const classes = Object.keys(diaryMenuItem.classes);
     const isSelected = classes.find((c: string) => c === 'selected');
 
@@ -112,7 +112,7 @@ describe('DrawerComponent', () => {
     ).and.callThrough();
 
     fixture.detectChanges();
-    component.onMenuItemClick(MenuItems.MAIN_PAGE);
+    component.onMenuItemClick(MenuItems.DIARY);
     fixture.detectChanges();
     const diaryMenuItem = fixture.debugElement.queryAll(
       By.css('.drawer__content__item')
@@ -121,7 +121,7 @@ describe('DrawerComponent', () => {
     const isSelected = classes.find((c: string) => c === 'selected');
 
     expect(isSelected).toBeTruthy();
-    expect(setMenuItemSpy).toHaveBeenCalledWith(MenuItems.MAIN_PAGE);
+    expect(setMenuItemSpy).toHaveBeenCalledWith(MenuItems.DIARY);
   });
 
   it('should fetch user credentials and dsiplay them', () => {
