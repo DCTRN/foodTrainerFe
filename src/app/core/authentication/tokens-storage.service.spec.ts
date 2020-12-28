@@ -1,9 +1,9 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { TokensStorageService } from './tokens-storage.service';
 import { Tokens } from '@stores/tokens/tokens.model';
+import { NGXLogger } from 'ngx-logger';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { LocalStorageService } from 'ngx-webstorage';
-import { NGXLogger } from 'ngx-logger';
+import { TokensStorageService } from './tokens-storage.service';
 
 const loginTokens: Tokens = {
   access_token: 'access_token_login',
@@ -74,7 +74,9 @@ describe('TokensStorageService', () => {
     expect(tokens).toBeFalsy();
     expect(logSpy).toHaveBeenCalled();
     expect(storeSpy).toHaveBeenCalled();
-    expect(clearSpy).toHaveBeenCalled();
+    expect(clearSpy).toHaveBeenCalledTimes(2);
+    expect(clearSpy).toHaveBeenCalledWith('tokens');
+    expect(clearSpy).toHaveBeenCalledWith('username');
   });
 
   it('should set and get username', () => {

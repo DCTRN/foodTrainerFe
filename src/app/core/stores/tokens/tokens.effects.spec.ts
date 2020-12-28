@@ -1,5 +1,4 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Injectable } from '@angular/core';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -39,8 +38,10 @@ export class TokensStorageServiceMock {
 
 class AuthenticationServiceMock {
   public refreshToken(): Observable<Tokens> {
-    return null;
+    return of(null);
   }
+
+  public setAuthState(state: boolean): void {}
 }
 
 class AuthenticationTimerServiceMock {
@@ -147,18 +148,20 @@ describe('Tokens effects', () => {
     expect(resultAction).toEqual(TokensAction.CLEAR_TOKENS_REQUEST());
   });
 
-  it('should handle tokens refresh action', () => {
+  it('should handle clear tokens refresh action', () => {
     let resultAction: any;
-    const clearSpy = spyOn(authenticationTimerService, 'clear');
-    const clearTokensSpy = spyOn(tokensStorageService, 'clearTokens');
-    const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
+    spyOn(authenticationTimerService, 'clear');
+    spyOn(authenticationService, 'setAuthState');
+    spyOn(tokensStorageService, 'clearTokens');
+    spyOn(router, 'navigateByUrl');
 
     actions$.next(TokensAction.CLEAR_TOKENS_REQUEST());
     service.clear$.subscribe((action) => (resultAction = action));
 
-    expect(clearSpy).toHaveBeenCalled();
-    expect(clearTokensSpy).toHaveBeenCalled();
-    expect(navigateByUrlSpy).toHaveBeenCalledWith('/login');
+    expect(authenticationTimerService.clear).toHaveBeenCalled();
+    expect(tokensStorageService.clearTokens).toHaveBeenCalled();
+    expect(authenticationService.setAuthState).toHaveBeenCalledWith(false);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
     expect(resultAction).toEqual(TokensAction.CLEAR_TOKENS_REQUEST_SUCCESS());
   });
 });

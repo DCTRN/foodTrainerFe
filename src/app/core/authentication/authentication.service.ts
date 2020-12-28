@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, tap, distinctUntilChanged } from 'rxjs/operators';
 import { AuthenticationApiService } from '@api/authentication/authentication-api.service';
 import { LoginCredentials } from '@api/authentication/login-credentials.model';
+import { ErrorFormat } from '@core/models/error-format.model';
 import { Tokens } from '@stores/tokens/tokens.model';
 import { User } from '@stores/user/user.model';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, distinctUntilChanged, tap } from 'rxjs/operators';
 import { TokensStorageService } from './tokens-storage.service';
-import { ErrorFormat } from '@core/models/error-format.model';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +64,10 @@ export class AuthenticationService {
         return throwError(error);
       })
     );
+  }
+
+  public setAuthState(state: boolean): void {
+    this.authState$.next(state);
   }
 
   public getAuthState$(): Observable<boolean> {

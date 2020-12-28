@@ -9,10 +9,14 @@ import { MatDrawer, MatDrawerMode } from '@angular/material/sidenav';
   styleUrls: ['./main-content.component.scss'],
 })
 export class MainContentComponent implements OnInit {
-  @ViewChild('drawer', { static: true }) drawer: MatDrawer;
-  @ViewChild('menuButton', { static: true }) menuButton: MatButton;
-  @ViewChild('menuIcon', { static: true }) menuIcon: MatIcon;
+  @ViewChild('drawer', { static: true })
+  public drawer: MatDrawer;
+  @ViewChild('menuButton', { static: true })
+  public menuButton: MatButton;
+  @ViewChild('menuIcon', { static: true })
+  public menuIcon: MatIcon;
   public matDrawerMode: MatDrawerMode = 'over';
+
   constructor() {}
 
   public ngOnInit(): void {}

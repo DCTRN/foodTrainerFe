@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { ErrorFormat } from '@core/models/error-format.model';
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { NGXLogger } from 'ngx-logger';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, retry, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { AuthenticationTimerService } from '../../authentication/authentication-timer.service';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { TokensStorageService } from '../../authentication/tokens-storage.service';
@@ -23,13 +21,15 @@ export class TokenEffects {
           `${this.signature} Handling ${TokensActionType.REFRESH_TOKENS_REQUEST}`
         )
       ),
-      mergeMap(() => this.authenticationService.refreshToken().pipe(retry(3))),
+      mergeMap(() => this.authenticationService.refreshToken()),
+      // TODO fix / change behavior
+      // mergeMap(() => this.authenticationService.refreshToken().pipe(retry(3))),
       tap((tokens: Tokens) => this.tokensStorageService.setTokens(tokens)),
       tap(() => this.authenticationTimerService.start()),
       map((action: Tokens) =>
         TokensAction.REFRESH_TOKENS_REQUEST_SUCCESS(action)
       ),
-      catchError((error: ErrorFormat) => {
+      catchError(() => {
         this.logger.log(`${this.signature} Failed to refresh tokens`);
         this.openSnackBar('Failed to maintain session');
         return of(TokensAction.REFRESH_TOKENS_REQUEST_FAILURE()).pipe(
@@ -49,6 +49,7 @@ export class TokenEffects {
       ),
       tap(() => this.tokensStorageService.clearTokens()),
       tap(() => this.authenticationTimerService.clear()),
+      tap(() => this.authenticationService.setAuthState(false)),
       tap(() => this.router.navigateByUrl('/login')),
       map(() => TokensAction.CLEAR_TOKENS_REQUEST_SUCCESS())
     )

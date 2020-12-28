@@ -1,14 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { AuthenticationService } from '@core/authentication/authentication.service';
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
 import { TokensAction } from '@core/stores/tokens/tokens.actions';
 import { Tokens } from '@core/stores/tokens/tokens.model';
-import { Store } from '@ngrx/store';
+import { UserAction } from '@core/stores/user/user.actions';
+import { User } from '@core/stores/user/user.model';
+import { select, Store } from '@ngrx/store';
 import { NGXLogger } from 'ngx-logger';
 import { LocalStorageService } from 'ngx-webstorage';
-import { interval, Observable, of } from 'rxjs';
-import { delay, filter, mergeMap, skipWhile, take, tap } from 'rxjs/operators';
+import { interval, Observable, of, Subscription } from 'rxjs';
+import {
+  catchError,
+  delay,
+  filter,
+  map,
+  skipWhile,
+  switchMap,
+  take,
+  tap,
+  timeout,
+} from 'rxjs/operators';
 import { AppState } from './reducers';
 
 @Component({
@@ -16,15 +28,20 @@ import { AppState } from './reducers';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   public title = 'food-trainer';
   public showSpinner = true;
+
   private readonly signature = '[APP.C]';
+  private user: User;
+  private authStatePredicate = () =>
+    this.authenticationService.isAuthOperationInProgress();
+  private subscriptions = new Subscription();
 
   constructor(
     private logger: NGXLogger,
     private router: Router,
-    private tokensStore: Store<AppState>,
+    private store: Store<AppState>,
     private localStorageService: LocalStorageService,
     private tokensStorageService: TokensStorageService,
     private authenticationService: AuthenticationService
@@ -32,14 +49,31 @@ export class AppComponent implements OnInit {
     this.logEvents();
   }
 
-  public ngOnInit(): void {
-    this.tokensHandler();
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
-  private tokensHandler(): void {
+  public ngOnInit(): void {
+    this.subscribeToUserCredentials();
+    this.bootstrapHandler();
+  }
+
+  private subscribeToUserCredentials(): void {
+    this.subscriptions.add(
+      this.store
+        .pipe(
+          select('user'),
+          filter((user: User) => !!user.id)
+        )
+        .subscribe((user: User) => (this.user = user))
+    );
+  }
+
+  private bootstrapHandler(): void {
     const tokens = this.localStorageService.retrieve('tokens') as Tokens;
-    if (!tokens) {
-      this.missingTokensHandler();
+    const username = this.localStorageService.retrieve('username') as string;
+    if (!tokens || !username) {
+      this.missingInformationHandler();
     } else {
       this.tokensPresenseHandler(tokens);
     }
@@ -47,7 +81,7 @@ export class AppComponent implements OnInit {
 
   private tokensPresenseHandler(tokens: Tokens): void {
     this.tokensStorageService.setTokens(tokens);
-    this.tokensStore.dispatch(TokensAction.REFRESH_TOKENS_REQUEST());
+    this.store.dispatch(TokensAction.REFRESH_TOKENS_REQUEST());
     this.refreshTokenHander();
   }
 
@@ -55,31 +89,68 @@ export class AppComponent implements OnInit {
     of(null)
       .pipe(
         delay(200),
-        mergeMap(() => this.waitForAuthOperationToFinish()),
-        mergeMap(() => this.authenticationService.getAuthState$()),
+        switchMap(() => this.waitWhile(this.authStatePredicate)),
+        switchMap(() => this.authenticationService.getAuthState$()),
         take(1),
-        tap(() => setTimeout(() => (this.showSpinner = false), 1000)),
-        filter((state: boolean) => state),
-        tap(() => this.router.navigateByUrl('/main'))
+        switchMap((state: boolean) => this.statehandler(state))
       )
       .subscribe();
   }
 
-  private missingTokensHandler(): void {
-    this.showSpinner = false;
-    this.router.navigateByUrl('/');
+  private statehandler(state: boolean): Observable<boolean> {
+    return !state
+      ? this.unauthorizedHandler(state)
+      : this.authorizedHandler(state);
   }
 
-  private waitForAuthOperationToFinish(): Observable<number> {
-    return interval(33).pipe(
-      skipWhile(() => this.authenticationService.isAuthOperationInProgress()),
-      take(1)
+  private authorizedHandler(state: boolean): Observable<boolean> {
+    return of(state).pipe(
+      tap(() => this.store.dispatch(UserAction.GET_CREDENTIALS_REQUEST())),
+      switchMap(() => this.waitWhile(() => !this.user?.id)),
+      map((v) => !!v),
+      tap(() => this.authorizedNavigationHandler()),
+      tap(() => this.hideSpinnerWithDelay()),
+      catchError(() => this.missingUserCredentialsHandler(state))
     );
   }
 
-  private logEvents(): void {
-    this.logger.log(`${this.signature} ${this.title} started!`);
-    this.subscribeToRouterEvents();
+  private authorizedNavigationHandler(): void {
+    if (this.isOnMainPage()) {
+      return;
+    }
+    this.navigateToMainPage();
+  }
+
+  private missingUserCredentialsHandler(state: boolean): Observable<boolean> {
+    return this.unauthorizedHandler(state).pipe(
+      tap(() => this.store.dispatch(TokensAction.CLEAR_TOKENS_REQUEST()))
+    );
+  }
+
+  private unauthorizedHandler(state: boolean): Observable<boolean> {
+    return of(state).pipe(
+      tap(() => this.navigateToLandingPage()),
+      tap(() => this.hideSpinnerWithDelay())
+    );
+  }
+
+  private missingInformationHandler(): void {
+    this.hideSpinnerWithDelay();
+    if (!this.isOnMainPage()) {
+      return;
+    }
+    this.navigateToLandingPage();
+  }
+
+  private waitWhile(
+    predicate: () => boolean,
+    timeoutValue: number = 5000
+  ): Observable<number> {
+    return interval(33).pipe(
+      skipWhile(() => predicate()),
+      take(1),
+      timeout(timeoutValue)
+    );
   }
 
   private subscribeToRouterEvents(): void {
@@ -91,5 +162,26 @@ export class AppComponent implements OnInit {
         )
       )
       .subscribe();
+  }
+
+  private logEvents(): void {
+    this.logger.log(`${this.signature} ${this.title} started!`);
+    this.subscribeToRouterEvents();
+  }
+
+  private isOnMainPage(): boolean {
+    return this.router.url.includes('main');
+  }
+
+  private navigateToLandingPage(): void {
+    this.router.navigateByUrl('/');
+  }
+
+  private navigateToMainPage(): void {
+    this.router.navigateByUrl('/main');
+  }
+
+  private hideSpinnerWithDelay(): void {
+    setTimeout(() => (this.showSpinner = false), 1000);
   }
 }

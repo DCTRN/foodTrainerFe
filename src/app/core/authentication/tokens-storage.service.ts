@@ -10,6 +10,9 @@ export class TokensStorageService {
   private readonly signature = '[TS.S]';
   private tokens: Tokens;
 
+  private readonly tokensKey = 'tokens';
+  private readonly usernameKey = 'username';
+
   constructor(
     private logger: NGXLogger,
     private localStorageService: LocalStorageService
@@ -19,7 +22,7 @@ export class TokensStorageService {
     this.logger.log(
       `${this.signature} setting tokens: ${JSON.stringify(tokens)}`
     );
-    this.localStorageService.store('tokens', tokens);
+    this.localStorageService.store(this.tokensKey, tokens);
     this.tokens = tokens;
   }
 
@@ -29,18 +32,19 @@ export class TokensStorageService {
 
   public clearTokens(): void {
     this.logger.log(`${this.signature} clearing tokens`);
-    this.localStorageService.clear('tokens');
+    this.localStorageService.clear(this.tokensKey);
+    this.localStorageService.clear(this.usernameKey);
     this.tokens = null;
   }
 
   public getUsername(): string {
-    return this.localStorageService.retrieve('username') as string;
+    return this.localStorageService.retrieve(this.usernameKey) as string;
   }
 
   public setUsername(username: string): void {
     this.logger.log(
       `${this.signature} setting username: ${JSON.stringify(username)}`
     );
-    this.localStorageService.store('username', username);
+    this.localStorageService.store(this.usernameKey, username);
   }
 }
