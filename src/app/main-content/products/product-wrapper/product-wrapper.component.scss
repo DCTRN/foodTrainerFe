@@ -1,0 +1,103 @@
+::-webkit-scrollbar {
+  height: 0.4rem !important;
+}
+
+button {
+  font-size: 80% !important;
+}
+
+mat-form-field.mat-form-field {
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+mat-accordion.mat-accordion {
+  width: 100%;
+  height: 100%;
+}
+
+mat-expansion-panel.mat-expansion-panel {
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+::ng-deep mat-expansion-panel-header.mat-expansion-panel-header {
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+mat-panel-title#title {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 80% !important;
+  margin: 0 !important;
+}
+
+mat-panel-description#description {
+  min-width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 60% !important;
+  margin: 0 !important;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  margin: 0 !important;
+  padding: 0 0.6rem !important;
+}
+
+::ng-deep mat-action-row.mat-action-row {
+  margin: 0 !important;
+  padding: 1rem !important;
+}
+
+.header-content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem !important;
+  overflow-x: auto;
+}
+
+.amount {
+  max-width: 20%;
+  margin-left: 1rem !important;
+}
+
+.values {
+  min-width: 26%;
+  margin-left: 1rem !important;
+}
+
+.diary-actions {
+  min-width: 20%;
+  margin-left: 1rem !important;
+}
+
+@media (min-width: 768px) {
+  button {
+    font-size: 100% !important;
+  }
+
+  mat-panel-title#title {
+    font-size: 100% !important;
+  }
+
+  mat-panel-description#description {
+    font-size: 80% !important;
+  }
+}

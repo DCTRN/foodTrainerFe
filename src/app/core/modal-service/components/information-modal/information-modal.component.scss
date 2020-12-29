@@ -22,8 +22,6 @@ h1 {
 
 .container {
   display: grid;
-  // min-width: 30vw;
-  // min-height: 30vh;
   grid-template-columns: 1fr;
   grid-template-rows: 4rem auto 4rem;
 }
@@ -153,7 +151,6 @@ button {
   .footer {
     font-size: 0.8rem;
   }
-
 
   .left-buttons button {
     font-size: 0.8rem;

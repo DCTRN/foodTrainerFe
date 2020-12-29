@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { AuthenticationService } from '@core/authentication/authentication.service';
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
+import { waitWhile } from '@core/rxjs-operators/wait-while';
 import { TokensAction } from '@core/stores/tokens/tokens.actions';
 import { Tokens } from '@core/stores/tokens/tokens.model';
 import { UserAction } from '@core/stores/user/user.actions';
@@ -9,17 +10,15 @@ import { User } from '@core/stores/user/user.model';
 import { select, Store } from '@ngrx/store';
 import { NGXLogger } from 'ngx-logger';
 import { LocalStorageService } from 'ngx-webstorage';
-import { interval, Observable, of, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import {
   catchError,
   delay,
   filter,
   map,
-  skipWhile,
   switchMap,
   take,
   tap,
-  timeout,
 } from 'rxjs/operators';
 import { AppState } from './reducers';
 
@@ -89,7 +88,7 @@ export class AppComponent implements OnInit, OnDestroy {
     of(null)
       .pipe(
         delay(200),
-        switchMap(() => this.waitWhile(this.authStatePredicate)),
+        switchMap(() => waitWhile(this.authStatePredicate)),
         switchMap(() => this.authenticationService.getAuthState$()),
         take(1),
         switchMap((state: boolean) => this.statehandler(state))
@@ -106,7 +105,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private authorizedHandler(state: boolean): Observable<boolean> {
     return of(state).pipe(
       tap(() => this.store.dispatch(UserAction.GET_CREDENTIALS_REQUEST())),
-      switchMap(() => this.waitWhile(() => !this.user?.id)),
+      switchMap(() => waitWhile(() => !this.user?.id)),
       map((v) => !!v),
       tap(() => this.authorizedNavigationHandler()),
       tap(() => this.hideSpinnerWithDelay()),
@@ -140,17 +139,6 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     }
     this.navigateToLandingPage();
-  }
-
-  private waitWhile(
-    predicate: () => boolean,
-    timeoutValue: number = 5000
-  ): Observable<number> {
-    return interval(33).pipe(
-      skipWhile(() => predicate()),
-      take(1),
-      timeout(timeoutValue)
-    );
   }
 
   private subscribeToRouterEvents(): void {

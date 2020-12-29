@@ -14,7 +14,7 @@ import {
 } from './product-details.component';
 
 describe('ProductDetailsComponent', () => {
-  const defaultFontSize = 60;
+  const defaultFontSize = 80;
   const defaultDisplayStyle = DisplayType.COLUMN;
   let injector: TestBed;
   let component: ProductDetailsComponent;

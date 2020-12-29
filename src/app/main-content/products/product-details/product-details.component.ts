@@ -7,13 +7,13 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
+  SimpleChanges
 } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Product } from '@core/models/products';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
@@ -36,7 +36,7 @@ interface KeyValue {
 })
 export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public fontSize: number = 60;
+  public fontSize: number = 80;
   @Input()
   public display: DisplayType = DisplayType.COLUMN;
   @Input()

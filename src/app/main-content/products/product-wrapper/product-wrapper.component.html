@@ -1,1 +1,89 @@
-<p>product-wrapper works!</p>
+<div class="wrapper">
+  <mat-accordion class="accordion">
+    <mat-expansion-panel [expanded]="expandend" hideToggle>
+      <mat-expansion-panel-header (click)="toggle()" id="header">
+        <div class="header-content">
+          <ng-container *ngIf="display === productWrapperDisplayType.PRODUCT">
+            <mat-panel-title id="title">
+              {{ innerProduct?.name }} ({{
+                innerProduct?.producer
+              }})</mat-panel-title
+            >
+            <mat-panel-description id="description">
+              <div class="values">
+                {{ innerProduct?.amount }} {{ innerProduct?.unit }} ({{
+                  innerProduct?.kcal
+                }}
+                kcal)
+              </div>
+            </mat-panel-description>
+          </ng-container>
+
+          <ng-container *ngIf="display === productWrapperDisplayType.DIARY">
+            <mat-panel-title id="title">
+              {{ innerProduct?.name }} ({{
+                innerProduct?.producer
+              }})</mat-panel-title
+            >
+            <mat-panel-description id="description">
+              <div class="amount" (click)="$event.stopPropagation()">
+                <mat-form-field>
+                  <mat-label>Amount</mat-label>
+                  <input
+                    [formControl]="amount"
+                    matInput
+                    type="number"
+                    min="1"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="values">
+                {{ innerProduct?.amount }} {{ innerProduct?.unit }} ({{
+                  innerProduct?.kcal
+                }}
+                kcal)
+              </div>
+              <div class="diary-actions" (click)="$event.stopPropagation()">
+                <button
+                  id="add-button"
+                  mat-button
+                  color="accent"
+                  (click)="onClick(buttonAction.ADD)"
+                >
+                  Add
+                </button>
+              </div>
+            </mat-panel-description>
+          </ng-container>
+        </div>
+      </mat-expansion-panel-header>
+
+      <app-product-details
+        (value)="onValue($event)"
+        [product]="innerProduct"
+        [readonly]="display === productWrapperDisplayType.DIARY"
+        [display]="detailsDisplay"
+      ></app-product-details>
+      <ng-container *ngIf="display === productWrapperDisplayType.PRODUCT">
+        <mat-action-row>
+          <button
+            id="delete-button"
+            mat-button
+            color="warn"
+            (click)="onClick(buttonAction.DELETE)"
+          >
+            Delete
+          </button>
+          <button
+            id="update-button"
+            mat-button
+            color="accent"
+            (click)="onClick(buttonAction.UPDATE)"
+          >
+            Update
+          </button>
+        </mat-action-row>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
