@@ -52,8 +52,8 @@ export const addProduct1: Product = {
 
 export const product1: Product = {
   id: 1,
-  producer: 'lidl',
-  name: 'apple',
+  producer: 'lidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidl',
+  name: 'lidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidllidl',
   unit: 'gram',
   amount: 100,
   kcal: 300,

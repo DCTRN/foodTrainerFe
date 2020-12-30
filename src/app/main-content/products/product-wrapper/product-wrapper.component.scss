@@ -35,22 +35,25 @@ mat-expansion-panel.mat-expansion-panel {
 }
 
 mat-panel-title#title {
+  width: 33%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 80% !important;
   margin: 0 !important;
+  overflow-x: auto;
 }
 
 mat-panel-description#description {
-  min-width: 50%;
+  width: 66%;
   height: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
   font-size: 60% !important;
   margin: 0 !important;
+  word-break: keep-all;
 }
 
 ::ng-deep .mat-expansion-panel-body {
@@ -74,17 +77,17 @@ mat-panel-description#description {
 }
 
 .amount {
-  max-width: 20%;
+  width: 30%;
   margin-left: 1rem !important;
 }
 
 .values {
-  min-width: 26%;
+  width: 30%;
   margin-left: 1rem !important;
 }
 
 .diary-actions {
-  min-width: 20%;
+  width: 30%;
   margin-left: 1rem !important;
 }
 

@@ -17,6 +17,7 @@ import { ProductsRoutingModule } from './products-routing.module';
 import { ProductsComponent } from './products.component';
 import { UserProductsListComponent } from './user-products-list/user-products-list.component';
 import { AddProductComponent } from './add-product/add-product.component';
+import { ProductsListComponent } from './products-list/products-list.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AddProductComponent } from './add-product/add-product.component';
     UserProductsListComponent,
     ProductWrapperComponent,
     AddProductComponent,
+    ProductsListComponent,
   ],
   imports: [
     CommonModule,
