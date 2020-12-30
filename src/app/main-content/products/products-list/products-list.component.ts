@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Product } from '@core/models/products';
 import {
+  Product,
   ProductAction,
   ProductWrapperDisplayType,
-} from '../product-wrapper/product-wrapper.component';
+} from '@core/models/products';
 
 @Component({
   selector: 'app-products-list',

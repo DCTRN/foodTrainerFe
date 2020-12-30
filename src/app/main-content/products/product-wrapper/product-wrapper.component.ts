@@ -9,7 +9,13 @@ import {
   Output,
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Product } from '@core/models/products';
+import {
+  ButtonAction,
+  Product,
+  ProductAction,
+  ProductDetailsDisplayType,
+  ProductWrapperDisplayType,
+} from '@core/models/products';
 import {
   convertToPrecision,
   multipleBy,
@@ -18,23 +24,6 @@ import {
 import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { DisplayType } from '../product-details/product-details.component';
-
-export enum ProductWrapperDisplayType {
-  PRODUCT,
-  DIARY,
-}
-
-export enum ButtonAction {
-  ADD,
-  DELETE,
-  UPDATE,
-}
-
-export interface ProductAction {
-  action: ButtonAction;
-  product: Product;
-}
 
 @Component({
   selector: 'app-product-wrapper',
@@ -51,7 +40,8 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   @Output()
   public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
 
-  public detailsDisplay: DisplayType = DisplayType.COLUMN;
+  public detailsDisplay: ProductDetailsDisplayType =
+    ProductDetailsDisplayType.COLUMN;
   public innerProduct: Product;
   public expandend = false;
   public productWrapperDisplayType = ProductWrapperDisplayType;
@@ -103,9 +93,9 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
 
   private updateDetailsDisplayType(width: number): void {
     if (this.shoudDisplayDetailsInColumn(width)) {
-      this.detailsDisplay = DisplayType.COLUMN;
+      this.detailsDisplay = ProductDetailsDisplayType.COLUMN;
     } else {
-      this.detailsDisplay = DisplayType.ROW;
+      this.detailsDisplay = ProductDetailsDisplayType.ROW;
     }
   }
 

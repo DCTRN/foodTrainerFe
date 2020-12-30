@@ -1,4 +1,3 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   async,
   ComponentFixture,
@@ -6,37 +5,14 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Product } from '@core/models/products';
+import { ButtonAction, ProductAction } from '@core/models/products';
+import { ProductWrapperComponent } from '@testsUT/products/products-mock-components.model';
 import {
   product1,
   product2,
   product3,
 } from '@testsUT/products/products-mock-data.model';
-import {
-  ButtonAction,
-  ProductAction,
-  ProductWrapperDisplayType,
-} from '../product-wrapper/product-wrapper.component';
 import { ProductsListComponent } from './products-list.component';
-
-@Component({
-  selector: 'app-product-wrapper',
-  template: '',
-})
-export class ProductWrapperComponent {
-  @Input()
-  public product: Product;
-
-  @Input()
-  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY;
-
-  @Output()
-  public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
-
-  public triggerActionEvent(action: ProductAction): void {
-    this.action.emit(action);
-  }
-}
 
 describe('ProductsListComponent', () => {
   const productsMock = [product1, product2, product3];

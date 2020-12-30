@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -7,23 +6,19 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Product } from '@core/models/products';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-
-export enum DisplayType {
-  COLUMN = 'wrapper-column',
-  ROW = 'wrapper-row',
-}
+import { ProductDetailsDisplayType } from '../../../core/models/products/product-details-display-type.enum';
 
 interface KeyValue {
   [key: string]: any;
@@ -38,7 +33,7 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public fontSize: number = 80;
   @Input()
-  public display: DisplayType = DisplayType.COLUMN;
+  public display: ProductDetailsDisplayType = ProductDetailsDisplayType.COLUMN;
   @Input()
   public readonly = true;
   @Input()
@@ -62,10 +57,7 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   private readonly signature = '[PRD.C]';
   private subscriptions = new Subscription();
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private changeDectorRef: ChangeDetectorRef
-  ) {}
+  constructor(private formBuilder: FormBuilder) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     this.updateForm();
@@ -129,7 +121,7 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private createFormGroup() {
+  private createFormGroup(): void {
     this.formGroup = this.formBuilder.group({
       producer: this.producer,
       name: this.name,
@@ -142,7 +134,7 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  private createFormControls() {
+  private createFormControls(): void {
     this.createProducer();
     this.createName();
     this.createUnit();
@@ -153,27 +145,27 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
     this.createFats();
   }
 
-  private createFats() {
+  private createFats(): void {
     this.fats = new FormControl('', [Validators.required]);
   }
-  private createCarbohydrates() {
+  private createCarbohydrates(): void {
     this.carbohydrates = new FormControl('', [Validators.required]);
   }
-  private createProtein() {
+  private createProtein(): void {
     this.protein = new FormControl('', [Validators.required]);
   }
-  private createKcal() {
+  private createKcal(): void {
     this.kcal = new FormControl('', [Validators.required]);
   }
 
-  private createAmount() {
+  private createAmount(): void {
     this.amount = new FormControl('', [
       Validators.required,
       Validators.minLength(1),
     ]);
   }
 
-  private createUnit() {
+  private createUnit(): void {
     this.unit = new FormControl('', [
       Validators.required,
       Validators.minLength(1),
@@ -181,7 +173,7 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
     ]);
   }
 
-  private createName() {
+  private createName(): void {
     this.name = new FormControl('', [
       Validators.required,
       Validators.minLength(1),
@@ -189,7 +181,7 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
     ]);
   }
 
-  private createProducer() {
+  private createProducer(): void {
     this.producer = new FormControl('', [
       Validators.required,
       Validators.minLength(1),

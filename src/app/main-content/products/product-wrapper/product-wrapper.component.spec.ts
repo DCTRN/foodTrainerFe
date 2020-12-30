@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  NO_ERRORS_SCHEMA,
-  Output,
-} from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   async,
   ComponentFixture,
@@ -12,37 +6,15 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Product } from '@core/models/products';
-import { product1, product2 } from '@testsUT/products/products-mock-data.model';
-import { DisplayType } from '../product-details/product-details.component';
 import {
-  ButtonAction,
   ProductAction,
-  ProductWrapperComponent,
+  ProductDetailsDisplayType,
   ProductWrapperDisplayType,
-} from './product-wrapper.component';
-
-@Component({
-  selector: 'app-product-details',
-  template: '',
-})
-export class ProductDetailsComponent {
-  @Input()
-  public fontSize: number = 60;
-  @Input()
-  public display: DisplayType = DisplayType.COLUMN;
-  @Input()
-  public readonly = true;
-  @Input()
-  public product: Product;
-
-  @Output()
-  public value = new EventEmitter<Product>();
-
-  public triggerValueEvent(product: Product): void {
-    this.value.emit(product);
-  }
-}
+} from '@core/models/products';
+import { ButtonAction } from '@core/models/products/button-action.enum';
+import { ProductDetailsComponent } from '@testsUT/products/products-mock-components.model';
+import { product1, product2 } from '@testsUT/products/products-mock-data.model';
+import { ProductWrapperComponent } from './product-wrapper.component';
 
 describe('ProductWrapperComponent', () => {
   let injector: TestBed;
@@ -218,16 +190,16 @@ describe('ProductWrapperComponent', () => {
       By.directive(ProductDetailsComponent)
     ).componentInstance as ProductDetailsComponent;
 
-    expect(detailsComponent.display).toEqual(DisplayType.COLUMN);
+    expect(detailsComponent.display).toEqual(ProductDetailsDisplayType.COLUMN);
 
     component.onResize({ target: { innerWidth: 1980 } });
     fixture.detectChanges();
 
-    expect(detailsComponent.display).toEqual(DisplayType.ROW);
+    expect(detailsComponent.display).toEqual(ProductDetailsDisplayType.ROW);
 
     component.onResize({ target: { innerWidth: 360 } });
     fixture.detectChanges();
 
-    expect(detailsComponent.display).toEqual(DisplayType.COLUMN);
+    expect(detailsComponent.display).toEqual(ProductDetailsDisplayType.COLUMN);
   });
 });

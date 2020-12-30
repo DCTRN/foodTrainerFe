@@ -6,16 +6,14 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Product } from '@core/models/products';
+import { Product, ProductDetailsDisplayType } from '@core/models/products';
 import { product1, product2 } from '@testsUT/products/products-mock-data.model';
-import {
-  DisplayType,
-  ProductDetailsComponent,
-} from './product-details.component';
+import { expectComponentProductToEqual } from '@testsUT/products/products-utils.model';
+import { ProductDetailsComponent } from './product-details.component';
 
 describe('ProductDetailsComponent', () => {
   const defaultFontSize = 80;
-  const defaultDisplayStyle = DisplayType.COLUMN;
+  const defaultDisplayStyle = ProductDetailsDisplayType.COLUMN;
   let injector: TestBed;
   let component: ProductDetailsComponent;
   let fixture: ComponentFixture<ProductDetailsComponent>;
@@ -50,7 +48,7 @@ describe('ProductDetailsComponent', () => {
   });
 
   it('should display style', () => {
-    const changeDisplayType = DisplayType.ROW;
+    const changeDisplayType = ProductDetailsDisplayType.ROW;
 
     expect(component.display).toEqual(defaultDisplayStyle);
 
@@ -89,26 +87,3 @@ describe('ProductDetailsComponent', () => {
     expect(product).toBeTruthy();
   });
 });
-
-function expectComponentProductToEqual(
-  component: ProductDetailsComponent,
-  product: Product
-): void {
-  const producer = component.producer.value;
-  const name = component.name.value;
-  const unit = component.unit.value;
-  const amount = component.amount.value;
-  const kcal = component.kcal.value;
-  const protein = component.protein.value;
-  const carbohydrates = component.carbohydrates.value;
-  const fats = component.fats.value;
-
-  expect(producer).toEqual(product.producer);
-  expect(name).toEqual(product.name);
-  expect(unit).toEqual(product.unit);
-  expect(amount).toEqual(product.amount);
-  expect(kcal).toEqual(product.kcal);
-  expect(protein).toEqual(product.protein);
-  expect(carbohydrates).toEqual(product.carbohydrates);
-  expect(fats).toEqual(product.fats);
-}
