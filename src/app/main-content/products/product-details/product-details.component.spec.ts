@@ -8,7 +8,10 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Product, ProductDetailsDisplayType } from '@core/models/products';
 import { product1, product2 } from '@testsUT/products/products-mock-data.model';
-import { expectComponentProductToEqual } from '@testsUT/products/products-utils.model';
+import {
+  createSimpleChangesForProduct,
+  expectComponentProductToEqual,
+} from '@testsUT/products/products-utils.model';
 import { ProductDetailsComponent } from './product-details.component';
 
 describe('ProductDetailsComponent', () => {
@@ -58,11 +61,12 @@ describe('ProductDetailsComponent', () => {
   });
 
   it('should display product values', () => {
-    component.ngOnInit();
+    component.readonly = true;
+    component.ngOnChanges(null);
 
     component.product = product1;
-
-    component.ngOnChanges(null);
+    component.ngOnInit();
+    component.ngOnChanges(createSimpleChangesForProduct(null, product1));
 
     expectComponentProductToEqual(component, product1);
   });
@@ -74,16 +78,16 @@ describe('ProductDetailsComponent', () => {
 
     component.value.asObservable().subscribe((p) => (product = p));
     component.product = product1;
-    component.ngOnChanges(null);
+    component.ngOnChanges(createSimpleChangesForProduct(null, product1));
     component.ngOnInit();
 
     component.product = product2;
-    component.ngOnChanges(null);
+    component.ngOnChanges(createSimpleChangesForProduct(product1, product2));
     expect(product).toBeFalsy();
 
     component.readonly = false;
     component.product = product1;
-    component.ngOnChanges(null);
+    component.ngOnChanges(createSimpleChangesForProduct(product2, product1));
     expect(product).toBeTruthy();
   });
 });

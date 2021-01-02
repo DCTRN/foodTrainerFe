@@ -21,7 +21,7 @@ import {
   multipleBy,
   subtractBy,
 } from '@core/util-functions/util-functions';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -43,6 +43,7 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   public detailsDisplay: ProductDetailsDisplayType =
     ProductDetailsDisplayType.COLUMN;
   public innerProduct: Product;
+  public detailsProduct: Product;
   public expandend = false;
   public productWrapperDisplayType = ProductWrapperDisplayType;
   public buttonAction = ButtonAction;
@@ -50,6 +51,7 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.minLength(1),
   ]);
+  public updateDisabled = true;
 
   private subscriptions = new Subscription();
 
@@ -70,6 +72,7 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.innerProduct = cloneDeep(this.product);
+    this.detailsProduct = cloneDeep(this.product);
     this.updateDetailsDisplayType(window.innerWidth);
     this.subscribeToAmountChanges();
     this.setInitialAmount();
@@ -80,7 +83,10 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   public onClick(buttonAction: ButtonAction): void {
-    this.action.emit({ action: buttonAction, product: this.innerProduct });
+    this.action.emit({
+      action: buttonAction,
+      product: cloneDeep(this.innerProduct),
+    });
   }
 
   public toggle(): void {
@@ -88,7 +94,16 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   public onValue(product: Product): void {
-    this.innerProduct = cloneDeep(product);
+    this.innerProduct = product;
+    this.disabledButtonPropertyHandler();
+  }
+
+  private disabledButtonPropertyHandler(): void {
+    if (isEqual(this.innerProduct, this.product)) {
+      this.updateDisabled = true;
+    } else {
+      this.updateDisabled = false;
+    }
   }
 
   private updateDetailsDisplayType(width: number): void {

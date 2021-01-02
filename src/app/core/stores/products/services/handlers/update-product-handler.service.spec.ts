@@ -54,11 +54,13 @@ describe('UpdateProductHandlerService', () => {
     let action: Action;
     spyOn(productsApiService, 'updateProduct').and.returnValue(of(product));
     spyOn(notificationService, 'error');
+    spyOn(notificationService, 'success');
 
     service.handle(actionArgument).subscribe((a) => (action = a));
 
     expect(productsApiService.updateProduct).toHaveBeenCalled();
     expect(notificationService.error).not.toHaveBeenCalled();
+    expect(notificationService.success).toHaveBeenCalled();
     expect(action).toEqual(
       ProductsAction.UPDATE_PRODUCT_REQUEST_SUCCESS({ product })
     );

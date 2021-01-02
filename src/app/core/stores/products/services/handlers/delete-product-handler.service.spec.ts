@@ -50,10 +50,12 @@ describe('DeleteProductHandlerService', () => {
     const actionArugment = ProductsAction.DELETE_PRODUCT_REQUEST({ id: 1 });
     spyOn(productsApiService, 'deleteProduct').and.returnValue(of({}));
     spyOn(notificationService, 'error');
+    spyOn(notificationService, 'success');
 
     service.handle(actionArugment).subscribe((a) => (action = a));
 
     expect(productsApiService.deleteProduct).toHaveBeenCalled();
+    expect(notificationService.success).toHaveBeenCalled();
     expect(notificationService.error).not.toHaveBeenCalled();
     expect(action.type).toEqual(
       ProductsActionType.DELETE_PRODUCT_REQUEST_SUCCESS

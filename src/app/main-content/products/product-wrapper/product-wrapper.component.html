@@ -41,12 +41,12 @@
                   innerProduct?.kcal
                 }}&nbsp;kcal)
               </div>
-              <div class="diary-actions" (click)="$event.stopPropagation()">
+              <div class="diary-actions">
                 <button
                   id="add-button"
                   mat-button
                   color="accent"
-                  (click)="onClick(buttonAction.ADD)"
+                  (click)="onClick(buttonAction.ADD); $event.stopPropagation()"
                 >
                   Add
                 </button>
@@ -58,7 +58,7 @@
 
       <app-product-details
         (value)="onValue($event)"
-        [product]="innerProduct"
+        [product]="detailsProduct"
         [readonly]="display === productWrapperDisplayType.DIARY"
         [display]="detailsDisplay"
       ></app-product-details>
@@ -68,15 +68,16 @@
             id="delete-button"
             mat-button
             color="warn"
-            (click)="onClick(buttonAction.DELETE)"
+            (click)="onClick(buttonAction.DELETE); $event.stopPropagation()"
           >
             Delete
           </button>
           <button
+            [disabled]="updateDisabled"
             id="update-button"
             mat-button
             color="accent"
-            (click)="onClick(buttonAction.UPDATE)"
+            (click)="onClick(buttonAction.UPDATE); $event.stopPropagation()"
           >
             Update
           </button>

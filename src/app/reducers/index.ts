@@ -1,4 +1,6 @@
 import { Friends } from '@core/stores/friends/friends.actions';
+import { Products } from '@core/stores/products/products.actions';
+import { productsReducer } from '@core/stores/products/products.reducer';
 import { Tokens } from '@core/stores/tokens/tokens.model';
 import { User } from '@core/stores/user/user.model';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
@@ -11,6 +13,7 @@ export interface AppState {
   user: User;
   tokens: Tokens;
   friends: Friends;
+  products: Products;
 }
 
 export interface State {}
@@ -19,6 +22,7 @@ export const reducers: ActionReducerMap<State> = {
   user: userReducer,
   tokens: tokensReducer,
   friends: friendsReducer,
+  products: productsReducer,
 };
 
 export const metaReducers: MetaReducer<State>[] = !environment.production

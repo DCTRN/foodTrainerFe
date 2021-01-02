@@ -121,12 +121,12 @@ describe('ProductWrapperComponent', () => {
     const deleteButton = fixture.debugElement.query(By.css('#delete-button'));
     const updateButton = fixture.debugElement.query(By.css('#update-button'));
 
-    deleteButton.triggerEventHandler('click', {});
+    deleteButton.triggerEventHandler('click', { stopPropagation: () => {} });
     expect(action.action).toEqual(ButtonAction.DELETE);
     expect(action.product).toEqual(product1);
 
     detailsComponent.triggerValueEvent(product2);
-    updateButton.triggerEventHandler('click', {});
+    updateButton.triggerEventHandler('click', { stopPropagation: () => {} });
     expect(action.action).toEqual(ButtonAction.UPDATE);
     expect(action.product).toEqual(product2);
   });
@@ -142,8 +142,8 @@ describe('ProductWrapperComponent', () => {
     fixture.detectChanges();
 
     const addButton = fixture.debugElement.query(By.css('#add-button'));
+    addButton.triggerEventHandler('click', { stopPropagation: () => {} });
 
-    addButton.triggerEventHandler('click', {});
     expect(action.action).toEqual(ButtonAction.ADD);
     expect(action.product).toEqual(product1);
   });
@@ -170,7 +170,7 @@ describe('ProductWrapperComponent', () => {
     component.amount.setValue(product1.amount * 2);
 
     const addButton = fixture.debugElement.query(By.css('#add-button'));
-    addButton.triggerEventHandler('click', {});
+    addButton.triggerEventHandler('click', { stopPropagation: () => {} });
 
     expect(action.action).toEqual(ButtonAction.ADD);
     expect(action.product.kcal).toEqual(product1.kcal * 2);

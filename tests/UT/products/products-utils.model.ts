@@ -1,3 +1,4 @@
+import { SimpleChange, SimpleChanges } from '@angular/core';
 import { Product } from '@core/models/products';
 import { ProductDetailsComponent } from '@main-content/products/product-details/product-details.component';
 
@@ -22,4 +23,17 @@ export function expectComponentProductToEqual(
   expect(protein).toEqual(product.protein);
   expect(carbohydrates).toEqual(product.carbohydrates);
   expect(fats).toEqual(product.fats);
+}
+
+export function createSimpleChange(previous: any, current: any): SimpleChange {
+  return new SimpleChange(previous, current, false);
+}
+
+export function createSimpleChangesForProduct(
+  previous: any,
+  current: any
+): SimpleChanges {
+  return {
+    product: createSimpleChange(previous, current),
+  };
 }

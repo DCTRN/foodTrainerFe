@@ -20,7 +20,7 @@ describe('Products Reducer', () => {
       initialState,
       ProductsAction.GET_ALL_PRODUCTS_REQUEST()
     );
-    expect(result).toBe(initialState);
+    expect(result).toEqual(initialState);
 
     result = productsReducer(
       result,
@@ -46,7 +46,7 @@ describe('Products Reducer', () => {
       initialState,
       ProductsAction.ADD_PRODUCT_REQUEST({ product: addProduct1 })
     );
-    expect(result).toBe(initialState);
+    expect(result).toEqual(initialState);
 
     result = productsReducer(
       result,
@@ -66,7 +66,7 @@ describe('Products Reducer', () => {
       initialState,
       ProductsAction.UPDATE_PRODUCT_REQUEST({ product: addProduct1 })
     );
-    expect(result).toBe(initialState);
+    expect(result).toEqual(initialState);
 
     result = productsReducer(
       result,

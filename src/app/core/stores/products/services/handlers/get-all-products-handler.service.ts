@@ -26,12 +26,13 @@ export class GetAllProductsHandlerService implements EffectHandler {
   public handle(action?: Action): Observable<Action> {
     return this.store.pipe(select('user'), take(1)).pipe(
       switchMap((user: User) =>
-        this.productsApiService.findProductsByUserId(user.id)
-      ),
-      map((products: Product[]) =>
-        ProductsAction.GET_ALL_PRODUCTS_REQUEST_SUCCESS({ products })
-      ),
-      catchError(() => this.errorHandler())
+        this.productsApiService.findProductsByUserId(user.id).pipe(
+          map((products: Product[]) =>
+            ProductsAction.GET_ALL_PRODUCTS_REQUEST_SUCCESS({ products })
+          ),
+          catchError(() => this.errorHandler())
+        )
+      )
     );
   }
 

@@ -2,10 +2,10 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -14,11 +14,11 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Product } from '@core/models/products';
+import { Product, ProductDetailsDisplayType } from '@core/models/products';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
+import { cloneDeep, isEqual } from 'lodash';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { ProductDetailsDisplayType } from '../../../core/models/products/product-details-display-type.enum';
+import { filter, tap } from 'rxjs/operators';
 
 interface KeyValue {
   [key: string]: any;
@@ -29,7 +29,7 @@ interface KeyValue {
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
 })
-export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
+export class ProductDetailsComponent implements OnInit, OnDestroy {
   @Input()
   public fontSize: number = 80;
   @Input()
@@ -60,6 +60,10 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private formBuilder: FormBuilder) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
+    const productChange = changes?.product as SimpleChange;
+    if (isEqual(productChange?.currentValue, productChange?.previousValue)) {
+      return;
+    }
     this.updateForm();
   }
 
@@ -89,6 +93,13 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   private updateFormControlsValues(controls): void {
     const keys = this.extractObjectKeys(controls);
     for (const key of keys) {
+      const shouldUpdateView = !isEqual(
+        this.formGroup.controls[key].value,
+        this.product[key]
+      );
+      if (!shouldUpdateView) {
+        continue;
+      }
       this.formGroup.controls[key].setValue(this.product[key]);
     }
   }
@@ -100,24 +111,31 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   private subscribeToFormChanges(): void {
     this.subscriptions.add(
       this.formGroup.valueChanges
-        .pipe(filter(() => !this.readonly))
-        .subscribe((changes: KeyValue) => this.updateState(changes))
+        .pipe(
+          filter(() => !this.readonly),
+          tap((product: Product) => (product.id = this.product.id)),
+          filter((product: Product) => !isEqual(product, this.product))
+        )
+        .subscribe((product: Product) => this.updateState(product))
     );
   }
 
-  private updateState(changes: KeyValue): void {
-    this.updateProduct(changes);
+  private updateState(product: Product): void {
+    this.updateProduct(product);
     this.emitValue();
   }
 
   private emitValue(): void {
-    this.value.emit(this.product);
+    this.value.emit(cloneDeep(this.product));
   }
 
-  private updateProduct(changes: KeyValue): void {
-    const keys = this.extractObjectKeys(changes);
+  private updateProduct(product: Product): void {
+    const keys = this.extractObjectKeys(product);
     for (const key of keys) {
-      this.product[key] = changes[key];
+      if (isEqual(this.product[key], product[key])) {
+        continue;
+      }
+      this.product[key] = product[key];
     }
   }
 
