@@ -1,3 +1,4 @@
+import { SimpleChange } from '@angular/core';
 import {
   async,
   ComponentFixture,
@@ -5,17 +6,28 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ButtonAction, ProductAction } from '@core/models/products';
+import {
+  ButtonAction,
+  ProductAction,
+  ProductExpandStatus,
+} from '@core/models/products';
 import { ProductWrapperComponent } from '@testsUT/products/products-mock-components.model';
 import {
   product1,
   product2,
   product3,
+  product4,
 } from '@testsUT/products/products-mock-data.model';
+import {
+  initializeListComponent,
+  findProductExpandStatusBy,
+  getProductWrapper,
+} from '@testsUT/products/products-utils.model';
 import { ProductsListComponent } from './products-list.component';
 
 describe('ProductsListComponent', () => {
   const productsMock = [product1, product2, product3];
+  const productsMockChanged = [product1, product2, product3, product4];
   let injector: TestBed;
   let component: ProductsListComponent;
   let fixture: ComponentFixture<ProductsListComponent>;
@@ -75,16 +87,77 @@ describe('ProductsListComponent', () => {
     component.products = productsMock;
     fixture.detectChanges();
 
-    const p1 = fixture.debugElement.queryAll(
-      By.directive(ProductWrapperComponent)
-    )[0].componentInstance as ProductWrapperComponent;
+    const productWrapper = getProductWrapper(fixture);
 
-    p1.triggerActionEvent({
+    productWrapper.triggerActionEvent({
       action: ButtonAction.ADD,
       product: product2,
     });
 
     expect(action.action).toEqual(ButtonAction.ADD);
     expect(action.product).toEqual(product2);
+  });
+
+  it('should have all products panels hidden on initial', () => {
+    initializeListComponent(component, productsMock);
+    fixture.detectChanges();
+
+    const expandStatus = component.productsExpandedStatus;
+    expandStatus.forEach((status: ProductExpandStatus) =>
+      expect(status.expanded).toBeFalsy()
+    );
+  });
+
+  it('should handle toggle event', () => {
+    spyOn(component, 'onToggle').and.callThrough();
+    initializeListComponent(component, productsMock);
+    fixture.detectChanges();
+
+    const productWrapper = getProductWrapper(fixture);
+    const toggle1 = {
+      product: product1,
+      expanded: true,
+    };
+    productWrapper.triggerToggleEvent(toggle1);
+
+    expect(component.onToggle).toHaveBeenCalledWith(toggle1);
+
+    const status = component.productsExpandedStatus.find(
+      (status) => status.product.id === product1.id
+    );
+    expect(status.expanded).toEqual(true);
+  });
+
+  it('should use cached expand status', () => {
+    let status: ProductExpandStatus;
+    spyOn(component, 'onToggle').and.callThrough();
+    initializeListComponent(component, productsMock);
+    fixture.detectChanges();
+
+    const productWrapper = getProductWrapper(fixture);
+    const toggle1 = {
+      product: product1,
+      expanded: true,
+    };
+    productWrapper.triggerToggleEvent(toggle1);
+
+    expect(component.onToggle).toHaveBeenCalledWith(toggle1);
+
+    status = component.productsExpandedStatus.find(
+      (status) => status.product.id === product1.id
+    );
+    expect(status.expanded).toEqual(true);
+
+    const simpleChange = new SimpleChange(
+      productsMock,
+      productsMockChanged,
+      false
+    );
+
+    component.ngOnChanges({ products: simpleChange });
+    fixture.detectChanges();
+
+    status = findProductExpandStatusBy(product1.id, component);
+    expect(status.expanded).toEqual(true);
   });
 });

@@ -1,6 +1,10 @@
 import { SimpleChange, SimpleChanges } from '@angular/core';
-import { Product } from '@core/models/products';
+import { ComponentFixture } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { Product, ProductExpandStatus } from '@core/models/products';
 import { ProductDetailsComponent } from '@main-content/products/product-details/product-details.component';
+import { ProductsListComponent } from '@main-content/products/products-list/products-list.component';
+import { ProductWrapperComponent } from './products-mock-components.model';
 
 export function expectComponentProductToEqual(
   component: ProductDetailsComponent,
@@ -36,4 +40,32 @@ export function createSimpleChangesForProduct(
   return {
     product: createSimpleChange(previous, current),
   };
+}
+
+export function initializeListComponent(
+  component: ProductsListComponent,
+  productsMock: Product[]
+): void {
+  component.products = productsMock;
+  const productsSimpleChange = new SimpleChange([], productsMock, true);
+  component.ngOnChanges({ products: productsSimpleChange });
+  component.ngOnInit();
+}
+
+export function findProductExpandStatusBy(
+  id: number,
+  component: ProductsListComponent
+): ProductExpandStatus {
+  return component.productsExpandedStatus.find(
+    (status) => status.product.id === id
+  );
+}
+
+export function getProductWrapper(
+  fixture: ComponentFixture<ProductsListComponent>,
+  productIndex: number = 0
+): ProductWrapperComponent {
+  return fixture.debugElement.queryAll(By.directive(ProductWrapperComponent))[
+    productIndex
+  ].componentInstance as ProductWrapperComponent;
 }

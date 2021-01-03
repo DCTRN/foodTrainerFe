@@ -4,7 +4,11 @@ import { Product } from '@core/models/products';
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { Action } from '@ngrx/store';
 import { TypedAction } from '@ngrx/store/src/models';
-import { product1 } from '@testsUT/products/products-mock-data.model';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  product1,
+  userInitial,
+} from '@testsUT/products/products-mock-data.model';
 import { ProductsApiServiceMock } from '@testsUT/products/products-mock-services.model';
 import { NotificationServiceMock } from '@testsUT/shared/shared-mock-services.model';
 import { of, throwError } from 'rxjs';
@@ -12,6 +16,7 @@ import { ProductsAction, ProductsActionType } from '../../products.actions';
 import { AddProductHandlerService } from './add-product-handler.service';
 
 describe('AddProductHandlerService', () => {
+  const initialState = { user: userInitial };
   let injector: TestBed;
   let service: AddProductHandlerService;
   let productsApiService: ProductsApiService;
@@ -20,6 +25,7 @@ describe('AddProductHandlerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideMockStore({ initialState }),
         {
           provide: ProductsApiService,
           useClass: ProductsApiServiceMock,

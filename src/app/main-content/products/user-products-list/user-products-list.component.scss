@@ -1,0 +1,44 @@
+mat-form-field.mat-form-field {
+  width: 100%;
+}
+
+mat-divider.mat-divider {
+  margin: 0.2rem 0;
+  height: 1px;
+  background-color: var(--secondary-color);
+}
+
+.user-products-wrapper,
+.search-panel {
+  width: 100%;
+}
+
+.user-products-wrapper {
+  overflow-y: auto;
+  margin: 2vh auto;
+}
+
+.search-panel {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.search-text {
+  padding-left: 0.4rem;
+  width: 66%;
+}
+
+.search-actions {
+  margin-left: 2vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+}
+
+.search-actions > button {
+  width: 6rem;
+  margin: 0.2rem;
+}

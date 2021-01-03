@@ -37,7 +37,18 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   @Input()
   public readonly = true;
   @Input()
-  public product: Product;
+  public product: Product = {
+    id: undefined,
+    producer: undefined,
+    name: undefined,
+    unit: undefined,
+    amount: undefined,
+    kcal: undefined,
+    protein: undefined,
+    carbohydrates: undefined,
+    fats: undefined,
+    creatorId: undefined,
+  };
 
   @Output()
   public value = new EventEmitter<Product>();
@@ -113,7 +124,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       this.formGroup.valueChanges
         .pipe(
           filter(() => !this.readonly),
-          tap((product: Product) => (product.id = this.product.id)),
+          tap((product: Product) => (product.id = this.product?.id)),
           filter((product: Product) => !isEqual(product, this.product))
         )
         .subscribe((product: Product) => this.updateState(product))

@@ -9,6 +9,7 @@ import { By } from '@angular/platform-browser';
 import {
   ProductAction,
   ProductDetailsDisplayType,
+  ProductExpandStatus,
   ProductWrapperDisplayType,
 } from '@core/models/products';
 import { ButtonAction } from '@core/models/products/button-action.enum';
@@ -40,11 +41,21 @@ describe('ProductWrapperComponent', () => {
   });
 
   it('should toggle', () => {
-    expect(component.expandend).toBeFalse();
+    let productExpandStatus: ProductExpandStatus;
+    spyOn(component.toggle, 'emit').and.callThrough();
 
-    component.toggle();
+    component.product = product1;
+    component.ngOnInit();
+    expect(component.expanded).toBeFalse();
 
-    expect(component.expandend).toBeTrue();
+    component.toggle.subscribe(
+      (status: ProductExpandStatus) => (productExpandStatus = status)
+    );
+    component.onToggle();
+
+    expect(component.expanded).toBeTrue();
+    expect(productExpandStatus.expanded).toEqual(component.expanded);
+    expect(productExpandStatus.product.id).toEqual(component.product.id);
   });
 
   it('should configure child component in Product display mode', () => {

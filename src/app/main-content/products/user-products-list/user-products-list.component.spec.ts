@@ -12,6 +12,8 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { ModalService } from '@core/modal-service/modal.service';
+import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
 import {
   ButtonAction,
   Product,
@@ -25,6 +27,7 @@ import {
   product2,
   product3,
 } from '@testsUT/products/products-mock-data.model';
+import { ModalServiceMock } from '@testsUT/shared/shared-mock-services.model';
 import { UserProductsListComponent } from './user-products-list.component';
 
 @Component({
@@ -65,11 +68,18 @@ describe('UserProductsListComponent', () => {
   let component: UserProductsListComponent;
   let fixture: ComponentFixture<UserProductsListComponent>;
   let store: MockStore;
+  let modalService: ModalService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [UserProductsListComponent, ProductsListComponent],
-      providers: [provideMockStore({ initialState })],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ModalService,
+          useClass: ModalServiceMock,
+        },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
@@ -77,6 +87,7 @@ describe('UserProductsListComponent', () => {
   beforeEach(() => {
     injector = getTestBed();
     store = injector.inject(MockStore);
+    modalService = injector.inject(ModalService);
     fixture = TestBed.createComponent(UserProductsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -96,8 +107,14 @@ describe('UserProductsListComponent', () => {
     );
   });
 
-  it('should bind products and display type to products list', () => {
+  it('should show all user products on: show all button click', () => {
     component.ngOnInit();
+
+    const showAllButton = fixture.debugElement.query(By.css('#show-all-btn'));
+    expect(showAllButton).toBeTruthy();
+
+    showAllButton.triggerEventHandler('click', {});
+    fixture.detectChanges();
 
     const productsList = fixture.debugElement.query(
       By.directive(ProductsListComponent)
@@ -108,7 +125,49 @@ describe('UserProductsListComponent', () => {
     expect(productsList.products).toEqual(productsMock);
   });
 
+  it('should search user products by search text', () => {
+    component.ngOnInit();
+
+    component.search.setValue('kiwi');
+    const searchButton = fixture.debugElement.query(By.css('#search-btn'));
+    expect(searchButton).toBeTruthy();
+
+    searchButton.triggerEventHandler('click', {});
+    fixture.detectChanges();
+
+    const productsList = fixture.debugElement.query(
+      By.directive(ProductsListComponent)
+    ).componentInstance as ProductsListComponent;
+
+    expect(productsList.display).toEqual(ProductWrapperDisplayType.PRODUCT);
+    expect(productsList.products.length).toEqual(1);
+  });
+
+  it('should clear list and search text', () => {
+    component.ngOnInit();
+
+    component.search.setValue('kiwi');
+    const searchButton = fixture.debugElement.query(By.css('#search-btn'));
+    searchButton.triggerEventHandler('click', {});
+    fixture.detectChanges();
+
+    const clearButton = fixture.debugElement.query(By.css('#clear-btn'));
+    clearButton.triggerEventHandler('click', {});
+    fixture.detectChanges();
+
+    const productsList = fixture.debugElement.query(
+      By.directive(ProductsListComponent)
+    ).componentInstance as ProductsListComponent;
+
+    expect(productsList.display).toEqual(ProductWrapperDisplayType.PRODUCT);
+    expect(productsList.products.length).toEqual(0);
+    expect(component.search.value).toBeFalsy();
+  });
+
   it('should handle delete action', () => {
+    let modal: ModalConfiguration;
+    spyOn(modalService, 'openDialog').and.callFake((m) => (modal = m));
+    spyOn(modalService, 'closeDialog');
     spyOn(store, 'dispatch');
     spyOn(component, 'onAction').and.callThrough();
     component.ngOnInit();
@@ -119,13 +178,21 @@ describe('UserProductsListComponent', () => {
 
     productsList.triggerAction(deleteProductAction);
 
+    expect(modalService.openDialog).toHaveBeenCalled();
+
+    modal.getFooter().getButtons()[1].getCallback()();
+
     expect(component.onAction).toHaveBeenCalledWith(deleteProductAction);
     expect(store.dispatch).toHaveBeenCalledWith(
       ProductsAction.DELETE_PRODUCT_REQUEST({ id: product1.id })
     );
+    expect(modalService.closeDialog).toHaveBeenCalled();
   });
 
   it('should handle update action', () => {
+    let modal: ModalConfiguration;
+    spyOn(modalService, 'openDialog').and.callFake((m) => (modal = m));
+    spyOn(modalService, 'closeDialog');
     spyOn(store, 'dispatch');
     spyOn(component, 'onAction').and.callThrough();
     component.ngOnInit();
@@ -136,6 +203,11 @@ describe('UserProductsListComponent', () => {
 
     productsList.triggerAction(updateProductAction);
 
+    expect(modalService.openDialog).toHaveBeenCalled();
+
+    modal.getFooter().getButtons()[1].getCallback()();
+
+    expect(modalService.closeDialog).toHaveBeenCalled();
     expect(component.onAction).toHaveBeenCalledWith(updateProductAction);
     expect(store.dispatch).toHaveBeenCalledWith(
       ProductsAction.UPDATE_PRODUCT_REQUEST({

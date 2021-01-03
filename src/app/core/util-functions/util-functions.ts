@@ -12,3 +12,11 @@ export function multipleBy(number: number, multiplier: number): number {
 export function subtractBy(number: number, substract: number): number {
   return number / substract;
 }
+
+export function castString(value: any): string {
+  return String(value);
+}
+
+export function trim(value: any): string {
+  return castString(value).trim();
+}

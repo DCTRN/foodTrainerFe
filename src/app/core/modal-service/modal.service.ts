@@ -6,7 +6,6 @@ import { ModalConfiguration } from './models/modal-configuration';
 @Injectable()
 export class ModalService {
   private modals: ModalConfiguration[] = [];
-  private lastModal: ModalConfiguration;
 
   constructor(private dialog: MatDialog) {}
 
@@ -43,7 +42,6 @@ export class ModalService {
       return;
     }
 
-    this.lastModal = this.modals[0];
     this.dialog.open(InformationModalComponent, {
       data: {
         modalConfiguration: this.modals[0],

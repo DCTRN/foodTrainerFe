@@ -51,8 +51,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   private readonly signature = '[R.C]';
   private subscriptions = new Subscription();
-  private readonly modalId = 'change-credentials-modal';
 
+  private readonly modalId = 'change-credentials-modal';
   private readonly modalTitle = 'Update credentials warrning';
 
   private modalHeader = new Header()
@@ -86,6 +86,8 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     .setContent(this.modalContent)
     .setFooter(this.modalFooter);
 
+  private readonly invalidFormMessage = 'Please, fill form with valid data';
+
   constructor(
     private store: Store<AppState>,
     private formBuilder: FormBuilder,
@@ -112,7 +114,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   public updateCredentials(): void {
     if (!this.isFormValid()) {
-      this.openSnackBar('Please, fill form with valid data');
+      this.openSnackBar(this.invalidFormMessage);
     } else {
       this.modalService.openDialog(this.modalConfig);
     }

@@ -14,6 +14,7 @@ import {
   Product,
   ProductAction,
   ProductDetailsDisplayType,
+  ProductExpandStatus,
   ProductWrapperDisplayType,
 } from '@core/models/products';
 import {
@@ -35,16 +36,21 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   public product: Product;
 
   @Input()
+  public expanded: boolean = false;
+
+  @Input()
   public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY;
 
   @Output()
   public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
 
+  @Output()
+  public toggle: EventEmitter<ProductExpandStatus> = new EventEmitter<ProductExpandStatus>();
+
   public detailsDisplay: ProductDetailsDisplayType =
     ProductDetailsDisplayType.COLUMN;
   public innerProduct: Product;
   public detailsProduct: Product;
-  public expandend = false;
   public productWrapperDisplayType = ProductWrapperDisplayType;
   public buttonAction = ButtonAction;
   public amount = new FormControl('', [
@@ -89,8 +95,12 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
     });
   }
 
-  public toggle(): void {
-    this.expandend = !this.expandend;
+  public onToggle(): void {
+    this.expanded = !this.expanded;
+    this.toggle.emit({
+      product: cloneDeep(this.innerProduct),
+      expanded: this.expanded,
+    });
   }
 
   public onValue(product: Product): void {

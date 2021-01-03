@@ -6,12 +6,14 @@
   </ng-container>
 
   <ng-container *ngIf="products?.length">
-    <ng-container *ngFor="let product of products">
+    <ng-container *ngFor="let product of products; let i = index">
       <div class="product">
         <app-product-wrapper
           [product]="product"
           [display]="display"
+          [expanded]="!!productsExpandedStatus[i]?.expanded"
           (action)="onAction($event)"
+          (toggle)="onToggle($event)"
         ></app-product-wrapper>
       </div>
     </ng-container>

@@ -1,7 +1,7 @@
 <div class="wrapper">
   <mat-accordion class="accordion">
-    <mat-expansion-panel [expanded]="expandend" hideToggle>
-      <mat-expansion-panel-header (click)="toggle()" id="header">
+    <mat-expansion-panel [expanded]="expanded" hideToggle>
+      <mat-expansion-panel-header (click)="onToggle()" id="header">
         <div class="header-content">
           <ng-container *ngIf="display === productWrapperDisplayType.PRODUCT">
             <mat-panel-title id="title">
