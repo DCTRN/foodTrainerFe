@@ -6,7 +6,7 @@ import { EffectHandler } from '../../models/effect-handler.interface';
 import { AddProductHandlerService } from './handlers/add-product-handler.service';
 import { DeleteProductHandlerService } from './handlers/delete-product-handler.service';
 import { GetAllProductsHandlerService } from './handlers/get-all-products-handler.service';
-import { InternalErrorHandlerService } from './handlers/internal-error-handler.service';
+import { InternalErrorHandlerService } from '../../common/internal-error-handler.service';
 import { UpdateProductHandlerService } from './handlers/update-product-handler.service';
 
 @Injectable({
@@ -26,7 +26,6 @@ export class ProductsEffectsHandlerService implements EffectFactory {
   public createEffectHandler(action: TypedAction<string>): EffectHandler {
     const token: Type<EffectHandler> =
       this.actionHandlers[action.type] || this.internalErrorHandlerService;
-    const serviceToken = this.injector.get(token);
-    return serviceToken;
+    return this.injector.get(token);
   }
 }

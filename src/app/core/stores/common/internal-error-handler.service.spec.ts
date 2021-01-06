@@ -1,6 +1,6 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { Action } from '@ngrx/store';
-import { ProductsAction } from '../../products.actions';
+import { ProductsAction } from '../products/products.actions';
 
 import { InternalErrorHandlerService } from './internal-error-handler.service';
 

@@ -20,3 +20,11 @@ export function castString(value: any): string {
 export function trim(value: any): string {
   return castString(value).trim();
 }
+
+export function removeDuplicatesById<T extends { id: number }>(
+  array: T[]
+): T[] {
+  return array.filter(
+    (product, index, arr) => arr.findIndex((p) => p.id === product.id) === index
+  );
+}
