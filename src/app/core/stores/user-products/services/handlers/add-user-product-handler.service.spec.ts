@@ -84,7 +84,6 @@ describe('AddUserProductHandlerService', () => {
     expect(service).toBeTruthy();
   });
 
-  // TODO finish this
   it('should add user product successfully', () => {
     const actionArgument = UserProductsAction.ADD_USER_PRODUCT_REQUEST({
       userProduct: userProduct1,

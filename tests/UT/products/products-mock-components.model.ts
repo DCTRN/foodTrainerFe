@@ -75,7 +75,7 @@ export class ProductWrapperComponent {
   public expanded: boolean = false;
 
   @Input()
-  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY;
+  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY_SEARCH;
 
   @Output()
   public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();

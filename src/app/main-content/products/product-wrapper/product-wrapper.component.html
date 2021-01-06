@@ -18,7 +18,7 @@
             </mat-panel-description>
           </ng-container>
 
-          <ng-container *ngIf="display === productWrapperDisplayType.DIARY">
+          <ng-container *ngIf="display !== productWrapperDisplayType.PRODUCT">
             <mat-panel-title id="title">
               {{ innerProduct?.name }} ({{
                 innerProduct?.producer
@@ -42,14 +42,46 @@
                 }}&nbsp;kcal)
               </div>
               <div class="diary-actions">
-                <button
-                  id="add-button"
-                  mat-button
-                  color="accent"
-                  (click)="onClick(buttonAction.ADD); $event.stopPropagation()"
+                <ng-container
+                  *ngIf="display === productWrapperDisplayType.DIARY_SEARCH"
                 >
-                  Add
-                </button>
+                  <button
+                    id="add-button"
+                    [disabled]="!amount?.value || !amount?.valid"
+                    (click)="
+                      onClick(buttonAction.ADD); $event.stopPropagation()
+                    "
+                    mat-button
+                    color="accent"
+                  >
+                    Add
+                  </button>
+                </ng-container>
+                <ng-container
+                  *ngIf="display === productWrapperDisplayType.DIARY_SUMMARY"
+                >
+                  <button
+                    id="diary-update-button"
+                    [disabled]="!amount?.value || !amount?.valid"
+                    (click)="
+                      onClick(buttonAction.UPDATE); $event.stopPropagation()
+                    "
+                    mat-button
+                    color="accent"
+                  >
+                    Update
+                  </button>
+                  <button
+                    id="diary-delete-button"
+                    (click)="
+                      onClick(buttonAction.DELETE); $event.stopPropagation()
+                    "
+                    mat-button
+                    color="warn"
+                  >
+                    Delete
+                  </button>
+                </ng-container>
               </div>
             </mat-panel-description>
           </ng-container>
@@ -58,8 +90,8 @@
 
       <app-product-details
         (value)="onValue($event)"
-        [product]="detailsProduct"
-        [readonly]="display === productWrapperDisplayType.DIARY"
+        [product]="innerProduct"
+        [readonly]="display !== productWrapperDisplayType.PRODUCT"
         [display]="detailsDisplay"
       ></app-product-details>
       <ng-container *ngIf="display === productWrapperDisplayType.PRODUCT">

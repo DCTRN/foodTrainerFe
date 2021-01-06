@@ -45,6 +45,12 @@ import { ProductsListComponent } from './products-list/products-list.component';
     MatExpansionModule,
     IconRegistryModule,
   ],
-  exports: [ProductsComponent],
+  exports: [
+    ProductsComponent,
+    UserProductsListComponent,
+    ProductWrapperComponent,
+    AddProductComponent,
+    ProductsListComponent,
+  ],
 })
 export class ProductsModule {}

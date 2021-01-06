@@ -39,7 +39,8 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   public expanded: boolean = false;
 
   @Input()
-  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY;
+  public display: ProductWrapperDisplayType =
+    ProductWrapperDisplayType.DIARY_SEARCH;
 
   @Output()
   public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
@@ -56,6 +57,7 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   public amount = new FormControl('', [
     Validators.required,
     Validators.minLength(1),
+    Validators.min(1),
   ]);
   public updateDisabled = true;
 
@@ -129,7 +131,7 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   private setInitialAmount(): void {
-    if (this.display !== ProductWrapperDisplayType.DIARY) {
+    if (this.display !== ProductWrapperDisplayType.DIARY_SEARCH) {
       return;
     }
     this.amount.setValue(this.product?.amount || 100);
@@ -148,7 +150,7 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   private isDiaryMode(): boolean {
-    return this.display === this.productWrapperDisplayType.DIARY;
+    return this.display !== this.productWrapperDisplayType.PRODUCT;
   }
 
   private calculateProductValues(amount: number): void {

@@ -134,10 +134,20 @@ export class UserProductsListComponent implements OnInit, OnDestroy {
   private subscribeToProducts(): void {
     const subscription = this.store
       .pipe(select('products'))
-      .subscribe((p: Products) => {
-        this.products = p.products;
-      });
+      .subscribe((p: Products) => this.updateProductsHandler(p));
     this.subscription.add(subscription);
+  }
+
+  private updateProductsHandler(p: Products): void {
+    this.products = p.products;
+    this.updateListIfExpanded();
+  }
+
+  private updateListIfExpanded(): void {
+    if (!this.innerProducts.length) {
+      return;
+    }
+    this.innerProducts = cloneDeep(this.products);
   }
 
   private closeModal(id: string): void {

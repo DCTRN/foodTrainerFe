@@ -102,7 +102,7 @@ describe('ProductWrapperComponent', () => {
   });
 
   it('should not display modify and delete button in diary display mode', () => {
-    component.display = ProductWrapperDisplayType.DIARY;
+    component.display = ProductWrapperDisplayType.DIARY_SEARCH;
     component.product = product1;
     component.ngOnInit();
     fixture.detectChanges();
@@ -147,7 +147,7 @@ describe('ProductWrapperComponent', () => {
     spyOn(component.action, 'emit').and.callFake(
       (a: ProductAction) => (action = a)
     );
-    component.display = ProductWrapperDisplayType.DIARY;
+    component.display = ProductWrapperDisplayType.DIARY_SEARCH;
     component.product = product1;
     component.ngOnInit();
     fixture.detectChanges();
@@ -160,7 +160,7 @@ describe('ProductWrapperComponent', () => {
   });
 
   it('should set amount equal product default amount', async () => {
-    component.display = ProductWrapperDisplayType.DIARY;
+    component.display = ProductWrapperDisplayType.DIARY_SEARCH;
     component.product = product1;
     component.ngOnInit();
     fixture.detectChanges();
@@ -174,7 +174,7 @@ describe('ProductWrapperComponent', () => {
     spyOn(component.action, 'emit').and.callFake(
       (a: ProductAction) => (action = a)
     );
-    component.display = ProductWrapperDisplayType.DIARY;
+    component.display = ProductWrapperDisplayType.DIARY_SEARCH;
     component.product = product1;
     component.ngOnInit();
     fixture.detectChanges();
@@ -192,7 +192,7 @@ describe('ProductWrapperComponent', () => {
   });
 
   it('should change details display type on window resize', async () => {
-    component.display = ProductWrapperDisplayType.DIARY;
+    component.display = ProductWrapperDisplayType.DIARY_SEARCH;
     component.product = product1;
     component.ngOnInit();
     fixture.detectChanges();
@@ -212,5 +212,54 @@ describe('ProductWrapperComponent', () => {
     fixture.detectChanges();
 
     expect(detailsComponent.display).toEqual(ProductDetailsDisplayType.COLUMN);
+  });
+
+  it('should disable add button when value is invalid', async () => {
+    const addButtonSelector = '#add-button';
+    component.display = ProductWrapperDisplayType.DIARY_SEARCH;
+    component.product = product1;
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    component.amount.setValue(-1);
+    fixture.detectChanges();
+
+    let addButton = fixture.debugElement.query(By.css(addButtonSelector))
+      .nativeElement;
+
+    expect(addButton.disabled).toBeTrue();
+
+    component.amount.setValue(100);
+    fixture.detectChanges();
+
+    addButton = fixture.debugElement.query(By.css(addButtonSelector))
+      .nativeElement;
+
+    expect(addButton.disabled).toBeFalse();
+  });
+
+  it('should disable add button when value is invalid', async () => {
+    const updateButtonselector = '#diary-update-button';
+    component.display = ProductWrapperDisplayType.DIARY_SUMMARY;
+    component.product = product1;
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    component.amount.setValue(-1);
+    fixture.detectChanges();
+
+    let diaryUpdateButton = fixture.debugElement.query(
+      By.css(updateButtonselector)
+    ).nativeElement;
+
+    expect(diaryUpdateButton.disabled).toBeTrue();
+
+    component.amount.setValue(100);
+    fixture.detectChanges();
+
+    diaryUpdateButton = fixture.debugElement.query(By.css(updateButtonselector))
+      .nativeElement;
+
+    expect(diaryUpdateButton.disabled).toBeFalse();
   });
 });

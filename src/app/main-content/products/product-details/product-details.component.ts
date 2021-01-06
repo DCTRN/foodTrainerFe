@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -29,7 +30,7 @@ interface KeyValue {
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
 })
-export class ProductDetailsComponent implements OnInit, OnDestroy {
+export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public fontSize: number = 80;
   @Input()
@@ -71,10 +72,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
-    const productChange = changes?.product as SimpleChange;
-    if (isEqual(productChange?.currentValue, productChange?.previousValue)) {
-      return;
-    }
+    // FIXME why previous value always equall current value?
+    // const productChange = changes?.product as SimpleChange;
+    // if (isEqual(productChange?.currentValue, productChange?.previousValue)) {
+    //   return;
+    // }
     this.updateForm();
   }
 
@@ -94,6 +96,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   private updateForm(): void {
+    console.warn('updateForm');
     const controls = this.formGroup?.controls;
     if (!this.product || !controls) {
       return;
@@ -111,6 +114,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       if (!shouldUpdateView) {
         continue;
       }
+      console.warn('uptadetuje');
       this.formGroup.controls[key].setValue(this.product[key]);
     }
   }

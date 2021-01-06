@@ -24,7 +24,7 @@ export class ProductsListComponent implements OnInit, OnChanges {
   public products: Product[] = [];
 
   @Input()
-  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY;
+  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY_SEARCH;
 
   @Output()
   public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
@@ -80,7 +80,7 @@ export class ProductsListComponent implements OnInit, OnChanges {
     return this.createProductExpandStatus(product, !!cachedStatus?.expanded);
   }
 
-  private getCachedExpandStatusByProductId(id: number) {
+  private getCachedExpandStatusByProductId(id: number): ProductExpandStatus {
     return this.productsExpandedStatus?.find((p) => p.product.id === id);
   }
 

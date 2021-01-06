@@ -39,7 +39,7 @@ export class ProductsListComponent {
   public products: Product[] = [];
 
   @Input()
-  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY;
+  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY_SEARCH;
 
   @Output()
   public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
@@ -214,5 +214,35 @@ describe('UserProductsListComponent', () => {
         product: updateProductAction.product,
       })
     );
+  });
+
+  it('should update list on action ', async () => {
+    const productsMockModified = [product3, product2];
+    const productsModifiedState = {
+      products: { products: productsMockModified },
+    };
+    let modal: ModalConfiguration;
+    spyOn(modalService, 'openDialog').and.callFake((m) => (modal = m));
+    spyOn(modalService, 'closeDialog');
+    component.ngOnInit();
+
+    const showAllButton = fixture.debugElement.query(By.css('#show-all-btn'));
+    showAllButton.triggerEventHandler('click', {});
+    fixture.detectChanges();
+
+    expect(component.innerProducts).toEqual(productsMock);
+
+    const productsList = fixture.debugElement.query(
+      By.directive(ProductsListComponent)
+    ).componentInstance as ProductsListComponent;
+
+    productsList.triggerAction(deleteProductAction);
+
+    modal.getFooter().getButtons()[1].getCallback()();
+
+    store.setState(productsModifiedState);
+    fixture.detectChanges();
+
+    expect(component.innerProducts).toEqual([product3, product2]);
   });
 });

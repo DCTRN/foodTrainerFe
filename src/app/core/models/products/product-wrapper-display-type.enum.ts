@@ -1,4 +1,5 @@
 export enum ProductWrapperDisplayType {
   PRODUCT,
-  DIARY,
+  DIARY_SEARCH,
+  DIARY_SUMMARY,
 }
