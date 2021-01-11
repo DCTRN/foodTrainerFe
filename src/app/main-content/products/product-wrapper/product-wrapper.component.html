@@ -62,7 +62,11 @@
                 >
                   <button
                     id="diary-update-button"
-                    [disabled]="!amount?.value || !amount?.valid"
+                    [disabled]="
+                      !amount?.value ||
+                      !amount?.valid ||
+                      amount?.value === userProduct?.amount
+                    "
                     (click)="
                       onClick(buttonAction.UPDATE); $event.stopPropagation()
                     "

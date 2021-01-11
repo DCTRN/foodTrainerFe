@@ -13,8 +13,10 @@ import {
   ProductWrapperDisplayType,
 } from '@core/models/products';
 import { ButtonAction } from '@core/models/products/button-action.enum';
+import { UserProductExpandStatus } from '@core/models/products/user-product-expaned-status.interface';
 import { ProductDetailsComponent } from '@testsUT/products/products-mock-components.model';
 import { product1, product2 } from '@testsUT/products/products-mock-data.model';
+import { userProduct1 } from '@testsUT/user-products/user-products-mock-data.model';
 import { ProductWrapperComponent } from './product-wrapper.component';
 
 describe('ProductWrapperComponent', () => {
@@ -40,10 +42,11 @@ describe('ProductWrapperComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle', () => {
+  it('should toggle product', () => {
     let productExpandStatus: ProductExpandStatus;
     spyOn(component.toggle, 'emit').and.callThrough();
 
+    component.display = ProductWrapperDisplayType.PRODUCT;
     component.product = product1;
     component.ngOnInit();
     expect(component.expanded).toBeFalse();
@@ -56,6 +59,27 @@ describe('ProductWrapperComponent', () => {
     expect(component.expanded).toBeTrue();
     expect(productExpandStatus.expanded).toEqual(component.expanded);
     expect(productExpandStatus.product.id).toEqual(component.product.id);
+  });
+
+  it('should toggle user product', () => {
+    let productExpandStatus: UserProductExpandStatus;
+    spyOn(component.diaryToggle, 'emit').and.callThrough();
+
+    component.display = ProductWrapperDisplayType.DIARY_SEARCH;
+    component.userProduct = userProduct1;
+    component.ngOnInit();
+    expect(component.expanded).toBeFalse();
+
+    component.diaryToggle.subscribe(
+      (status: UserProductExpandStatus) => (productExpandStatus = status)
+    );
+    component.onToggle();
+
+    expect(component.expanded).toBeTrue();
+    expect(productExpandStatus.expanded).toEqual(component.expanded);
+    expect(productExpandStatus.userProduct.id).toEqual(
+      component.userProduct.id
+    );
   });
 
   it('should configure child component in Product display mode', () => {
@@ -116,7 +140,7 @@ describe('ProductWrapperComponent', () => {
 
   it('should emit event with updated product data and button action in product mode', () => {
     let action: ProductAction;
-    spyOn(component.action, 'emit').and.callFake(
+    spyOn(component.productAction, 'emit').and.callFake(
       (a: ProductAction) => (action = a)
     );
     component.display = ProductWrapperDisplayType.PRODUCT;
@@ -142,9 +166,9 @@ describe('ProductWrapperComponent', () => {
     expect(action.product).toEqual(product2);
   });
 
-  it('should emit add event whend button clicked in diary mode', () => {
+  it('should emit add event when button clicked in diary mode', () => {
     let action: ProductAction;
-    spyOn(component.action, 'emit').and.callFake(
+    spyOn(component.productAction, 'emit').and.callFake(
       (a: ProductAction) => (action = a)
     );
     component.display = ProductWrapperDisplayType.DIARY_SEARCH;
@@ -171,27 +195,30 @@ describe('ProductWrapperComponent', () => {
 
   it('should recalculate product properties and emit them on add button click', async () => {
     let action: ProductAction;
-    spyOn(component.action, 'emit').and.callFake(
+    spyOn(component.productAction, 'emit').and.callFake(
       (a: ProductAction) => (action = a)
     );
     component.display = ProductWrapperDisplayType.DIARY_SEARCH;
     component.product = product1;
     component.ngOnInit();
-    fixture.detectChanges();
     component.amount.setValue(product1.amount * 2);
+    fixture.detectChanges();
 
     const addButton = fixture.debugElement.query(By.css('#add-button'));
     addButton.triggerEventHandler('click', { stopPropagation: () => {} });
 
     expect(action.action).toEqual(ButtonAction.ADD);
-    expect(action.product.kcal).toEqual(product1.kcal * 2);
-    expect(action.product.protein).toEqual(product1.protein * 2);
-    expect(action.product.carbohydrates).toEqual(product1.carbohydrates * 2);
-    expect(action.product.fats).toEqual(product1.fats * 2);
-    expect(action.product.amount).toEqual(product1.amount * 2);
+    expect(component.innerProduct.kcal).toEqual(product1.kcal * 2);
+    expect(component.innerProduct.protein).toEqual(product1.protein * 2);
+    expect(component.innerProduct.carbohydrates).toEqual(
+      product1.carbohydrates * 2
+    );
+    expect(component.innerProduct.fats).toEqual(product1.fats * 2);
+    expect(component.innerProduct.amount).toEqual(product1.amount * 2);
   });
 
-  it('should change details display type on window resize', async () => {
+  it('should change details display type on window resize', () => {
+    spyOnProperty(window, 'innerWidth').and.returnValue(360);
     component.display = ProductWrapperDisplayType.DIARY_SEARCH;
     component.product = product1;
     component.ngOnInit();
@@ -238,7 +265,7 @@ describe('ProductWrapperComponent', () => {
     expect(addButton.disabled).toBeFalse();
   });
 
-  it('should disable add button when value is invalid', async () => {
+  it('should disable update button when value is invalid', async () => {
     const updateButtonselector = '#diary-update-button';
     component.display = ProductWrapperDisplayType.DIARY_SUMMARY;
     component.product = product1;
@@ -255,6 +282,30 @@ describe('ProductWrapperComponent', () => {
     expect(diaryUpdateButton.disabled).toBeTrue();
 
     component.amount.setValue(100);
+    fixture.detectChanges();
+
+    diaryUpdateButton = fixture.debugElement.query(By.css(updateButtonselector))
+      .nativeElement;
+
+    expect(diaryUpdateButton.disabled).toBeFalse();
+  });
+
+  it('should disable update button when value is not changed', async () => {
+    const updateButtonselector = '#diary-update-button';
+    component.display = ProductWrapperDisplayType.DIARY_SUMMARY;
+    component.userProduct = userProduct1;
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    fixture.detectChanges();
+
+    let diaryUpdateButton = fixture.debugElement.query(
+      By.css(updateButtonselector)
+    ).nativeElement;
+
+    expect(diaryUpdateButton.disabled).toBeTrue();
+
+    component.amount.setValue(500);
     fixture.detectChanges();
 
     diaryUpdateButton = fixture.debugElement.query(By.css(updateButtonselector))

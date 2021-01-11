@@ -96,7 +96,6 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateForm(): void {
-    console.warn('updateForm');
     const controls = this.formGroup?.controls;
     if (!this.product || !controls) {
       return;
@@ -114,7 +113,6 @@ export class ProductDetailsComponent implements OnInit, OnChanges, OnDestroy {
       if (!shouldUpdateView) {
         continue;
       }
-      console.warn('uptadetuje');
       this.formGroup.controls[key].setValue(this.product[key]);
     }
   }

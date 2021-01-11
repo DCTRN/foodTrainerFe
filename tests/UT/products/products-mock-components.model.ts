@@ -1,12 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
+  ButtonAction,
   Product,
   ProductAction,
   ProductDetailsDisplayType,
   ProductExpandStatus,
   ProductWrapperDisplayType,
 } from '@core/models/products';
+import { DiaryAction } from '@core/models/products/diary-action.interface';
+import { UserProductExpandStatus } from '@core/models/products/user-product-expaned-status.interface';
+import { UserProduct } from '@core/models/user-products';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 
 @Component({
@@ -72,22 +76,111 @@ export class ProductWrapperComponent {
   public product: Product;
 
   @Input()
+  public userProduct: UserProduct;
+
+  @Input()
   public expanded: boolean = false;
 
   @Input()
-  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY_SEARCH;
+  public display: ProductWrapperDisplayType =
+    ProductWrapperDisplayType.DIARY_SEARCH;
 
   @Output()
-  public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
+  public productAction: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
+
+  @Output()
+  public diaryAction: EventEmitter<DiaryAction> = new EventEmitter<DiaryAction>();
 
   @Output()
   public toggle: EventEmitter<ProductExpandStatus> = new EventEmitter<ProductExpandStatus>();
 
-  public triggerActionEvent(action: ProductAction): void {
-    this.action.emit(action);
-  }
+  @Output()
+  public diaryToggle: EventEmitter<UserProductExpandStatus> = new EventEmitter<UserProductExpandStatus>();
+
+  public detailsDisplay: ProductDetailsDisplayType =
+    ProductDetailsDisplayType.COLUMN;
+  public innerProduct: Product;
+  public detailsProduct: Product;
+  public productWrapperDisplayType = ProductWrapperDisplayType;
+  public buttonAction = ButtonAction;
+  public amount = new FormControl('', [
+    Validators.required,
+    Validators.minLength(1),
+    Validators.min(1),
+  ]);
+  public updateDisabled = true;
+
+  public ngOnInit(): void {}
+
+  public ngOnDestroy(): void {}
+
+  public onClick(buttonAction: ButtonAction): void {}
+
+  public onToggle(): void {}
+
+  public onValue(product: Product): void {}
 
   public triggerToggleEvent(status: ProductExpandStatus): void {
     this.toggle.emit(status);
   }
+
+  public triggerDiaryToggleEvent(status: UserProductExpandStatus): void {
+    this.diaryToggle.emit(status);
+  }
+
+  public triggerProductActionEvent(action: ProductAction): void {
+    this.productAction.emit(action);
+  }
+
+  public triggerDiaryActionEvent(action: DiaryAction): void {
+    this.diaryAction.emit(action);
+  }
+}
+
+@Component({
+  selector: 'app-products-list',
+  template: '',
+})
+export class ProductsListComponent {
+  @Input()
+  public display: ProductWrapperDisplayType =
+    ProductWrapperDisplayType.DIARY_SEARCH;
+
+  @Input()
+  public products: Product[] = [];
+
+  @Input()
+  public userProducts: UserProduct[] = [];
+
+  @Output()
+  public productAction: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
+
+  @Output()
+  public diaryAction: EventEmitter<DiaryAction> = new EventEmitter<DiaryAction>();
+
+  public productsExpandedStatus: ProductExpandStatus[] = [];
+  public userProductsExpandedStatus: UserProductExpandStatus[] = [];
+
+  public readonly emptyProductListText = 'No products to display.';
+  public readonly displayType = ProductWrapperDisplayType;
+
+  public triggerProductAction(action: ProductAction): void {
+    this.productAction.emit(action);
+  }
+
+  public triggerDiaryAction(action: DiaryAction): void {
+    this.diaryAction.emit(action);
+  }
+
+  public onProductAction(action: ProductAction): void {
+    this.productAction.emit(action);
+  }
+
+  public onDiaryAction(action: DiaryAction): void {
+    this.diaryAction.emit(action);
+  }
+
+  public onToggle(product: ProductExpandStatus): void {}
+
+  public onDiaryToggle(userProduct: UserProductExpandStatus): void {}
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserProductsApiService } from '@api/user-products/user-products-api.service';
 import {
   UserProduct,
+  UserProductDTO,
   UserProductsByDateRange,
 } from '@core/models/user-products';
 import { NotificationService } from '@core/notifications/service/notification.service';
@@ -70,6 +71,8 @@ export class GetUserProductsByDateRangeHandlerService implements EffectHandler {
 
   private errorHandler(): Observable<Action> {
     this.notificationService.error(this.errorMassage);
-    return of(UserProductsAction.GET_USER_PRODUCTS_BY_DATE_RANGE_REQUEST_ERROR());
+    return of(
+      UserProductsAction.GET_USER_PRODUCTS_BY_DATE_RANGE_REQUEST_ERROR()
+    );
   }
 }

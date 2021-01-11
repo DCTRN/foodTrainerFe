@@ -1,0 +1,15 @@
+table {
+  width: 100%;
+}
+
+#summary-title {
+  background-color: var(--green-color);
+  text-align: center;
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  #summary-title {
+    font-size: 2rem;
+  }
+}

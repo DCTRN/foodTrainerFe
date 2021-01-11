@@ -7,13 +7,14 @@ import { Environment } from '@core/environment';
 import { ErrorFormat } from '@core/models/error-format.model';
 import { UserProduct } from '@core/models/user-products';
 import {
-  addUserProduct1,
+  addUserProductDTO1,
   updateUserProduct1,
   userProduct1,
   userProduct2,
   userProductByDate,
   userProductByDateRange,
   userProductDeletion,
+  userProductDTO1,
 } from '@testsUT/user-products/user-products-mock-data.model';
 import { UserProductsApiService } from './user-products-api.service';
 
@@ -21,10 +22,9 @@ describe('UserProductsApiService', () => {
   const apiUrl = Environment.apiUrl;
   const userProductsUrl = apiUrl + Environment.userProductsUrl.USER_PRODUCT;
   const userProductsByDateUrl =
-    userProductsUrl + Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE;
+    apiUrl + Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE;
   const userProductsByDateRangeUrl =
-    userProductsUrl +
-    Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE_RANGE;
+    apiUrl + Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE_RANGE;
 
   let injector: TestBed;
   let service: UserProductsApiService;
@@ -122,7 +122,7 @@ describe('UserProductsApiService', () => {
     let error: ErrorFormat;
     let userProduct: UserProduct;
 
-    service.addUserProduct(addUserProduct1).subscribe(
+    service.addUserProduct(addUserProductDTO1).subscribe(
       (up: UserProduct) => (userProduct = up),
       (e: ErrorFormat) => (error = e)
     );
@@ -130,16 +130,16 @@ describe('UserProductsApiService', () => {
     httpTestingController.expectOne(userProductsUrl).flush(userProduct1);
 
     expect(error).toBeFalsy();
-    expect(userProduct.id).toEqual(userProduct1.id);
-    expect(userProduct.productId).toEqual(userProduct1.productId);
-    expect(userProduct.amount).toEqual(userProduct1.amount);
+    expect(userProduct.id).toEqual(userProductDTO1.id);
+    expect(userProduct.product.id).toEqual(userProductDTO1.productId);
+    expect(userProduct.amount).toEqual(userProductDTO1.amount);
   });
 
   it('should fail to add user product', () => {
     let error: ErrorFormat;
     let userProduct;
 
-    service.addUserProduct(addUserProduct1).subscribe(
+    service.addUserProduct(addUserProductDTO1).subscribe(
       (up: UserProduct) => (userProduct = up),
       (e: ErrorFormat) => (error = e)
     );
@@ -166,9 +166,9 @@ describe('UserProductsApiService', () => {
     httpTestingController.expectOne(userProductsUrl).flush(userProduct1);
 
     expect(error).toBeFalsy();
-    expect(userProduct.id).toEqual(userProduct1.id);
-    expect(userProduct.productId).toEqual(userProduct1.productId);
-    expect(userProduct.amount).toEqual(userProduct1.amount);
+    expect(userProduct.id).toEqual(userProductDTO1.id);
+    expect(userProduct.product.id).toEqual(userProductDTO1.productId);
+    expect(userProduct.amount).toEqual(userProductDTO1.amount);
   });
 
   it('should fail to update user product', () => {

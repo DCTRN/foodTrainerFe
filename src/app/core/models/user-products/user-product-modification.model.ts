@@ -1,6 +1,6 @@
-import { UserProduct } from './user-product.model';
+import { UserProductDTO } from './user-product-dto.model';
 
 export interface UserProductModification {
   userId: number;
-  product: UserProduct;
+  product: UserProductDTO;
 }

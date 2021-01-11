@@ -17,11 +17,10 @@ import {
   ProductExpandStatus,
   ProductWrapperDisplayType,
 } from '@core/models/products';
-import {
-  convertToPrecision,
-  multipleBy,
-  subtractBy,
-} from '@core/util-functions/util-functions';
+import { DiaryAction } from '@core/models/products/diary-action.interface';
+import { UserProductExpandStatus } from '@core/models/products/user-product-expaned-status.interface';
+import { UserProduct } from '@core/models/user-products';
+import { calculateProductValues } from '@core/util-functions/util-functions';
 import { cloneDeep, isEqual } from 'lodash';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -36,6 +35,9 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   public product: Product;
 
   @Input()
+  public userProduct: UserProduct;
+
+  @Input()
   public expanded: boolean = false;
 
   @Input()
@@ -43,10 +45,16 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
     ProductWrapperDisplayType.DIARY_SEARCH;
 
   @Output()
-  public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
+  public productAction: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
+
+  @Output()
+  public diaryAction: EventEmitter<DiaryAction> = new EventEmitter<DiaryAction>();
 
   @Output()
   public toggle: EventEmitter<ProductExpandStatus> = new EventEmitter<ProductExpandStatus>();
+
+  @Output()
+  public diaryToggle: EventEmitter<UserProductExpandStatus> = new EventEmitter<UserProductExpandStatus>();
 
   public detailsDisplay: ProductDetailsDisplayType =
     ProductDetailsDisplayType.COLUMN;
@@ -63,12 +71,6 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  private readonly propertiesToRecalculate: string[] = [
-    'kcal',
-    'protein',
-    'carbohydrates',
-    'fats',
-  ];
   private readonly productDetailsDisplayChangeThreshold = 1366;
 
   constructor(private changeDectorRef: ChangeDetectorRef) {}
@@ -79,6 +81,9 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    if (!this.product) {
+      this.product = this.userProduct?.product;
+    }
     this.innerProduct = cloneDeep(this.product);
     this.detailsProduct = cloneDeep(this.product);
     this.updateDetailsDisplayType(window.innerWidth);
@@ -91,18 +96,32 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   public onClick(buttonAction: ButtonAction): void {
-    this.action.emit({
-      action: buttonAction,
-      product: cloneDeep(this.innerProduct),
-    });
+    if (this.display !== ProductWrapperDisplayType.DIARY_SUMMARY) {
+      this.productAction.emit({
+        action: buttonAction,
+        product: cloneDeep(this.innerProduct),
+      });
+    } else {
+      this.diaryAction.emit({
+        action: buttonAction,
+        userProduct: { ...this.userProduct, amount: this.amount.value },
+      });
+    }
   }
 
   public onToggle(): void {
     this.expanded = !this.expanded;
-    this.toggle.emit({
-      product: cloneDeep(this.innerProduct),
-      expanded: this.expanded,
-    });
+    if (this.display === ProductWrapperDisplayType.PRODUCT) {
+      this.toggle.emit({
+        product: cloneDeep(this.innerProduct),
+        expanded: this.expanded,
+      });
+    } else {
+      this.diaryToggle.emit({
+        userProduct: cloneDeep(this.userProduct),
+        expanded: this.expanded,
+      });
+    }
   }
 
   public onValue(product: Product): void {
@@ -131,46 +150,23 @@ export class ProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   private setInitialAmount(): void {
-    if (this.display !== ProductWrapperDisplayType.DIARY_SEARCH) {
-      return;
-    }
-    this.amount.setValue(this.product?.amount || 100);
+    this.amount.setValue(
+      this.userProduct?.amount || this.product?.amount || 100
+    );
     this.changeDectorRef.detectChanges();
   }
 
   private subscribeToAmountChanges(): void {
     this.subscriptions.add(
       this.amount.valueChanges
-        .pipe(
-          filter(() => !!this.product),
-          filter(() => this.isDiaryMode())
-        )
+        .pipe(filter(() => !!this.product))
         .subscribe((amount: number) => this.calculateProductValues(amount))
     );
   }
 
-  private isDiaryMode(): boolean {
-    return this.display !== this.productWrapperDisplayType.PRODUCT;
-  }
-
   private calculateProductValues(amount: number): void {
-    const percentage = this.calculatePercentage(amount);
+    this.innerProduct = calculateProductValues(amount, this.product);
     this.innerProduct.amount = amount;
-    this.calculateProperty(percentage);
-    this.innerProduct = cloneDeep(this.innerProduct);
     this.changeDectorRef.detectChanges();
-  }
-
-  private calculateProperty(percentage: number): void {
-    this.propertiesToRecalculate.forEach(
-      (key: string) =>
-        (this.innerProduct[key] = convertToPrecision(
-          multipleBy(this.product[key], percentage)
-        ))
-    );
-  }
-
-  private calculatePercentage(amount: number): number {
-    return convertToPrecision(subtractBy(amount, this.product.amount));
   }
 }

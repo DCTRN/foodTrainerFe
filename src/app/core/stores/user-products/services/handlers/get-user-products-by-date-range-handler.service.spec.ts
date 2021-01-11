@@ -6,9 +6,11 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { userInitial } from '@testsUT/products/products-mock-data.model';
 import { NotificationServiceMock } from '@testsUT/shared/shared-mock-services.model';
 import {
-  userProduct1,
-  userProduct2,
+  userProductDTO1,
+  userProductDTO2,
   userProductByDateRange,
+  userProduct2,
+  userProduct1,
 } from '@testsUT/user-products/user-products-mock-data.model';
 import { of, throwError } from 'rxjs';
 import { UserProductsAction } from '../../user-products.actions';
@@ -83,7 +85,7 @@ describe('GetUserProductsByDateRangeHandlerService', () => {
   });
 
   it('should fail to get user products by date range', () => {
-    const userProductsMock = [userProduct1, userProduct2];
+    const userProductsMock = [userProductDTO1, userProductDTO2];
     const actionArgument = UserProductsAction.GET_USER_PRODUCTS_BY_DATE_RANGE_REQUEST(
       {
         userProductsBy: {

@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Environment } from '@core/environment';
 import {
-  UserProduct,
+  UserProductDTO,
   UserProductDeletion,
   UserProductModification,
   UserProductsByDate,
   UserProductsByDateRange,
+  UserProduct,
 } from '@core/models/user-products';
 import { propagateError } from '@core/rxjs-operators/propagate-error';
 import { Observable, of } from 'rxjs';
@@ -19,11 +20,9 @@ export class UserProductsApiService {
   private readonly userProductsUrl =
     this.apiUrl + Environment.userProductsUrl.USER_PRODUCT;
   private readonly productsByDateUrl =
-    this.userProductsUrl +
-    Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE;
+    this.apiUrl + Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE;
   private readonly productsByDateRangeUrl =
-    this.userProductsUrl +
-    Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE_RANGE;
+    this.apiUrl + Environment.userProductsUrl.FIND_USER_PRODUCT_BY_BATE_RANGE;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -31,7 +30,7 @@ export class UserProductsApiService {
     date: UserProductsByDate
   ): Observable<UserProduct[]> {
     return this.httpClient
-      .request<UserProduct[]>('GET', this.productsByDateUrl, { body: date })
+      .post<UserProduct[]>(this.productsByDateUrl, date)
       .pipe(propagateError());
   }
 
@@ -39,13 +38,11 @@ export class UserProductsApiService {
     date: UserProductsByDateRange
   ): Observable<UserProduct[]> {
     return this.httpClient
-      .request<UserProduct[]>('GET', this.productsByDateRangeUrl, {
-        body: date,
-      })
+      .post<UserProduct[]>(this.productsByDateRangeUrl, date)
       .pipe(propagateError());
   }
 
-  public addUserProduct(userProduct: UserProduct): Observable<UserProduct> {
+  public addUserProduct(userProduct: UserProductDTO): Observable<UserProduct> {
     return this.httpClient
       .post<UserProduct>(this.userProductsUrl, userProduct)
       .pipe(propagateError());

@@ -20,7 +20,7 @@ import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
 import { AppState } from 'src/app/reducers';
 
-enum SearchPanelButtonAction {
+export enum SearchPanelButtonAction {
   SEARCH,
   CLEAR,
   SHOW_ALL,

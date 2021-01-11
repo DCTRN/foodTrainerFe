@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { UserProductsApiService } from '@api/user-products/user-products-api.service';
-import { UserProduct, UserProductsByDate } from '@core/models/user-products';
+import {
+  UserProduct,
+  UserProductDTO,
+  UserProductsByDate,
+} from '@core/models/user-products';
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { EffectHandler } from '@core/stores/models/effect-handler.interface';
 import { User } from '@core/stores/user/user.model';

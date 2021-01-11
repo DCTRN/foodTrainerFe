@@ -1,9 +1,10 @@
 import {
-  UserProduct,
+  UserProductDTO,
   UserProductDeletion,
   UserProductModification,
   UserProductsByDate,
   UserProductsByDateRange,
+  UserProduct,
 } from '@core/models/user-products';
 import { createAction, props } from '@ngrx/store';
 
@@ -66,7 +67,7 @@ export const addUserProductErrorType =
 // ADD USER PRODUCT ACTIONS
 export const addUserProduct = createAction(
   addUserProductType,
-  props<{ userProduct: Omit<UserProduct, 'userId'> }>()
+  props<{ userProduct: Omit<UserProductDTO, 'userId'> }>()
 );
 export const addUserProductSuccess = createAction(
   addUserProductSuccessType,

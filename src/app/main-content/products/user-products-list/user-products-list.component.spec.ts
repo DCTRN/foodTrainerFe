@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  NO_ERRORS_SCHEMA,
-  Output,
-} from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   async,
   ComponentFixture,
@@ -14,14 +8,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { ModalService } from '@core/modal-service/modal.service';
 import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
-import {
-  ButtonAction,
-  Product,
-  ProductAction,
-  ProductWrapperDisplayType,
-} from '@core/models/products';
+import { ButtonAction, ProductWrapperDisplayType } from '@core/models/products';
 import { ProductsAction } from '@core/stores/products/products.actions';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { ProductsListComponent } from '@testsUT/products/products-mock-components.model';
 import {
   product1,
   product2,
@@ -29,25 +19,6 @@ import {
 } from '@testsUT/products/products-mock-data.model';
 import { ModalServiceMock } from '@testsUT/shared/shared-mock-services.model';
 import { UserProductsListComponent } from './user-products-list.component';
-
-@Component({
-  selector: 'app-products-list',
-  template: '',
-})
-export class ProductsListComponent {
-  @Input()
-  public products: Product[] = [];
-
-  @Input()
-  public display: ProductWrapperDisplayType = ProductWrapperDisplayType.DIARY_SEARCH;
-
-  @Output()
-  public action: EventEmitter<ProductAction> = new EventEmitter<ProductAction>();
-
-  public triggerAction(action: ProductAction): void {
-    this.action.emit(action);
-  }
-}
 
 const productsMock = [product1, product2, product3];
 const initialState = {
@@ -176,7 +147,7 @@ describe('UserProductsListComponent', () => {
       By.directive(ProductsListComponent)
     ).componentInstance as ProductsListComponent;
 
-    productsList.triggerAction(deleteProductAction);
+    productsList.triggerProductAction(deleteProductAction);
 
     expect(modalService.openDialog).toHaveBeenCalled();
 
@@ -201,7 +172,7 @@ describe('UserProductsListComponent', () => {
       By.directive(ProductsListComponent)
     ).componentInstance as ProductsListComponent;
 
-    productsList.triggerAction(updateProductAction);
+    productsList.triggerProductAction(updateProductAction);
 
     expect(modalService.openDialog).toHaveBeenCalled();
 
@@ -236,7 +207,7 @@ describe('UserProductsListComponent', () => {
       By.directive(ProductsListComponent)
     ).componentInstance as ProductsListComponent;
 
-    productsList.triggerAction(deleteProductAction);
+    productsList.triggerProductAction(deleteProductAction);
 
     modal.getFooter().getButtons()[1].getCallback()();
 

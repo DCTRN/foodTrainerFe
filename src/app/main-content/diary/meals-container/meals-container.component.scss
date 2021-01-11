@@ -1,0 +1,78 @@
+$backroundColor: #303030;
+
+mat-expansion-panel-header.mat-expansion-panel-header {
+  display: flex;
+  height: 6vh;
+  background-color: var(--secondary-color) !important;
+}
+
+mat-expansion-panel-header.mat-expansion-panel-header:hover {
+  background-color: var(--secondary-color);
+}
+
+mat-action-row.mat-action-row {
+  padding: 0 !important;
+}
+
+.mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+.header-content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.meal-container-wrapper {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.products {
+  margin: 1rem 0;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  margin: 0 !important;
+  padding: 0 rem !important;
+}
+
+.summary {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 80%;
+}
+
+.ingredient {
+  margin-right: 0.2rem;
+}
+
+table {
+  width: 100%;
+}
+
+mat-panel-title.mat-expansion-panel-header-title {
+  width: 33%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 !important;
+  padding-left: 1rem;
+  overflow-x: auto;
+}
+
+mat-panel-description.mat-expansion-panel-header-description {
+  width: 66%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 !important;
+  word-break: keep-all;
+}

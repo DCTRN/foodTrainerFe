@@ -1,8 +1,8 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { UserProductsApiService } from '@api/user-products/user-products-api.service';
 import {
-  UserProduct,
   UserProductDeletion,
+  UserProductDTO,
   UserProductModification,
   UserProductsByDate,
   UserProductsByDateRange,
@@ -12,7 +12,10 @@ import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { userInitial } from '@testsUT/products/products-mock-data.model';
 import { NotificationServiceMock } from '@testsUT/shared/shared-mock-services.model';
-import { userProduct1 } from '@testsUT/user-products/user-products-mock-data.model';
+import {
+  userProduct1,
+  userProductDTO1,
+} from '@testsUT/user-products/user-products-mock-data.model';
 import { Observable, of, throwError } from 'rxjs';
 import { UserProductsAction } from '../../user-products.actions';
 import { AddUserProductHandlerService } from './add-user-product-handler.service';
@@ -20,23 +23,25 @@ import { AddUserProductHandlerService } from './add-user-product-handler.service
 export class UserProductsApiServiceMock {
   public findUserProductsByDate(
     date: UserProductsByDate
-  ): Observable<UserProduct[]> {
+  ): Observable<UserProductDTO[]> {
     return of(null);
   }
 
   public findUserProductsByDateRange(
     date: UserProductsByDateRange
-  ): Observable<UserProduct[]> {
+  ): Observable<UserProductDTO[]> {
     return of(null);
   }
 
-  public addUserProduct(userProduct: UserProduct): Observable<UserProduct> {
+  public addUserProduct(
+    userProduct: UserProductDTO
+  ): Observable<UserProductDTO> {
     return of(null);
   }
 
   public updateUserProduct(
     userProduct: UserProductModification
-  ): Observable<UserProduct> {
+  ): Observable<UserProductDTO> {
     return of(null);
   }
 
@@ -86,17 +91,19 @@ describe('AddUserProductHandlerService', () => {
 
   it('should add user product successfully', () => {
     const actionArgument = UserProductsAction.ADD_USER_PRODUCT_REQUEST({
-      userProduct: userProduct1,
+      userProduct: userProductDTO1,
     });
     let action: Action;
     spyOn(userProductsApiService, 'addUserProduct').and.returnValue(
       of(userProduct1)
     );
     spyOn(notificationService, 'error');
+    spyOn(notificationService, 'success');
 
     service.handle(actionArgument).subscribe((a: Action) => (action = a));
 
     expect(userProductsApiService.addUserProduct).toHaveBeenCalled();
+    expect(notificationService.success).toHaveBeenCalled();
     expect(notificationService.error).not.toHaveBeenCalled();
     expect(action).toEqual(
       UserProductsAction.ADD_USER_PRODUCT_REQUEST_SUCCESS({
@@ -107,7 +114,7 @@ describe('AddUserProductHandlerService', () => {
 
   it('should fail to add user product', () => {
     const actionArgument = UserProductsAction.ADD_USER_PRODUCT_REQUEST({
-      userProduct: userProduct1,
+      userProduct: userProductDTO1,
     });
     let action: Action;
     spyOn(userProductsApiService, 'addUserProduct').and.returnValue(

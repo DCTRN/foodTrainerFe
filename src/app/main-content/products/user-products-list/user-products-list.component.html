@@ -4,6 +4,7 @@
       <mat-form-field>
         <mat-label>Product name or producer</mat-label>
         <input
+          (keyup.enter)="buttonActionClick(buttonAction.SEARCH)"
           [formControl]="search"
           matInput
           [errorStateMatcher]="simpleErrorStateMatcher"
@@ -21,7 +22,7 @@
         Search
       </button>
       <button
-      [disabled]="!search.value && !innerProducts.length"
+        [disabled]="!search.value && !innerProducts.length"
         (click)="buttonActionClick(buttonAction.CLEAR)"
         id="clear-btn"
         mat-stroked-button
@@ -42,7 +43,7 @@
   <app-products-list
     [products]="innerProducts"
     [display]="display"
-    (action)="onAction($event)"
+    (productAction)="onAction($event)"
   >
   </app-products-list>
 </div>

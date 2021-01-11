@@ -1,0 +1,43 @@
+<div class="meal-container-wrapper">
+  <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <div class="header-content">
+          <mat-panel-title id="title">
+            {{ title }}
+          </mat-panel-title>
+          <mat-panel-description>
+            <div id="kcal">{{ product?.kcal || 0 }}&nbsp;kcal</div>
+            <button
+              class="add-button"
+              (click)="onAddClick(); $event.stopPropagation()"
+              mat-button
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-panel-description>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="products">
+        <app-products-list
+          (diaryAction)="onDiaryAction($event)"
+          [display]="display"
+          [userProducts]="userProducts"
+        >
+        </app-products-list>
+      </div>
+      <mat-action-row>
+        <table mat-table [dataSource]="[product]" class="mat-elevation-z8">
+          <ng-container [matColumnDef]="column" *ngFor="let column of columns">
+            <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        </table>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-divider></mat-divider>
+</div>

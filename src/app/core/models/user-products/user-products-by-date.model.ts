@@ -1,4 +1,4 @@
 export interface UserProductsByDate {
   userId: number;
-  date: Date;
+  date: Date | string;
 }

@@ -2,6 +2,7 @@ import { SimpleChange, SimpleChanges } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Product, ProductExpandStatus } from '@core/models/products';
+import { UserProductExpandStatus } from '@core/models/products/user-product-expaned-status.interface';
 import { ProductDetailsComponent } from '@main-content/products/product-details/product-details.component';
 import { ProductsListComponent } from '@main-content/products/products-list/products-list.component';
 import { ProductWrapperComponent } from './products-mock-components.model';
@@ -58,6 +59,15 @@ export function findProductExpandStatusBy(
 ): ProductExpandStatus {
   return component.productsExpandedStatus.find(
     (status) => status.product.id === id
+  );
+}
+
+export function findUserProductExpandStatusBy(
+  id: number,
+  component: ProductsListComponent
+): UserProductExpandStatus {
+  return component.userProductsExpandedStatus.find(
+    (status) => status.userProduct.id === id
   );
 }
 

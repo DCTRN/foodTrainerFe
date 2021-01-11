@@ -2,8 +2,12 @@
   height: 0.4rem !important;
 }
 
+mat-expansion-panel-header.mat-expansion-panel-header {
+  height: 14vh;
+}
+
 button {
-  font-size: 80% !important;
+  font-size: 100% !important;
 }
 
 mat-form-field.mat-form-field {
@@ -58,7 +62,7 @@ mat-panel-description#description {
 
 ::ng-deep .mat-expansion-panel-body {
   margin: 0 !important;
-  padding: 0 0.6rem !important;
+  padding: 0 !important;
 }
 
 ::ng-deep mat-action-row.mat-action-row {
@@ -92,6 +96,10 @@ mat-panel-description#description {
 }
 
 @media (min-width: 768px) {
+  mat-expansion-panel-header.mat-expansion-panel-header {
+    height: 6vh;
+  }
+
   button {
     font-size: 100% !important;
   }

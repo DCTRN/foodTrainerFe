@@ -6,6 +6,7 @@ import {
   userProduct3,
   userProductByDate,
   userProductByDateRange,
+  userProductDTO1,
 } from '@testsUT/user-products/user-products-mock-data.model';
 import { UserProducts, UserProductsAction } from './user-products.actions';
 import { userProductsReducer } from './user-products.reducer';
@@ -78,7 +79,7 @@ describe('User products Reducer', () => {
     let result = userProductsReducer(
       initialState,
       UserProductsAction.ADD_USER_PRODUCT_REQUEST({
-        userProduct: userProduct1,
+        userProduct: userProductDTO1,
       })
     );
     expect(result).toEqual(initialState);
@@ -144,7 +145,7 @@ describe('User products Reducer', () => {
     result = userProductsReducer(
       result,
       UserProductsAction.DELETE_USER_PRODUCT_REQUEST_SUCCESS({
-        id: userProduct1.id,
+        id: userProductDTO1.id,
       })
     );
     expect(result.userProducts).toEqual([]);

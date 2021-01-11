@@ -5,7 +5,10 @@ import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { userInitial } from '@testsUT/products/products-mock-data.model';
 import { NotificationServiceMock } from '@testsUT/shared/shared-mock-services.model';
-import { userProduct1 } from '@testsUT/user-products/user-products-mock-data.model';
+import {
+  userProduct1,
+  userProductDTO1,
+} from '@testsUT/user-products/user-products-mock-data.model';
 import { of, throwError } from 'rxjs';
 import { UserProductsAction } from '../../user-products.actions';
 import { UserProductsApiServiceMock } from './add-user-product-handler.service.spec';
@@ -50,7 +53,7 @@ describe('UpdateUserProductHandlerService', () => {
 
   it('should update user product successfully', () => {
     const actionArgument = UserProductsAction.UPDATE_USER_PRODUCT_REQUEST({
-      userProductModification: { product: userProduct1 },
+      userProductModification: { product: userProductDTO1 },
     });
     let action: Action;
     spyOn(userProductsApiService, 'updateUserProduct').and.returnValue(
@@ -71,7 +74,7 @@ describe('UpdateUserProductHandlerService', () => {
 
   it('should fail to update user product', () => {
     const actionArgument = UserProductsAction.UPDATE_USER_PRODUCT_REQUEST({
-      userProductModification: { product: userProduct1 },
+      userProductModification: { product: userProductDTO1 },
     });
     let action: Action;
     spyOn(userProductsApiService, 'updateUserProduct').and.returnValue(

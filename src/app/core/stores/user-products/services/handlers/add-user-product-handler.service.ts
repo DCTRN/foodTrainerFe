@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { UserProductsApiService } from '@api/user-products/user-products-api.service';
-import { UserProduct } from '@core/models/user-products';
+import { UserProduct, UserProductDTO } from '@core/models/user-products';
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { EffectHandler } from '@core/stores/models/effect-handler.interface';
 import { User } from '@core/stores/user/user.model';
 import { Action, select, Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 import { UserProductsAction } from '../../user-products.actions';
 
@@ -14,6 +14,7 @@ import { UserProductsAction } from '../../user-products.actions';
   providedIn: 'root',
 })
 export class AddUserProductHandlerService implements EffectHandler {
+  private readonly successMessage = 'Successfully added product';
   private readonly errorMessage = 'Failed to add product';
 
   constructor(
@@ -23,7 +24,7 @@ export class AddUserProductHandlerService implements EffectHandler {
   ) {}
 
   public handle(
-    action: { userProduct: Omit<UserProduct, 'userId'> } & Action
+    action: { userProduct: Omit<UserProductDTO, 'userId'> } & Action
   ): Observable<Action> {
     return this.store
       .pipe(select('user'), take(1))
@@ -31,7 +32,7 @@ export class AddUserProductHandlerService implements EffectHandler {
   }
 
   private addProduct(
-    action: { userProduct: Omit<UserProduct, 'userId'> } & Action,
+    action: { userProduct: Omit<UserProductDTO, 'userId'> } & Action,
     user: User
   ): Observable<Action> {
     return this.userProductsApiService
@@ -40,14 +41,15 @@ export class AddUserProductHandlerService implements EffectHandler {
         map((userProduct: UserProduct) =>
           this.createSuccessAction(userProduct)
         ),
+        tap(() => this.notificationService.success(this.successMessage)),
         catchError(() => this.errorHandler())
       );
   }
 
   private createUserProduct(
-    action: { userProduct: Omit<UserProduct, 'userId'> } & Action,
+    action: { userProduct: Omit<UserProductDTO, 'userId'> } & Action,
     user: User
-  ): UserProduct {
+  ): UserProductDTO {
     return { ...action.userProduct, userId: user.id };
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserProductsApiService } from '@api/user-products/user-products-api.service';
 import {
   UserProduct,
+  UserProductDTO,
   UserProductModification,
 } from '@core/models/user-products';
 import { NotificationService } from '@core/notifications/service/notification.service';
