@@ -20,7 +20,12 @@ import { MealsConatainerListComponent } from './meals-container-list/meals-conat
 import { MealsSearchListComponent } from './meals-search-list/meals-search-list.component';
 
 @NgModule({
-  declarations: [DiaryComponent, MealsContainerComponent, MealsConatainerListComponent, MealsSearchListComponent],
+  declarations: [
+    DiaryComponent,
+    MealsContainerComponent,
+    MealsConatainerListComponent,
+    MealsSearchListComponent,
+  ],
   imports: [
     CommonModule,
     DiaryRoutingModule,

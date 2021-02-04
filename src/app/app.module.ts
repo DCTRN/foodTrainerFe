@@ -1,5 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -9,6 +9,7 @@ import { AuthenticationInterceptor } from '@core/authentication/authentication.i
 import { LoggerInterceptor } from '@core/logs/logger.interceptor';
 import { ModalModule } from '@core/modal-service/modal.module';
 import { NotificationModule } from '@core/notifications/notification.module';
+import { NotificationService } from '@core/notifications/service/notification.service';
 import { ProductsEffects } from '@core/stores/products/products.effects';
 import { UserProductsEffects } from '@core/stores/user-products/user-products.effects';
 import { EffectsModule } from '@ngrx/effects';

@@ -84,6 +84,11 @@
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
+          "codeCoverage": {
+            "exclude": [
+              "src/app/main-content/account/change-password"
+            ]
+          },
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",

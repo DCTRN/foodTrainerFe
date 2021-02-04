@@ -38,7 +38,7 @@ export class UserEffects {
           catchError((err: ErrorFormat) =>
             this.handleError(
               err,
-              `${err.errorDescription || this.failedRegisterMessage}.`
+              `${this.failedRegisterMessage}.`
             )
           )
         );
@@ -114,7 +114,7 @@ export class UserEffects {
   private readonly signature = '[U.E]';
   private readonly failedLoginMessage = 'Failed to login. Please try again.';
   private readonly failedRegisterMessage =
-    '. Failed to register. Please try again.';
+    'Failed to register. Please try again';
   private readonly credentialsFetchError =
     'Failed to fetch user credentials due to internal error.';
 

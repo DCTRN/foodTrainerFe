@@ -33,7 +33,8 @@ mat-action-row.mat-action-row {
 }
 
 .products {
-  margin: 1rem 0;
+  padding: 1rem 0;
+  background-color: darken($backroundColor, 2);
 }
 
 ::ng-deep .mat-expansion-panel-body {

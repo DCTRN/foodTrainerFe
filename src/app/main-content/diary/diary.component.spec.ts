@@ -21,7 +21,7 @@ import { MealsSearchListComponent } from './meals-search-list/meals-search-list.
 
 const initialState = { userProducts: { userProducts: [userProduct1] } };
 
-fdescribe('DiaryComponent', () => {
+describe('DiaryComponent', () => {
   let injector: TestBed;
   let component: DiaryComponent;
   let fixture: ComponentFixture<DiaryComponent>;

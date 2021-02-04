@@ -81,10 +81,7 @@ export class ProductsListComponent implements OnInit, OnChanges {
   }
 
   public shouldDisplayEmptyListText(): boolean {
-    return (
-      this.shouldDisplayEmptyListForProducts() ||
-      this.shouldDisplayEmptyListForDiary()
-    );
+    return this.shouldDisplayEmptyListForProducts();
   }
 
   private shouldDisplayEmptyListForDiary(): boolean {
@@ -94,7 +91,7 @@ export class ProductsListComponent implements OnInit, OnChanges {
   }
 
   private shouldDisplayEmptyListForProducts(): boolean {
-    return !this.products?.length && this.display === this.displayType.PRODUCT;
+    return !this.products?.length && !this.userProducts?.length;
   }
 
   private extractCurrentProducts(changes: SimpleChanges): Product[] {
