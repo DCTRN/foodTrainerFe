@@ -1,0 +1,16 @@
+<mat-drawer-container class="wrapper" [hasBackdrop]="true">
+  <mat-drawer class="drawer" #drawer [mode]="this.matDrawerMode">
+    <app-drawer></app-drawer>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="content-wrapper">
+      <div class="toolbar">
+        <app-toolbar (menuClick)="onMenuClick()"></app-toolbar>
+      </div>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+      <div class="footer"><app-bottom-nav></app-bottom-nav></div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

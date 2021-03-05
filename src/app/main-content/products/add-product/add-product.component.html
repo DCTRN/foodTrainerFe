@@ -1,0 +1,25 @@
+<div class="add-product-wrapper">
+  <app-product-details
+    #productDetails
+    (value)="onValue($event)"
+    [readonly]="false"
+    [fontSize]="100"
+  ></app-product-details>
+  <div
+    class="actions"
+    [matTooltip]="toolTipContent"
+    [matTooltipPosition]="toolTipPosition"
+    [matTooltipHideDelay]="toolTipDelay"
+    [matTooltipDisabled]="details?.formGroup.valid"
+  >
+    <button
+      (click)="onSubmit()"
+      [disabled]="!details?.formGroup.valid"
+      id="add-product-btn"
+      mat-flat-button
+      color="primary"
+    >
+      Add
+    </button>
+  </div>
+</div>

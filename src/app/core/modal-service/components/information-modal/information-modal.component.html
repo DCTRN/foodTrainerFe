@@ -1,0 +1,37 @@
+<div [id]="this.id" class="container">
+  <header class="header" [class]="[this.header.getColor()]">
+    <mat-icon>{{ this.header.getIcon() }}</mat-icon>
+    <h1 mat-dialog-title>{{ this.header.getTitle() }}</h1>
+  </header>
+  <div mat-dialog-content class="content">
+    <div class="text-content" *ngFor="let text of this.content.getText()">
+      <p>{{ text }}</p>
+    </div>
+  </div>
+  <div mat-dialog-actions class="footer">
+    <div class="left-buttons">
+      <ng-container *ngFor="let button of this.leftButtons">
+        <button
+          class="btn"
+          mat-stroked-button
+          (click)="button.getCallback()()"
+          [class]="[button.getType()]"
+        >
+          {{ button.getText() }}
+        </button>
+      </ng-container>
+    </div>
+    <div class="right-buttons">
+      <ng-container *ngFor="let button of this.rightButtons">
+        <button
+          class="btn"
+          mat-stroked-button
+          (click)="button.getCallback()()"
+          [class]="[button.getType()]"
+        >
+          {{ button.getText() }}
+        </button></ng-container
+      >
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="diary-wrapper">
+  <div class="search-panel">
+    <div class="action-btn">
+      <button (click)="onDecrementDateClick()" id="back-btn" mat-button>
+        <mat-icon>arrow_back_ios</mat-icon>
+      </button>
+    </div>
+    <div class="search-text">
+      <mat-form-field appearance="fill">
+        <mat-label>Date</mat-label>
+        <input
+          [formControl]="date"
+          matInput
+          [matDatepicker]="picker"
+          [errorStateMatcher]="simpleErrorStateMatcher"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="action-btn">
+      <button (click)="onIcrementDateClick()" id="forward-btn" mat-button>
+        <mat-icon>arrow_forward_ios</mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <ng-container #componentContainer></ng-container>
+</div>

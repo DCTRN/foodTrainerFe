@@ -1,0 +1,41 @@
+form.wrapper-row::-webkit-scrollbar {
+  height: 0.4rem !important;
+}
+
+mat-form-field.mat-form-field {
+  width: 100% !important;
+}
+
+.wrapper {
+  width: 100%;
+  padding: 0.4rem;
+  font-size: 60%;
+}
+
+.wrapper-column {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.wrapper-row {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.wrapper-column > .property {
+  width: 100%;
+}
+
+.wrapper-row > .property {
+  width: 50%;
+  padding-right: 0.4rem;
+}

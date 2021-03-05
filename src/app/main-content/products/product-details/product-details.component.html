@@ -1,0 +1,109 @@
+<div class="wrapper" [style.fontSize]="this.fontSize + '%'">
+  <form [formGroup]="formGroup" [ngClass]="this.display">
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Producer</mat-label>
+        <input
+          formControlName="producer"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          [readonly]="this.readonly"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input
+          formControlName="name"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          [readonly]="this.readonly"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Unit</mat-label>
+        <input
+          formControlName="unit"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          [readonly]="this.readonly"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Amount</mat-label>
+        <input
+          formControlName="amount"
+          matInput
+          [readonly]="this.readonly"
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          type="number"
+          min="0"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Kcal</mat-label>
+        <input
+          formControlName="kcal"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          [readonly]="this.readonly"
+          type="number"
+          min="0"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Protein</mat-label>
+        <input
+          formControlName="protein"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          [readonly]="this.readonly"
+          type="number"
+          min="0"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Carbohydrates</mat-label>
+        <input
+          formControlName="carbohydrates"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          [readonly]="this.readonly"
+          type="number"
+          min="0"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="property">
+      <mat-form-field>
+        <mat-label>Fats</mat-label>
+        <input
+          formControlName="fats"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+          [readonly]="this.readonly"
+          type="number"
+          min="0"
+        />
+      </mat-form-field>
+    </div>
+  </form>
+</div>

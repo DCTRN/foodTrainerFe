@@ -1,0 +1,45 @@
+<div class="meals-wrapper-list">
+  <app-meals-container
+    [title]="mealEatTimeType.BREAKFAST"
+    [mealEatTimeType]="mealEatTimeType.BREAKFAST"
+    (action)="onAction($event)"
+  >
+  </app-meals-container>
+  <app-meals-container
+    [title]="mealEatTimeType.LUNCH"
+    [mealEatTimeType]="mealEatTimeType.LUNCH"
+    (action)="onAction($event)"
+  >
+  </app-meals-container>
+  <app-meals-container
+    [title]="mealEatTimeType.DINNER"
+    [mealEatTimeType]="mealEatTimeType.DINNER"
+    (action)="onAction($event)"
+  >
+  </app-meals-container>
+  <app-meals-container
+    [title]="mealEatTimeType.SUPPER"
+    [mealEatTimeType]="mealEatTimeType.SUPPER"
+    (action)="onAction($event)"
+  >
+  </app-meals-container>
+  <app-meals-container
+    [title]="mealEatTimeType.OTHERS"
+    [mealEatTimeType]="mealEatTimeType.OTHERS"
+    (action)="onAction($event)"
+  >
+  </app-meals-container>
+
+  <div class="summary">
+    <mat-card id="summary-title">Summary</mat-card>
+    <table mat-table [dataSource]="[product]" class="mat-elevation-z8">
+      <ng-container [matColumnDef]="column" *ngFor="let column of columns">
+        <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+        <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+  </div>
+</div>

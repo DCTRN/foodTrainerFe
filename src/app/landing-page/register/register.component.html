@@ -1,0 +1,196 @@
+<div class="main-wrapper">
+  <form [formGroup]="registerForm" class="example-form">
+    <table class="example-full-width">
+      <tr>
+        <td>
+          <mat-form-field (key.enter)="register()" class="example-full-width">
+            <mat-label>Username</mat-label>
+            <input
+              formControlName="username"
+              matInput
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                usernameFormControl.dirty &&
+                (usernameFormControl.hasError('required') ||
+                  usernameFormControl.hasError('minlength') ||
+                  usernameFormControl.hasError('maxlength'))
+              "
+            >
+              Please enter a valid username. From 3 - 20 characters.
+            </mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field (key.enter)="register()" class="example-full-width">
+            <mat-label>Password</mat-label>
+            <input
+              formControlName="password"
+              matInput
+              type="password"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                passwordFormControl.dirty &&
+                (passwordFormControl.hasError('required') ||
+                  passwordFormControl.hasError('minlength') ||
+                  passwordFormControl.hasError('maxlength'))
+              "
+            >
+              Please enter a valid password. From 6 - 30 characters.
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr class="example-full-width">
+        <td colspan="2" class="example-full-width">
+          <mat-form-field (key.enter)="register()" class="example-full-width">
+            <mat-label>Confirm password</mat-label>
+            <input
+              formControlName="passwordConfirmation"
+              matInput
+              type="password"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                (passwordConfirmationFormControl.dirty &&
+                  passwordConfirmationFormControl.hasError('required')) ||
+                passwordConfirmationFormControl.value !==
+                  passwordFormControl.value
+              "
+            >
+              Passwords do not match.
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field (key.enter)="register()" class="example-full-width">
+            <mat-label>Email</mat-label>
+            <input
+              formControlName="email"
+              matInput
+              type="email"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                emailFormControl.dirty &&
+                (emailFormControl.hasError('required') ||
+                  emailFormControl.hasError('email'))
+              "
+            >
+              Please enter a valid email.
+            </mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field (key.enter)="register()" class="example-full-width">
+            <mat-label>Phone number</mat-label>
+            <input
+              formControlName="phoneNumber"
+              matInput
+              type="number"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                phoneNumberFormControl.dirty &&
+                (phoneNumberFormControl.hasError('required') ||
+                  phoneNumberFormControl.hasError('pattern'))
+              "
+            >
+              Please enter a valid phone number. In the format: 123-456-789.
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-form-field (key.enter)="register()" class="example-full-width">
+            <mat-label>First name</mat-label>
+            <input
+              formControlName="firstName"
+              matInput
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                firstNameFormControl.dirty &&
+                (firstNameFormControl.hasError('required') ||
+                  firstNameFormControl.hasError('minlength') ||
+                  firstNameFormControl.hasError('maxlength'))
+              "
+            >
+              Please enter a valid first name. From 3 - 20 characters.
+            </mat-error>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field (key.enter)="register()" class="example-full-width">
+            <mat-label>Last name</mat-label>
+            <input
+              formControlName="lastName"
+              matInput
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                lastNameFormControl.dirty &&
+                (lastNameFormControl.hasError('required') ||
+                  lastNameFormControl.hasError('minlength') ||
+                  lastNameFormControl.hasError('maxlength'))
+              "
+            >
+              Please enter a valid last name. From 3 - 20 characters.
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="example-full-width">
+          <mat-form-field (key.enter)="register()" appearance="fill">
+            <mat-label>Birth date</mat-label>
+            <input
+              [min]="minDate"
+              formControlName="birthDate"
+              matInput
+              [matDatepicker]="picker"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error
+              *ngIf="
+                birthDateFormControl.dirty &&
+                birthDateFormControl.hasError('required')
+              "
+            >
+              Please enter a valid date.
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <button (click)="register()" mat-stroked-button class="btn">
+            Register
+          </button>
+        </td>
+        <td>
+          <button (click)="navigateToMainPage()" mat-stroked-button class="btn">
+            Return to main page
+          </button>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>

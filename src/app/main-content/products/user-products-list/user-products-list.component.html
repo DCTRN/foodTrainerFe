@@ -1,0 +1,49 @@
+<div class="user-products-wrapper">
+  <div class="search-panel">
+    <div class="search-text">
+      <mat-form-field>
+        <mat-label>Product name or producer</mat-label>
+        <input
+          (keyup.enter)="buttonActionClick(buttonAction.SEARCH)"
+          [formControl]="search"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+        />
+      </mat-form-field>
+    </div>
+    <div class="search-actions">
+      <button
+        [disabled]="!search.value"
+        (click)="buttonActionClick(buttonAction.SEARCH)"
+        id="search-btn"
+        mat-stroked-button
+        color="accent"
+      >
+        Search
+      </button>
+      <button
+        [disabled]="!search.value && !innerProducts.length"
+        (click)="buttonActionClick(buttonAction.CLEAR)"
+        id="clear-btn"
+        mat-stroked-button
+        color="primary"
+      >
+        Clear
+      </button>
+      <button
+        (click)="buttonActionClick(buttonAction.SHOW_ALL)"
+        id="show-all-btn"
+        mat-stroked-button
+      >
+        Show all
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <app-products-list
+    [products]="innerProducts"
+    [display]="display"
+    (productAction)="onAction($event)"
+  >
+  </app-products-list>
+</div>

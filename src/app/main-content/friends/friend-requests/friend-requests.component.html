@@ -1,0 +1,31 @@
+<div class="wrapper">
+  <mat-accordion class="example-headers-align">
+    <mat-expansion-panel
+      [expanded]="step === 0"
+      (opened)="setStep(0)"
+      hideToggle
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> Sent friend request </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-user-card-list
+        (action)="this.onAction($event)"
+        [listType]="this.type.FRIEND_REQUEST_SENT"
+      ></app-user-card-list>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel
+      [expanded]="step === 1"
+      (opened)="setStep(1)"
+      hideToggle
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> Received friend request </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-user-card-list
+        (action)="this.onAction($event)"
+        [listType]="this.type.FRIEND_REQUEST_RECEIVED"
+      ></app-user-card-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

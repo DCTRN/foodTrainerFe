@@ -1,0 +1,52 @@
+<div class="search-list-wrapper">
+  <div class="search-panel">
+    <div class="back-btn-wrapper">
+      <button
+        id="back-btn"
+        (click)="onBackClick()"
+        mat-mini-fab
+        color="primary"
+      >
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+    </div>
+
+    <div class="search-text">
+      <mat-form-field>
+        <mat-label>Product name or producer</mat-label>
+        <input
+          (keyup.enter)="buttonActionClick(buttonAction.SEARCH)"
+          [formControl]="search"
+          matInput
+          [errorStateMatcher]="simpleErrorStateMatcher"
+        />
+      </mat-form-field>
+    </div>
+    <div class="search-actions">
+      <button
+        [disabled]="!search.value"
+        (click)="buttonActionClick(buttonAction.SEARCH)"
+        id="search-btn"
+        mat-stroked-button
+        color="accent"
+      >
+        Search
+      </button>
+      <button
+        (click)="buttonActionClick(buttonAction.CLEAR)"
+        id="clear-btn"
+        mat-stroked-button
+        color="primary"
+      >
+        Clear
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <app-products-list
+    [products]="products"
+    [display]="display"
+    (productAction)="onAction($event)"
+  >
+  </app-products-list>
+</div>

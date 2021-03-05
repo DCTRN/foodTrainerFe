@@ -1,0 +1,39 @@
+<div class="list-wrapper">
+  <ng-container *ngIf="shouldDisplayEmptyListText()">
+    <div class="empty-list">
+      <h1 id="empty-list__text">{{ emptyProductListText }}</h1>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="display !== displayType.DIARY_SUMMARY">
+    <ng-container *ngIf="products?.length">
+      <ng-container *ngFor="let product of products; let i = index">
+        <div class="product">
+          <app-product-wrapper
+            [product]="product"
+            [display]="display"
+            [expanded]="!!productsExpandedStatus[i]?.expanded"
+            (productAction)="onProductAction($event)"
+            (toggle)="onToggle($event)"
+          ></app-product-wrapper>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="display === displayType.DIARY_SUMMARY">
+    <ng-container *ngIf="userProducts?.length">
+      <ng-container *ngFor="let userProduct of userProducts; let i = index">
+        <div class="product">
+          <app-product-wrapper
+            [userProduct]="userProduct"
+            [display]="display"
+            [expanded]="!!productsExpandedStatus[i]?.expanded"
+            (diaryAction)="onDiaryAction($event)"
+            (diaryToggle)="onDiaryToggle($event)"
+          ></app-product-wrapper>
+        </div>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>

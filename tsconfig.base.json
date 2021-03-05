@@ -3,6 +3,16 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "paths": {
+      "@api/*": ["src/app/api/*"],
+      "@core/*": ["src/app/core/*"],
+      "@utils/*": ["src/app/utils/*"],
+      "@landingPage/*": ["src/app/landing-page/*"],
+      "@main-content/*": ["src/app/main-content/*"],
+      "@stores/*": ["src/app/core/stores/*"],
+      "@shared/*": ["src/app/main-content/shared/*"],
+      "@testsUT/*": ["tests/UT/*"]
+    },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -12,9 +22,6 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"]
   }
 }

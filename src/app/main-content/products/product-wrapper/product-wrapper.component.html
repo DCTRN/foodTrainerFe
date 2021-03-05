@@ -1,0 +1,124 @@
+<div class="wrapper">
+  <mat-accordion class="accordion">
+    <mat-expansion-panel [expanded]="expanded" hideToggle>
+      <mat-expansion-panel-header (click)="onToggle()" id="header">
+        <div class="header-content">
+          <ng-container *ngIf="display === productWrapperDisplayType.PRODUCT">
+            <mat-panel-title id="title">
+              {{ innerProduct?.name }} ({{
+                innerProduct?.producer
+              }})</mat-panel-title
+            >
+            <mat-panel-description id="description">
+              <div class="values">
+                {{ innerProduct?.amount }} {{ innerProduct?.unit }} ({{
+                  innerProduct?.kcal
+                }}&nbsp;kcal)
+              </div>
+            </mat-panel-description>
+          </ng-container>
+
+          <ng-container *ngIf="display !== productWrapperDisplayType.PRODUCT">
+            <mat-panel-title id="title">
+              {{ innerProduct?.name }} ({{
+                innerProduct?.producer
+              }})</mat-panel-title
+            >
+            <mat-panel-description id="description">
+              <div class="amount" (click)="$event.stopPropagation()">
+                <mat-form-field>
+                  <mat-label>Amount</mat-label>
+                  <input
+                    [formControl]="amount"
+                    matInput
+                    type="number"
+                    min="1"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="values">
+                {{ innerProduct?.amount }} {{ innerProduct?.unit }} ({{
+                  innerProduct?.kcal
+                }}&nbsp;kcal)
+              </div>
+              <div class="diary-actions">
+                <ng-container
+                  *ngIf="display === productWrapperDisplayType.DIARY_SEARCH"
+                >
+                  <button
+                    id="add-button"
+                    [disabled]="!amount?.value || !amount?.valid"
+                    (click)="
+                      onClick(buttonAction.ADD); $event.stopPropagation()
+                    "
+                    mat-button
+                    color="accent"
+                  >
+                    Add
+                  </button>
+                </ng-container>
+                <ng-container
+                  *ngIf="display === productWrapperDisplayType.DIARY_SUMMARY"
+                >
+                  <button
+                    id="diary-update-button"
+                    [disabled]="
+                      !amount?.value ||
+                      !amount?.valid ||
+                      amount?.value === userProduct?.amount
+                    "
+                    (click)="
+                      onClick(buttonAction.UPDATE); $event.stopPropagation()
+                    "
+                    mat-button
+                    color="accent"
+                  >
+                    Update
+                  </button>
+                  <button
+                    id="diary-delete-button"
+                    (click)="
+                      onClick(buttonAction.DELETE); $event.stopPropagation()
+                    "
+                    mat-button
+                    color="warn"
+                  >
+                    Delete
+                  </button>
+                </ng-container>
+              </div>
+            </mat-panel-description>
+          </ng-container>
+        </div>
+      </mat-expansion-panel-header>
+      <mat-divider></mat-divider>
+      <app-product-details
+        (value)="onValue($event)"
+        [product]="innerProduct"
+        [readonly]="display !== productWrapperDisplayType.PRODUCT"
+        [display]="detailsDisplay"
+      ></app-product-details>
+      <ng-container *ngIf="display === productWrapperDisplayType.PRODUCT">
+        <mat-action-row>
+          <button
+            id="delete-button"
+            mat-button
+            color="warn"
+            (click)="onClick(buttonAction.DELETE); $event.stopPropagation()"
+          >
+            Delete
+          </button>
+          <button
+            [disabled]="updateDisabled"
+            id="update-button"
+            mat-button
+            color="accent"
+            (click)="onClick(buttonAction.UPDATE); $event.stopPropagation()"
+          >
+            Update
+          </button>
+        </mat-action-row>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

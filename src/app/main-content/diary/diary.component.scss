@@ -1,0 +1,24 @@
+mat-form-field.mat-form-field {
+  width: 100% !important;
+}
+
+mat-divider.mat-divider {
+  background-color: var(--secondary-color);
+}
+
+.diary-wrapper {
+  padding-top: 1rem;
+  margin-bottom: 4vh;
+}
+
+.search-panel {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-text {
+  width: 50%;
+  margin: 0 1rem;
+}
