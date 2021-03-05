@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FriendsAction } from '@core/stores/friends/friends.actions';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/reducers';

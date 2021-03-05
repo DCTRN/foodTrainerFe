@@ -43,7 +43,7 @@ export class UserCardComponent implements OnInit {
     isDisplayed: false,
   };
   @Output()
-  actions: EventEmitter<UserCardButtonAction> = new EventEmitter<UserCardButtonAction>();
+  public actions: EventEmitter<UserCardButtonAction> = new EventEmitter<UserCardButtonAction>();
   public action = UserCardButtonActionType;
 
   constructor() {}

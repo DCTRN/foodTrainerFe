@@ -10,7 +10,7 @@ import { User } from '@core/stores/user/user.model';
 import { select, Store } from '@ngrx/store';
 import { NGXLogger } from 'ngx-logger';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of, OperatorFunction, Subscription } from 'rxjs';
 import {
   catchError,
   delay,
