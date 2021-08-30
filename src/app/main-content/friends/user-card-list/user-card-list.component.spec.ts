@@ -10,6 +10,13 @@ import { Friend } from '@core/stores/friends/friends.model';
 import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  user1,
+  user2,
+  user3,
+  user4,
+  user5,
+} from '@testsUT/user/user-mock-data.model';
 import { isEqual } from 'lodash';
 import {
   ListType,
@@ -21,52 +28,16 @@ import {
   UserCardButtonActionType,
 } from './user-card/user-card.component';
 
-const randomUser: User = {
-  id: 66,
-  username: 'mikeRandom',
-  email: 'mikeRandom@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-const userAccepted: User = {
-  id: 3,
-  username: 'mike28',
-  email: 'mike28@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-const userSent: User = {
-  id: 2,
-  username: 'mike2',
-  email: 'mike2@gmail.com',
-  birthDate: null,
-  phoneNumber: '223123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-const userReceived: User = {
-  id: 1,
-  username: 'mike1',
-  email: 'mike1@gmail.com',
-  birthDate: null,
-  phoneNumber: '123123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
+const randomUser: User = user5;
+const userAccepted: User = user4;
+const userSent: User = user3;
+const userReceived: User = user2;
 
 const randomFriend: Friend = {
   id: 8,
   isAccepted: true,
   friend: randomUser,
-  friendshipRequesterId: 5,
+  friendshipRequesterId: randomUser.id,
   friendshipRequestDate: null,
   friendshipAcceptDate: null,
 };
@@ -74,7 +45,7 @@ const friendReceived = {
   id: 6,
   isAccepted: false,
   friend: userReceived,
-  friendshipRequesterId: 1,
+  friendshipRequesterId: userReceived.id,
   friendshipRequestDate: null,
   friendshipAcceptDate: null,
 };
@@ -82,7 +53,7 @@ const friendSent = {
   id: 7,
   isAccepted: false,
   friend: userSent,
-  friendshipRequesterId: 5,
+  friendshipRequesterId: user1.id,
   friendshipRequestDate: null,
   friendshipAcceptDate: null,
 };
@@ -90,7 +61,7 @@ const friendAccepted = {
   id: 8,
   isAccepted: true,
   friend: userAccepted,
-  friendshipRequesterId: 5,
+  friendshipRequesterId: userAccepted.id,
   friendshipRequestDate: null,
   friendshipAcceptDate: null,
 };
@@ -98,28 +69,11 @@ const friendsInitial: Friends = {
   friends: [friendReceived, friendSent, friendAccepted],
 };
 
-const userInitial: User = {
-  username: 'mike8',
-  email: 'michal.kowalski@gmail.com',
-  phoneNumber: '123123123',
-  birthDate: new Date(),
-  firstName: 'majkel',
-  lastName: 'majk',
-  id: 5,
-  authenticationLevel: 1,
-};
+const userInitial: User = user1;
+
 export const initialState: any = {
   user: userInitial,
   friends: friendsInitial,
-};
-
-const randomFriendMock: Friend = {
-  id: 88,
-  isAccepted: false,
-  friend: randomUser,
-  friendshipRequesterId: 5,
-  friendshipRequestDate: null,
-  friendshipAcceptDate: null,
 };
 
 const actionReceivedMock: UserCardButtonAction = {

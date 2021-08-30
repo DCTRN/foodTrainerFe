@@ -1,26 +1,10 @@
 import { userReducer, initialState } from './user.reducer';
 import { UserAction } from './user.actions';
 import { User } from './user.model';
+import { user1, user2 } from '@testsUT/user/user-mock-data.model';
 
-export const userMock: User = {
-  username: 'mike8',
-  password: 'haslo1234',
-  email: 'michal.kowalski@gmail.com',
-  phoneNumber: '123123123',
-  birthDate: null,
-  firstName: 'majkel',
-  lastName: 'majk',
-};
-
-export const userMockChanged: User = {
-  username: 'mikeChanged',
-  password: 'haslo1234',
-  email: 'michal.kowalski@gmail.com',
-  phoneNumber: '123123123',
-  birthDate: null,
-  firstName: 'majkelChanged',
-  lastName: 'majkChanged',
-};
+export const userMock: User = user1;
+export const userMockChanged: User = user2;
 
 const loginCredentialsMock = {
   username: 'newUsername',

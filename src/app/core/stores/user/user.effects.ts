@@ -6,6 +6,10 @@ import { AuthenticationTimerService } from '@core/authentication/authentication-
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
 import { ErrorFormat } from '@core/models/error-format.model';
 import { NotificationService } from '@core/notifications/service/notification.service';
+import {
+  defaultNutritionGoals,
+  UserFromForm,
+} from '@itf/user-utility-types.model';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { NGXLogger } from 'ngx-logger';
 import { of } from 'rxjs';
@@ -26,23 +30,10 @@ export class UserEffects {
           `${this.signature} Handling ${UserActionType.REGISTER_REQUEST}`
         )
       ),
-      mergeMap((action: User) => {
-        return this.authenticationService.register(action).pipe(
-          map((user: User) => userUpdate(user)),
-          tap(() =>
-            this.notificationService.success(
-              'Registered successfully! Now you can log in^^'
-            )
-          ),
-          tap(() => this.router.navigateByUrl('/login')),
-          catchError((err: ErrorFormat) =>
-            this.handleError(
-              err,
-              `${this.failedRegisterMessage}.`
-            )
-          )
-        );
-      })
+      map((action: UserFromForm) =>
+        this.addDefaulyUserNutritionGoalsToAction(action)
+      ),
+      mergeMap((action: User) => this.registerUser(action))
     )
   );
 
@@ -54,19 +45,7 @@ export class UserEffects {
           `${this.signature} Handling ${UserActionType.LOGIN_REQUEST}`
         )
       ),
-      mergeMap((action: LoginCredentials) => {
-        return this.authenticationService
-          .login(this.createLoginCredentials(action))
-          .pipe(
-            tap((tokens: Tokens) =>
-              this.tokensStorageService.setTokens(tokens)
-            ),
-            tap(() => this.authenticationTimerService.start()),
-            map((tokens: Tokens) => TokensAction.LOGIN_REQUEST_SUCCESS(tokens)),
-            tap(() => this.router.navigateByUrl('/main')),
-            catchError((err) => this.handleError(err, this.failedLoginMessage))
-          );
-      })
+      mergeMap((action: LoginCredentials) => this.loginUser(action))
     )
   );
 
@@ -78,11 +57,7 @@ export class UserEffects {
           `${this.signature} Handling ${UserActionType.GET_CREDENTIALS_REQUEST}`
         )
       ),
-      mergeMap(() => {
-        return this.userApiService
-          .getUserCredentialsByUsername(this.tokensStorageService.getUsername())
-          .pipe(map((user: User) => UserAction.USER_UPDATE(user)));
-      }),
+      mergeMap(() => this.getUserCredentials()),
       catchError((err) => this.handleError(err, this.credentialsFetchError))
     )
   );
@@ -95,19 +70,7 @@ export class UserEffects {
           `${this.signature} Handling ${UserActionType.PATCH_CREDENTIALS_REQUEST}`
         )
       ),
-      mergeMap((action) => {
-        return this.userApiService.updateUserCredentials(action).pipe(
-          map((user: User) => UserAction.USER_UPDATE(user)),
-          tap(() =>
-            this.notificationService.success(
-              'Successfully updated credentials!'
-            )
-          ),
-          catchError((err) =>
-            this.handleError(err, `Failed to update credentials`)
-          )
-        );
-      })
+      mergeMap((action) => this.patchUserCredentials(action))
     )
   );
 
@@ -128,6 +91,56 @@ export class UserEffects {
     private router: Router,
     private logger: NGXLogger
   ) {}
+
+  private patchUserCredentials(action) {
+    return this.userApiService.updateUserCredentials(action).pipe(
+      map((user: User) => UserAction.USER_UPDATE(user)),
+      tap(() =>
+        this.notificationService.success('Successfully updated credentials!')
+      ),
+      catchError((err) => this.handleError(err, `Failed to update credentials`))
+    );
+  }
+
+  private getUserCredentials() {
+    return this.userApiService
+      .getUserCredentialsByUsername(this.tokensStorageService.getUsername())
+      .pipe(map((user: User) => UserAction.USER_UPDATE(user)));
+  }
+
+  private loginUser(action: LoginCredentials) {
+    return this.authenticationService
+      .login(this.createLoginCredentials(action))
+      .pipe(
+        tap((tokens: Tokens) => this.tokensStorageService.setTokens(tokens)),
+        tap(() => this.authenticationTimerService.start()),
+        map((tokens: Tokens) => TokensAction.LOGIN_REQUEST_SUCCESS(tokens)),
+        tap(() => this.router.navigateByUrl('/main')),
+        catchError((err) => this.handleError(err, this.failedLoginMessage))
+      );
+  }
+
+  private registerUser(action: User) {
+    return this.authenticationService.register(action).pipe(
+      map((user: User) => userUpdate(user)),
+      tap(() =>
+        this.notificationService.success(
+          'Registered successfully! Now you can log in^^'
+        )
+      ),
+      tap(() => this.router.navigateByUrl('/login')),
+      catchError((err: ErrorFormat) =>
+        this.handleError(err, `${this.failedRegisterMessage}.`)
+      )
+    );
+  }
+
+  private addDefaulyUserNutritionGoalsToAction(action: UserFromForm): User {
+    return {
+      ...action,
+      nutritionGoals: defaultNutritionGoals,
+    };
+  }
 
   private createLoginCredentials(action: LoginCredentials): LoginCredentials {
     this.tokensStorageService.setUsername(action.username);

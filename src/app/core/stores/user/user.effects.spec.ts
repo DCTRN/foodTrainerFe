@@ -8,8 +8,17 @@ import { UserApiService } from '@api/user/user-api.service';
 import { AuthenticationTimerService } from '@core/authentication/authentication-timer.service';
 import { TokensStorageService } from '@core/authentication/tokens-storage.service';
 import { NotificationService } from '@core/notifications/service/notification.service';
+import {
+  defaultNutritionGoals,
+  UserFromFormTyped,
+} from '@itf/user-utility-types.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { provideMockStore } from '@ngrx/store/testing';
+import {
+  user1,
+  user2,
+  userFromRegisterFormWithType,
+} from '@testsUT/user/user-mock-data.model';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { Observable, of, ReplaySubject, throwError } from 'rxjs';
 import { AuthenticationService } from '../../authentication/authentication.service';
@@ -32,25 +41,11 @@ class RouterMock {
   public navigateByUrl(route: string): void {}
 }
 
-export const userMock: User = {
-  username: 'mike8',
-  password: 'haslo1234',
-  email: 'michal.kowalski@gmail.com',
-  phoneNumber: '123123123',
-  birthDate: null,
-  firstName: 'majkel',
-  lastName: 'majk',
-};
-
-export const userFromBeMock: User = {
-  username: 'mike8',
-  email: 'michal.kowalski@gmail.com',
-  birthDate: null,
-  phoneNumber: '123123123',
-  firstName: 'majkel',
-  lastName: 'majk',
-  id: 22,
-  authenticationLevel: 1,
+export const userFromFormMock: UserFromFormTyped = userFromRegisterFormWithType;
+export const userFromBeMock: User = user2;
+export const expectedUserFromFrom = {
+  ...userFromFormMock,
+  nutritionGoals: defaultNutritionGoals,
 };
 
 export const tokensMock = {
@@ -119,16 +114,7 @@ export class UserApiServiceMock {
   }
 }
 
-const userMock1 = {
-  id: 5,
-  username: 'mike98',
-  email: 'mike98@gmail.com',
-  birthDate: new Date(),
-  phoneNumber: '111222333',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  authenticationLevel: 1,
-};
+const userMock1: User = user1;
 
 describe('User effects', () => {
   let injector: TestBed;
@@ -181,7 +167,9 @@ describe('User effects', () => {
         },
       ],
     });
+  });
 
+  beforeEach(() => {
     injector = getTestBed();
     authenticationService = injector.inject(AuthenticationService);
     router = injector.inject(Router);
@@ -197,17 +185,17 @@ describe('User effects', () => {
   });
 
   it('should handle success register action', () => {
-    const navigateByUrlSpy = spyOn(router, 'navigateByUrl');
+    spyOn(router, 'navigateByUrl');
     let resultAction: any;
     const registerSpy = spyOn(
       authenticationService,
       'register'
     ).and.returnValue(of(userFromBeMock));
-    actions$.next(UserAction.REGISTER_REQUEST(userMock));
+    actions$.next(UserAction.REGISTER_REQUEST(userFromFormMock));
 
     service.register$.subscribe((action) => (resultAction = action));
 
-    expect(registerSpy).toHaveBeenCalled();
+    expect(registerSpy).toHaveBeenCalledWith(expectedUserFromFrom);
     expect(resultAction).toEqual(UserAction.USER_UPDATE(userFromBeMock));
   });
 
@@ -218,14 +206,14 @@ describe('User effects', () => {
       authenticationService,
       'register'
     ).and.returnValue(throwError('Error'));
-    actions$.next(UserAction.REGISTER_REQUEST(userMock));
+    actions$.next(UserAction.REGISTER_REQUEST(userFromFormMock));
 
     service.register$.subscribe(
       (a) => (resultAction = a),
       (e) => (error = e)
     );
 
-    expect(registerSpy).toHaveBeenCalled();
+    expect(registerSpy).toHaveBeenCalledWith(expectedUserFromFrom);
     expect(resultAction).toEqual(UserAction.USER_ERROR('Error'));
   });
 

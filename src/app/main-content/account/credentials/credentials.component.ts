@@ -267,16 +267,17 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   }
 
   private handleUpdateCredentials() {
-    const user: User = this.extractUserDataFromForms();
+    // TODO change Partial<User> to User
+    const user: Partial<User> = this.extractUserDataFromForms();
     user.id = this.user.id;
-    this.store.dispatch(UserAction.PATCH_CREDENTIALS_REQUEST(user));
+    this.store.dispatch(UserAction.PATCH_CREDENTIALS_REQUEST(user as User));
     this.closeChangeWarrningDialog();
     this.logger.log(
       `${this.signature} dispatching ${UserActionType.PATCH_CREDENTIALS_REQUEST}`
     );
   }
 
-  private extractUserDataFromForms(): User {
+  private extractUserDataFromForms(): Partial<User> {
     return {
       username: this.usernameFormControl.value,
       email: this.emailFormControl.value,

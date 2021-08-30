@@ -6,22 +6,14 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import { User } from '@core/stores/user/user.model';
+import { user1 } from '@testsUT/user/user-mock-data.model';
 import {
   UserCardButtonAction,
   UserCardButtonActionType,
   UserCardComponent,
 } from './user-card.component';
 
-const user: User = {
-  id: 5,
-  username: 'mike98',
-  email: 'mike98@gmail.com',
-  birthDate: new Date(),
-  phoneNumber: '111222333',
-  firstName: 'Michal1',
-  lastName: 'Pytlik1',
-  authenticationLevel: 1,
-};
+const user: User = user1;
 
 describe('UserCardComponent', () => {
   let injector: TestBed;

@@ -1,3 +1,4 @@
+import { UserFromForm } from '@itf/user-utility-types.model';
 import { createAction, props } from '@ngrx/store';
 import { User } from './user.model';
 
@@ -8,12 +9,15 @@ export const patchCredentialsRequestType = '[USER] PATCH_CREDENTIALS_REQUEST';
 export const updateType = '[USER] USER_UPDATE';
 export const errorType = '[USER] USER_ERROR';
 
-export const registerRequest = createAction(registerRequestType, props<User>());
+export const registerRequest = createAction(
+  registerRequestType,
+  props<UserFromForm>()
+);
 export const loginRequest = createAction(
   loginRequestType,
   props<{ username: string; password: string }>()
 );
-export const userUpdate = createAction(updateType, props<User>());
+export const userUpdate = createAction(updateType, props<Partial<User>>());
 export const userError = createAction(errorType, props<any>());
 export const getCredentialsRequest = createAction(getCredentialsRequestType);
 export const patchCredentialsRequest = createAction(

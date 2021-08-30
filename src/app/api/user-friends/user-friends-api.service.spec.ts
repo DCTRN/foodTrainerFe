@@ -16,6 +16,7 @@ import {
   FriendRequest,
   UserFriend
 } from "@core/stores/friends/friends.model";
+import { user1, user2 } from '@testsUT/user/user-mock-data.model';
 
 const friendRequest: FriendRequest = {
   userId: 1,
@@ -25,26 +26,8 @@ const friendRequest: FriendRequest = {
 const userFriendPending: UserFriend = {
   id: 5,
   isAccepted: false,
-  friend: {
-    id: 2,
-    username: 'mike2',
-    email: 'mike2@gmail.com',
-    birthDate: new Date(),
-    phoneNumber: '223123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
-  user: {
-    id: 2,
-    username: 'mike2',
-    email: 'mike2@gmail.com',
-    birthDate: new Date(),
-    phoneNumber: '223123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
+  friend: user2,
+  user: user1,
   friendshipRequesterId: 1,
   friendshipRequestDate: new Date(),
   friendshipAcceptDate: null,
@@ -53,26 +36,8 @@ const userFriendPending: UserFriend = {
 const userFriendAccepted: UserFriend = {
   id: 5,
   isAccepted: true,
-  friend: {
-    id: 2,
-    username: 'mike2',
-    email: 'mike2@gmail.com',
-    birthDate: new Date(),
-    phoneNumber: '223123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
-  user: {
-    id: 2,
-    username: 'mike2',
-    email: 'mike2@gmail.com',
-    birthDate: new Date(),
-    phoneNumber: '223123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
+  friend: user2,
+  user: user1,
   friendshipRequesterId: 1,
   friendshipRequestDate: new Date(),
   friendshipAcceptDate: null,
@@ -82,16 +47,7 @@ const friendsMock: Array<Friend> = [
   {
     id: 5,
     isAccepted: true,
-    friend: {
-      id: 2,
-      username: 'mike2',
-      email: 'mike2@gmail.com',
-      birthDate: new Date(),
-      phoneNumber: '223123146',
-      firstName: 'majkel',
-      lastName: 'majk',
-      authenticationLevel: 1,
-    },
+    friend: user2,
     friendshipRequesterId: 1,
     friendshipRequestDate: new Date(),
     friendshipAcceptDate: new Date(),

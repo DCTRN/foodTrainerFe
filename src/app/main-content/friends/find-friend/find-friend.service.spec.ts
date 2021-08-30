@@ -4,39 +4,18 @@ import { ErrorFormat } from '@core/models/error-format.model';
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { User } from '@core/stores/user/user.model';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { user1, user2, user3 } from '@testsUT/user/user-mock-data.model';
 import { isEqual } from 'lodash';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { FindFriendService } from './find-friend.service';
 
-const user1: User = {
-  id: 66,
-  username: 'mikeRandom',
-  email: 'mikeRandom@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-const user2: User = {
-  id: 3,
-  username: 'mike28',
-  email: 'mike28@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-
-const usersMock = [user1, user2];
+const usersMock = [user2, user3];
 
 class UserApiServiceMock {
   public findUsersBy(searchText: string): Observable<Array<User>> {
     return of(null);
   }
-  public dupa(): void {}
 }
 
 class NotificationServiceMock {
@@ -44,18 +23,9 @@ class NotificationServiceMock {
   public success(message: string, duration: number = 5000): void {}
   public error(message: string, duration: number = 5000): void {}
 }
-const userInitial: User = {
-  id: 5,
-  username: 'mike98',
-  email: 'mmike98@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
+const userInitial: User = user1;
 const initialState = { user: userInitial };
-const usersMock2 = [userInitial, user1, user2];
+const usersMock2 = [userInitial, user1, user2, user3];
 
 describe('FindFriendService', () => {
   let injector: TestBed;
@@ -100,8 +70,8 @@ describe('FindFriendService', () => {
 
     expect(userApiService.findUsersBy).toHaveBeenCalledWith(searchString);
     expect(users.length).toEqual(2);
-    expect(isEqual(users[0], user1)).toEqual(true);
-    expect(isEqual(users[1], user2)).toEqual(true);
+    expect(isEqual(users[0], user2)).toEqual(true);
+    expect(isEqual(users[1], user3)).toEqual(true);
     expect(notificationService.success).toHaveBeenCalledWith(
       `Found ${users.length} users`
     );

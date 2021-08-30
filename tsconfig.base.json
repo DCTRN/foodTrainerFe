@@ -6,6 +6,7 @@
     "paths": {
       "@api/*": ["src/app/api/*"],
       "@core/*": ["src/app/core/*"],
+      "@itf/*": ["src/app/itf/*"],
       "@utils/*": ["src/app/utils/*"],
       "@landingPage/*": ["src/app/landing-page/*"],
       "@main-content/*": ["src/app/main-content/*"],

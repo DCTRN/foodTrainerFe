@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { Environment } from '@core/environment';
 import { propagateError } from '@core/rxjs-operators/propagate-error';
 import { User } from '@core/stores/user/user.model';
+import { nullUser } from '@testsUT/user/user-mock-data.model';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -14,16 +15,7 @@ export class UserApiService {
   private readonly signature = '[USR.AS]';
   private readonly apiUrl = Environment.apiUrl;
   private readonly usersUrl = this.apiUrl + Environment.userUrl.USERS;
-  private readonly nullUser: User = {
-    id: null,
-    username: null,
-    email: null,
-    birthDate: null,
-    phoneNumber: null,
-    firstName: null,
-    lastName: null,
-    authenticationLevel: null,
-  };
+  private readonly nullUser: User = nullUser;
   constructor(private http: HttpClient, private logger: NGXLogger) {}
 
   public getUserCredentialsByUsername(username: string): Observable<User> {

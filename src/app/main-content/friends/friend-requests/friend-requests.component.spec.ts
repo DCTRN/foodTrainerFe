@@ -9,20 +9,12 @@ import { FriendsAction } from '@core/stores/friends/friends.actions';
 import { Friend } from '@core/stores/friends/friends.model';
 import { User } from '@core/stores/user/user.model';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { user1, user2 } from '@testsUT/user/user-mock-data.model';
 import { UserCardButtonListAction } from '../user-card-list/user-card-list.component';
 import { UserCardButtonActionType } from '../user-card-list/user-card/user-card.component';
 import { FriendRequestsComponent } from './friend-requests.component';
 
-const randomUser: User = {
-  id: 66,
-  username: 'mikeRandom',
-  email: 'mikeRandom@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
+const randomUser: User = user2;
 
 const randomFriend: Friend = {
   id: 6,
@@ -37,16 +29,7 @@ const friendsInitial: Friend[] = [
   {
     id: 5,
     isAccepted: true,
-    friend: {
-      id: 2,
-      username: 'mike2',
-      email: 'mike2@gmail.com',
-      birthDate: new Date(),
-      phoneNumber: '223123146',
-      firstName: 'majkel',
-      lastName: 'majk',
-      authenticationLevel: 1,
-    },
+    friend: user1,
     friendshipRequesterId: 1,
     friendshipRequestDate: null,
     friendshipAcceptDate: null,

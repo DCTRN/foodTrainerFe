@@ -3,6 +3,7 @@ import { UserFriendsApiService } from '@api/user-friends/user-friends-api.servic
 import { NotificationService } from '@core/notifications/service/notification.service';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { user1, user2 } from '@testsUT/user/user-mock-data.model';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
@@ -11,31 +12,13 @@ import { FriendsAction } from './friends.actions';
 import { FriendsEffects } from './friends.effects';
 import { Friend, FriendRequest, UserFriend } from './friends.model';
 
-const userInitial: User = {
-  id: 1,
-  username: 'mike',
-  email: 'mike@gmail.com',
-  birthDate: new Date(),
-  phoneNumber: '223153146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
+const userInitial: User = user1;
 
 const friendsInitial: Friend[] = [
   {
     id: 5,
     isAccepted: true,
-    friend: {
-      id: 2,
-      username: 'mike2',
-      email: 'mike2@gmail.com',
-      birthDate: new Date(),
-      phoneNumber: '223123146',
-      firstName: 'majkel',
-      lastName: 'majk',
-      authenticationLevel: 1,
-    },
+    friend: user2,
     friendshipRequesterId: 1,
     friendshipRequestDate: new Date(),
     friendshipAcceptDate: new Date(),
@@ -47,16 +30,7 @@ const userFriend: UserFriend = {
   id: 5,
   isAccepted: true,
   user: userInitial,
-  friend: {
-    id: 2,
-    username: 'mike2',
-    email: 'mike2@gmail.com',
-    birthDate: new Date(),
-    phoneNumber: '223123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
+  friend: user2,
   friendshipRequesterId: 1,
   friendshipRequestDate: new Date(),
   friendshipAcceptDate: new Date(),
@@ -66,16 +40,7 @@ const userFriendAccepted: UserFriend = {
   id: 5,
   isAccepted: true,
   user: userInitial,
-  friend: {
-    id: 2,
-    username: 'mike2',
-    email: 'mike2@gmail.com',
-    birthDate: new Date(),
-    phoneNumber: '223123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
+  friend: user2,
   friendshipRequesterId: 1,
   friendshipRequestDate: new Date(),
   friendshipAcceptDate: new Date(),

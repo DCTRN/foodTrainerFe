@@ -5,9 +5,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { NotificationService } from '@core/notifications/service/notification.service';
+import { Sex } from '@core/stores/user/user-details.model';
 import { select, Store } from '@ngrx/store';
 import {
   registerRequest,
@@ -20,6 +20,8 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, take } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
+import { MatSelectData } from '@itf/mat-select-data.model';
+import { UserFromForm } from '@itf/user-utility-types.model';
 
 @Component({
   selector: 'app-register',
@@ -29,6 +31,17 @@ import { AppState } from 'src/app/reducers';
 export class RegisterComponent implements OnInit, OnDestroy {
   public simpleErrorStateMatcher = new SimpleErrorStateMatcher();
   public minDate: Date;
+
+  public sex: Array<MatSelectData<Sex, string>> = [
+    {
+      value: Sex.MALE,
+      viewValue: 'Male',
+    },
+    {
+      value: Sex.FEMALE,
+      viewValue: 'Female',
+    },
+  ];
 
   public registerForm: FormGroup;
   public usernameFormControl: FormControl;
@@ -40,13 +53,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
   public firstNameFormControl: FormControl;
   public lastNameFormControl: FormControl;
 
+  public ageFormControl: FormControl;
+  public heightFormControl: FormControl;
+  public weightFormControl: FormControl;
+  public sexFormControl: FormControl;
+
   public user: User;
 
   private readonly signature = '[R.C]';
   private subscriptions = new Subscription();
 
   constructor(
-    private userStore: Store<AppState>,
+    private store: Store<AppState>,
     private router: Router,
     private formBuilder: FormBuilder,
     private logger: NGXLogger,
@@ -85,7 +103,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   private getLastUserState() {
-    this.userStore.pipe(select('user'), take(1)).subscribe((u: User) => {
+    this.store.pipe(select('user'), take(1)).subscribe((u: User) => {
       this.setCurrentValueInForms(u);
       this.updateFormValidity();
       this.updateView();
@@ -120,8 +138,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   private updateUserStoreState() {
-    const user: User = this.extractUserDataFromForms();
-    this.userStore.dispatch(UserAction.USER_UPDATE(user));
+    // TODO change UserFromForm to User
+    const user: UserFromForm = this.extractUserDataFromForms();
+    this.store.dispatch(UserAction.USER_UPDATE(user));
   }
 
   private setCurrentValueInForms(u: User) {
@@ -132,17 +151,22 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.firstNameFormControl?.setValue(this.user.firstName);
     this.lastNameFormControl?.setValue(this.user.lastName);
     this.birthDateFormControl?.setValue(this.user.birthDate);
+    this.ageFormControl?.setValue(this.user?.details.age);
+    this.heightFormControl?.setValue(this.user?.details.height);
+    this.weightFormControl?.setValue(this.user?.details.weight);
+    this.sexFormControl?.setValue(this.user?.details.sex);
   }
 
   private handleRegister() {
-    const user: User = this.extractUserDataFromForms();
-    this.userStore.dispatch(registerRequest(user));
+    // TODO change UserFromForm to User
+    const user: UserFromForm = this.extractUserDataFromForms();
+    this.store.dispatch(registerRequest(user as User));
     this.logger.log(
       `${this.signature} dispatching ${UserActionType.REGISTER_REQUEST}`
     );
   }
 
-  private extractUserDataFromForms(): User {
+  private extractUserDataFromForms(): UserFromForm {
     return {
       username: this.usernameFormControl.value,
       password: this.passwordFormControl.value,
@@ -151,6 +175,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
       phoneNumber: String(this.phoneNumberFormControl.value),
       firstName: this.firstNameFormControl.value,
       lastName: this.lastNameFormControl.value,
+      details: {
+        age: this.ageFormControl.value,
+        height: this.heightFormControl.value,
+        weight: this.weightFormControl.value,
+        sex: this.sexFormControl.value,
+      },
     };
   }
 
@@ -168,6 +198,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
       phoneNumber: this.phoneNumberFormControl,
       firstName: this.firstNameFormControl,
       lastName: this.lastNameFormControl,
+      age: this.ageFormControl,
+      height: this.heightFormControl,
+      weight: this.weightFormControl,
+      sex: this.sexFormControl,
     });
   }
 
@@ -180,6 +214,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.createPhoneNumberFormControl();
     this.createFirstNameFormControl();
     this.createLastNameFormControl();
+    this.createAgeFormControl();
+    this.createHeightFormControl();
+    this.createWeightFormControl();
+    this.createSexFormControl();
   }
 
   private createLastNameFormControl() {
@@ -203,6 +241,34 @@ export class RegisterComponent implements OnInit, OnDestroy {
       Validators.required,
       Validators.pattern('[0-9]{9}'),
     ]);
+  }
+
+  private createAgeFormControl() {
+    this.ageFormControl = new FormControl('', [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(100),
+    ]);
+  }
+
+  private createHeightFormControl() {
+    this.heightFormControl = new FormControl('', [
+      Validators.required,
+      Validators.min(50),
+      Validators.max(250),
+    ]);
+  }
+
+  private createWeightFormControl() {
+    this.weightFormControl = new FormControl('', [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(250),
+    ]);
+  }
+
+  private createSexFormControl() {
+    this.sexFormControl = new FormControl('', [Validators.required]);
   }
 
   private createBirthDateFormControl() {

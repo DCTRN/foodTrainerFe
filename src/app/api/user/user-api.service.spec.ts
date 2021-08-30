@@ -10,41 +10,10 @@ import { User } from '@core/stores/user/user.model';
 import { LoggerConfig, NGXLogger } from 'ngx-logger';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { UserApiService } from './user-api.service';
+import { user1, user2, user3 } from '@testsUT/user/user-mock-data.model';
 
-const userMock1 = {
-  id: 5,
-  username: 'mike98',
-  email: 'mike98@gmail.com',
-  birthDate: new Date(),
-  phoneNumber: '111222333',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  authenticationLevel: 1,
-};
-
-const userMock2 = {
-  id: 1,
-  username: 'mike1',
-  email: 'mike1@gmail.com',
-  birthDate: new Date(),
-  phoneNumber: '123123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-const userMock3 = {
-  id: 2,
-  username: 'mike2',
-  email: 'mike2@gmail.com',
-  birthDate: new Date(),
-  phoneNumber: '223123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-const findByMock: Array<User> = [userMock1, userMock2, userMock3];
-
-const userMockData: Array<User> = [userMock1];
+const findByMock: Array<User> = [user1, user2, user3];
+const userMockData: Array<User> = [user1];
 
 describe('UserApiService', () => {
   const apiUrl = Environment.apiUrl;
@@ -87,13 +56,13 @@ describe('UserApiService', () => {
       .expectOne(`${usersUrl}?username=${username}`)
       .flush(userMockData);
 
-    expect(user.id).toEqual(userMock1.id);
-    expect(user.username).toEqual(userMock1.username);
-    expect(user.email).toEqual(userMock1.email);
-    expect(user.phoneNumber).toEqual(userMock1.phoneNumber);
-    expect(user.firstName).toEqual(userMock1.firstName);
-    expect(user.lastName).toEqual(userMock1.lastName);
-    expect(user.authenticationLevel).toEqual(userMock1.authenticationLevel);
+    expect(user.id).toEqual(user1.id);
+    expect(user.username).toEqual(user1.username);
+    expect(user.email).toEqual(user1.email);
+    expect(user.phoneNumber).toEqual(user1.phoneNumber);
+    expect(user.firstName).toEqual(user1.firstName);
+    expect(user.lastName).toEqual(user1.lastName);
+    expect(user.authenticationLevel).toEqual(user1.authenticationLevel);
   });
 
   it('should get empty user data successfully', () => {
@@ -141,35 +110,33 @@ describe('UserApiService', () => {
     let user: User;
     let error: ErrorFormat;
 
-    service.updateUserCredentials(userMock1).subscribe(
+    service.updateUserCredentials(user1).subscribe(
       (u) => (user = u),
       (e) => (error = e)
     );
 
-    httpTestingController
-      .expectOne(`${usersUrl}/${userMock1.id}`)
-      .flush(userMock1);
+    httpTestingController.expectOne(`${usersUrl}/${user1.id}`).flush(user1);
 
-    expect(user.id).toEqual(userMock1.id);
-    expect(user.username).toEqual(userMock1.username);
-    expect(user.email).toEqual(userMock1.email);
-    expect(user.phoneNumber).toEqual(userMock1.phoneNumber);
-    expect(user.firstName).toEqual(userMock1.firstName);
-    expect(user.lastName).toEqual(userMock1.lastName);
-    expect(user.authenticationLevel).toEqual(userMock1.authenticationLevel);
+    expect(user.id).toEqual(user1.id);
+    expect(user.username).toEqual(user1.username);
+    expect(user.email).toEqual(user1.email);
+    expect(user.phoneNumber).toEqual(user1.phoneNumber);
+    expect(user.firstName).toEqual(user1.firstName);
+    expect(user.lastName).toEqual(user1.lastName);
+    expect(user.authenticationLevel).toEqual(user1.authenticationLevel);
   });
 
   it('should get error while updating user data', () => {
     let user: User;
     let error: ErrorFormat;
 
-    service.updateUserCredentials(userMock1).subscribe(
+    service.updateUserCredentials(user1).subscribe(
       (u) => (user = u),
       (e) => (error = e)
     );
 
     httpTestingController
-      .expectOne(`${usersUrl}/${userMock1.id}`)
+      .expectOne(`${usersUrl}/${user1.id}`)
       .error(new ErrorEvent('error'));
 
     expect(error).toBeTruthy();

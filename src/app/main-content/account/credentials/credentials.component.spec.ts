@@ -20,20 +20,12 @@ import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { user1 } from '@testsUT/user/user-mock-data.model';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ReplaySubject } from 'rxjs';
 import { CredentialsComponent } from './credentials.component';
 
-const userInitial: User = {
-  username: 'mike8',
-  email: 'michal.kowalski@gmail.com',
-  phoneNumber: '123123123',
-  birthDate: new Date(),
-  firstName: 'majkel',
-  lastName: 'majk',
-  id: 5,
-  authenticationLevel: 1,
-};
+const userInitial: User = user1;
 export const initialState: any = {
   user: userInitial,
 };

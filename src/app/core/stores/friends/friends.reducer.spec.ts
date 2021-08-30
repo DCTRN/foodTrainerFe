@@ -1,55 +1,29 @@
+import { user1, user2 } from '@testsUT/user/user-mock-data.model';
 import { isEqual } from 'lodash';
 import { Friends, FriendsAction } from './friends.actions';
 import { Friend } from './friends.model';
 import { friendsReducer } from './friends.reducer';
 
-const friend1 = {
+const friend1: Friend = {
   id: 6,
   isAccepted: false,
-  friend: {
-    id: 1,
-    username: 'mike1',
-    email: 'mike1@gmail.com',
-    birthDate: null,
-    phoneNumber: '123123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
+  friend: user1,
   friendshipRequesterId: 5,
   friendshipRequestDate: null,
   friendshipAcceptDate: null,
 };
-const friend1Accepted = {
+const friend1Accepted: Friend = {
   id: 6,
   isAccepted: true,
-  friend: {
-    id: 1,
-    username: 'mike1',
-    email: 'mike1@gmail.com',
-    birthDate: null,
-    phoneNumber: '123123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
+  friend: user1,
   friendshipRequesterId: 5,
   friendshipRequestDate: null,
   friendshipAcceptDate: null,
 };
-const friend2 = {
+const friend2: Friend = {
   id: 7,
   isAccepted: false,
-  friend: {
-    id: 2,
-    username: 'mike2',
-    email: 'mike2@gmail.com',
-    birthDate: null,
-    phoneNumber: '223123146',
-    firstName: 'majkel',
-    lastName: 'majk',
-    authenticationLevel: 1,
-  },
+  friend: user2,
   friendshipRequesterId: 5,
   friendshipRequestDate: null,
   friendshipAcceptDate: null,

@@ -4,17 +4,9 @@ import {
   ProductModification,
 } from '@core/models/products';
 import { User } from '@core/stores/user/user.model';
+import { user1 } from '@testsUT/user/user-mock-data.model';
 
-export const userInitial: User = {
-  id: 1,
-  username: 'mike',
-  email: 'mike@gmail.com',
-  birthDate: new Date(),
-  phoneNumber: '223153146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
+export const userInitial: User = user1;
 
 export const productDeletion1: ProductDeletion = {
   userId: 1,

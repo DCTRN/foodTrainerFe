@@ -17,6 +17,7 @@ import { Tokens } from '@core/stores/tokens/tokens.model';
 import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { undefinedUser, user1 } from '@testsUT/user/user-mock-data.model';
 import { NGXLogger } from 'ngx-logger';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -24,27 +25,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { ModalModule } from '../app/core/modal-service/modal.module';
 import { AppComponent } from './app.component';
 
-export const user1: User = {
-  id: 1,
-  username: 'mike8',
-  password: 'haslo1234',
-  email: 'michal.kowalski@gmail.com',
-  phoneNumber: '123123123',
-  birthDate: null,
-  firstName: 'majkel',
-  lastName: 'majk',
-};
-
-export const userInitial: User = {
-  id: undefined,
-  username: undefined,
-  email: undefined,
-  birthDate: undefined,
-  phoneNumber: undefined,
-  firstName: undefined,
-  lastName: undefined,
-  authenticationLevel: undefined,
-};
+export const userInitial: User = undefinedUser;
 
 const initialState = { user: userInitial };
 

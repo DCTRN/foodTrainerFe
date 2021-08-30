@@ -10,32 +10,12 @@ import { FriendsAction } from '@core/stores/friends/friends.actions';
 import { Friend } from '@core/stores/friends/friends.model';
 import { User } from '@core/stores/user/user.model';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { user1, user2 } from '@testsUT/user/user-mock-data.model';
 import { Observable, of } from 'rxjs';
 import { UserCardButtonListAction } from '../user-card-list/user-card-list.component';
 import { UserCardButtonActionType } from '../user-card-list/user-card/user-card.component';
 import { FindFriendComponent } from './find-friend.component';
 import { FindFriendService } from './find-friend.service';
-
-const user1: User = {
-  id: 66,
-  username: 'mikeRandom',
-  email: 'mikeRandom@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
-const user2: User = {
-  id: 3,
-  username: 'mike28',
-  email: 'mike28@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
 
 const usersMock = [user1, user2];
 
@@ -54,16 +34,7 @@ const friendsInitial: Friend[] = [
   {
     id: 5,
     isAccepted: true,
-    friend: {
-      id: 2,
-      username: 'mike2',
-      email: 'mike2@gmail.com',
-      birthDate: new Date(),
-      phoneNumber: '223123146',
-      firstName: 'majkel',
-      lastName: 'majk',
-      authenticationLevel: 1,
-    },
+    friend: user2,
     friendshipRequesterId: 1,
     friendshipRequestDate: null,
     friendshipAcceptDate: null,
@@ -71,16 +42,7 @@ const friendsInitial: Friend[] = [
 ];
 const initialState = { friends: friendsInitial };
 
-const randomUser: User = {
-  id: 66,
-  username: 'mikeRandom',
-  email: 'mikeRandom@gmail.com',
-  birthDate: null,
-  phoneNumber: '220123146',
-  firstName: 'majkel',
-  lastName: 'majk',
-  authenticationLevel: 1,
-};
+const randomUser: User = user1;
 
 const addFriend: Friend = {
   id: null,
