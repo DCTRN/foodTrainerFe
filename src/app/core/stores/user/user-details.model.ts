@@ -4,6 +4,7 @@ export enum Sex {
 }
 
 export interface UserDetails {
+  id?: number;
   age: number;
   height: number;
   weight: number;

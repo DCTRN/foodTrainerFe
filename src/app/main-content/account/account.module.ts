@@ -11,12 +11,15 @@ import { AccountComponent } from './account.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { CredentialsComponent } from './credentials/credentials.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
+import { NutritionGoalsComponent } from './nutrition-goals/nutrition-goals.component';
 
 @NgModule({
   declarations: [
     AccountComponent,
     CredentialsComponent,
     ChangePasswordComponent,
+    NutritionGoalsComponent,
   ],
   imports: [
     CommonModule,
@@ -29,6 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatTabsModule,
     MatTooltipModule,
+    MatSelectModule,
   ],
 })
 export class AccountModule {}

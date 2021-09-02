@@ -1,0 +1,133 @@
+<div class="main-wrapper">
+  <form [formGroup]="updateNutritionGoalsForm" class="example-form">
+    <table class="example-full-width">
+      <tr>
+        <td colspan="2" class="example-full-width">
+          <mat-form-field
+            (key.enter)="updateNutritionGoals()"
+            class="example-full-width"
+          >
+            <mat-label>Kcal</mat-label>
+            <input
+              formControlName="kcal"
+              matInput
+              type="number"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                kcalFormControl.dirty &&
+                (kcalFormControl.hasError('required') ||
+                  kcalFormControl.hasError('min') ||
+                  kcalFormControl.hasError('max'))
+              "
+            >
+              Please enter a valid kcal value(600-20 000).
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="example-full-width">
+          <mat-form-field
+            (key.enter)="updateNutritionGoals()"
+            class="example-full-width"
+          >
+            <mat-label>Protein</mat-label>
+            <input
+              formControlName="protein"
+              matInput
+              type="number"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                proteinFormControl.dirty &&
+                (proteinFormControl.hasError('required') ||
+                  proteinFormControl.hasError('min') ||
+                  proteinFormControl.hasError('max'))
+              "
+            >
+              Please enter a valid protein value(1-98).
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="example-full-width">
+          <mat-form-field
+            (key.enter)="updateNutritionGoals()"
+            class="example-full-width"
+          >
+            <mat-label>Carbs</mat-label>
+            <input
+              formControlName="carbs"
+              matInput
+              type="number"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                carbsFormControl.dirty &&
+                (carbsFormControl.hasError('required') ||
+                  carbsFormControl.hasError('min') ||
+                  carbsFormControl.hasError('max'))
+              "
+            >
+              Please enter a valid carbs value(1-98).
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="example-full-width">
+          <mat-form-field
+            (key.enter)="updateNutritionGoals()"
+            class="example-full-width"
+          >
+            <mat-label>Fats</mat-label>
+            <input
+              formControlName="fats"
+              matInput
+              type="number"
+              [errorStateMatcher]="simpleErrorStateMatcher"
+            />
+            <mat-error
+              *ngIf="
+                fatsFormControl.dirty &&
+                (fatsFormControl.hasError('required') ||
+                  fatsFormControl.hasError('min') ||
+                  fatsFormControl.hasError('max'))
+              "
+            >
+              Please enter a valid fats value(1-98).
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-error *ngIf="!isNutritionsPercentageEqual100">
+            Sum of protein, carbs and fats must equal 100%. Please adjust
+            proportions.
+          </mat-error>
+        </td>
+      </tr>
+    </table>
+    <div
+      [matTooltip]="toolTipContent"
+      [matTooltipPosition]="toolTipPosition"
+      [matTooltipHideDelay]="toolTipDelay"
+      [matTooltipDisabled]="!disabled"
+    >
+      <button
+        [disabled]="disabled || !this.isFormValid()"
+        (click)="updateNutritionGoals()"
+        mat-stroked-button
+        class="btn"
+      >
+        Apply changes
+      </button>
+    </div>
+  </form>
+</div>
