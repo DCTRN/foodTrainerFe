@@ -21,10 +21,14 @@ import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { user1 } from '@testsUT/user/user-mock-data.model';
+import {
+  user1,
+  user1Details,
+  user1NutritionGoals,
+} from '@testsUT/user/user-mock-data.model';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ReplaySubject } from 'rxjs';
-import { CredentialsComponent } from './credentials.component';
+import { NutritionGoalsComponent } from './nutrition-goals.component';
 
 const userInitial: User = user1;
 export const initialState: any = {
@@ -46,19 +50,18 @@ export class ModalServiceMock {
   }
 }
 
-// TODO check new fields and different behavior on the button
-describe('CredentialsComponent', () => {
+describe('NutritionGoalsComponent', () => {
   const actions$ = new ReplaySubject(1);
   let injector: TestBed;
-  let component: CredentialsComponent;
-  let fixture: ComponentFixture<CredentialsComponent>;
+  let component: NutritionGoalsComponent;
+  let fixture: ComponentFixture<NutritionGoalsComponent>;
   let store: MockStore;
   let notificationService: NotificationService;
   let modalService: ModalService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CredentialsComponent],
+      declarations: [NutritionGoalsComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -92,7 +95,7 @@ describe('CredentialsComponent', () => {
     modalService = injector.inject(ModalService);
     notificationService = injector.inject(NotificationService);
     store = injector.inject(MockStore);
-    fixture = injector.createComponent(CredentialsComponent);
+    fixture = injector.createComponent(NutritionGoalsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -102,17 +105,27 @@ describe('CredentialsComponent', () => {
   });
 
   it('should fill forms with current value from store', () => {
-    const username = component.usernameFormControl.value;
-    const email = component.emailFormControl.value;
-    const phoneNumber = component.phoneNumberFormControl.value;
-    const firstName = component.firstNameFormControl.value;
-    const lastName = component.lastNameFormControl.value;
+    const kca = component.kcalFormControl.value;
+    const protein = component.proteinFormControl.value;
+    const carbs = component.carbsFormControl.value;
+    const fats = component.fatsFormControl.value;
 
-    expect(username).toEqual(userInitial.username);
-    expect(email).toEqual(userInitial.email);
-    expect(phoneNumber).toEqual(userInitial.phoneNumber);
-    expect(firstName).toEqual(userInitial.firstName);
-    expect(lastName).toEqual(userInitial.lastName);
+    expect(kca).toEqual(user1NutritionGoals.kcal);
+    expect(protein).toEqual(user1NutritionGoals.protein);
+    expect(carbs).toEqual(user1NutritionGoals.carbs);
+    expect(fats).toEqual(user1NutritionGoals.fats);
+  });
+
+  it('should not send update credentials action and display notification when fields are invalid', () => {
+    const dispatchSpy = spyOn(store, 'dispatch');
+    const infoSpy = spyOn(notificationService, 'info');
+
+    component.kcalFormControl.setValue(0);
+    fixture.detectChanges();
+    component.updateNutritionGoals();
+
+    expect(infoSpy).toHaveBeenCalled();
+    expect(dispatchSpy).not.toHaveBeenCalled();
   });
 
   it('should send update credentials action', () => {
@@ -123,41 +136,26 @@ describe('CredentialsComponent', () => {
       (mc) => (modalConfiguration = mc)
     );
 
-    component.firstNameFormControl.setValue('a');
-    component.lastNameFormControl.setValue('a');
-
+    component.kcalFormControl.setValue(4000);
+    component.proteinFormControl.setValue(50);
+    component.carbsFormControl.setValue(25);
+    component.fatsFormControl.setValue(25);
     fixture.detectChanges();
-
-    component.updateCredentials();
-
-    expect(infoSpy).toHaveBeenCalled();
-    expect(dispatchSpy).not.toHaveBeenCalled();
-
-    component.firstNameFormControl.setValue('changedFirstName');
-    component.lastNameFormControl.setValue('changedLastName');
-
-    component.updateCredentials();
+    component.updateNutritionGoals();
 
     expect(modalConfiguration).toBeTruthy();
     expect(openDialogSpy).toHaveBeenCalled();
-
     const buttons = modalConfiguration.getFooter().getButtons();
-
     expect(buttons.length).toEqual(2);
-
     buttons[1].getCallback()();
-
-    expect(infoSpy).toHaveBeenCalledTimes(1);
+    expect(infoSpy).not.toHaveBeenCalled();
     expect(dispatchSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should disable / enable button dependng on changes', fakeAsync(() => {
-    store.dispatch(UserAction.USER_UPDATE(userInitial));
-
     expect(component.disabled).toEqual(true);
 
-    component.firstNameFormControl.setValue('changedFirstName');
-    component.lastNameFormControl.setValue('changedLastName');
+    component.kcalFormControl.setValue(user1NutritionGoals.kcal + 1);
 
     expect(component.disabled).toEqual(false);
   }));

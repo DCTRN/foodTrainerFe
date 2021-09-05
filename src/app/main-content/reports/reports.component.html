@@ -1,13 +1,19 @@
 <div class="friends-wrapper">
   <mat-tab-group mat-stretch-tabs>
     <mat-tab label="Daily">
-      <ng-template matTabContent><app-pie-chart></app-pie-chart></ng-template>
+      <ng-template matTabContent
+        ><app-report-tab [timeStamp]="timeStamp.DAILY"></app-report-tab
+      ></ng-template>
     </mat-tab>
     <mat-tab label="Weekly">
-      <ng-template matTabContent> </ng-template>
+      <ng-template matTabContent
+        ><app-report-tab [timeStamp]="timeStamp.WEEKLY"></app-report-tab>
+      </ng-template>
     </mat-tab>
     <mat-tab label="Monthly">
-      <ng-template matTabContent> </ng-template>
+      <ng-template matTabContent
+        ><app-report-tab [timeStamp]="timeStamp.MONTHLY"></app-report-tab>
+      </ng-template>
     </mat-tab>
   </mat-tab-group>
 </div>

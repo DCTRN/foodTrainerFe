@@ -61,8 +61,7 @@ export class DiaryComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private componentLoader: ComponentLoaderService,
-    private datePipe: DatePipe
+    private componentLoader: ComponentLoaderService
   ) {}
 
   public ngOnInit(): void {

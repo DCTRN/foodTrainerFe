@@ -22,7 +22,7 @@ export const userError = createAction(errorType, props<any>());
 export const getCredentialsRequest = createAction(getCredentialsRequestType);
 export const patchCredentialsRequest = createAction(
   patchCredentialsRequestType,
-  props<User>()
+  props<Partial<User>>()
 );
 
 export const UserActionType = {

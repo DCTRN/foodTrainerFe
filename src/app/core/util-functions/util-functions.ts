@@ -1,7 +1,9 @@
-import { cloneDeep } from 'lodash';
 import { Product } from '@core/models/products';
+import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
+import { UserProduct } from '@core/models/user-products/user-product.model';
+import { cloneDeep } from 'lodash';
 
-const productPropertiesToRecalculate: string[] = [
+export const productPropertiesToRecalculate: string[] = [
   'kcal',
   'protein',
   'carbohydrates',
@@ -37,6 +39,44 @@ export function removeDuplicatesById<T extends { id: number }>(
   return array.filter(
     (product, index, arr) => arr.findIndex((p) => p.id === product.id) === index
   );
+}
+
+export function reduceUserProductsNutritions(
+  userProducts: Array<UserProduct>
+): ProductNutritions {
+  const targetProductValues: ProductNutritions = {
+    kcal: 0,
+    protein: 0,
+    carbohydrates: 0,
+    fats: 0,
+  };
+  userProducts.forEach((up: UserProduct) =>
+    addValuesOfProduct(
+      targetProductValues,
+      calculateProductValues(up.amount, up.product)
+    )
+  );
+  return targetProductValues;
+}
+
+export function addValuesOfProduct(
+  origin: Partial<Product>,
+  current: Partial<Product>
+): Partial<Product> {
+  return addValuesOfObjectsByKeys<Partial<Product>>(
+    origin,
+    current,
+    productPropertiesToRecalculate
+  );
+}
+
+export function addValuesOfObjectsByKeys<T>(
+  origin: T,
+  current: T,
+  keys: string[]
+): T {
+  keys.forEach((key: string) => (origin[key] += current[key]));
+  return origin;
 }
 
 export function calculateProductValues(
@@ -86,4 +126,21 @@ export function decrementDateByDay(date: Date): Date {
     return new Date();
   }
   return new Date(date.getTime() - day);
+}
+
+export function addOneDay(date: Date): Date {
+  if (!date) {
+    return new Date();
+  }
+  return new Date(date.getTime() - day);
+}
+
+export function setBeginningOfTheDay(date: Date): Date {
+  date.setHours(0, 0, 0);
+  return date;
+}
+
+export function setEndOfTheDay(date: Date): Date {
+  date.setHours(23, 59, 59);
+  return date;
 }

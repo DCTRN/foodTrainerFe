@@ -18,13 +18,27 @@ import { HeaderColor } from '@core/modal-service/models/header-color.enum';
 import { Icon } from '@core/modal-service/models/icon.enum';
 import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
 import { NotificationService } from '@core/notifications/service/notification.service';
+import { Sex, UserDetails } from '@core/stores/user/user-details.model';
 import { UserAction, UserActionType } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
+import { MatSelectData } from '@itf/mat-select-data.model';
 import { select, Store } from '@ngrx/store';
 import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { AppState } from 'src/app/reducers';
+
+export interface UserBasicInformation {
+  username: string;
+  email: string;
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface UserFromUpdateForm extends UserBasicInformation, UserDetails {
+  birthDate: Date;
+}
 
 @Component({
   selector: 'app-credentials',
@@ -35,6 +49,17 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   public simpleErrorStateMatcher = new SimpleErrorStateMatcher();
   public minDate: Date;
 
+  public sex: Array<MatSelectData<Sex, string>> = [
+    {
+      value: Sex.MALE,
+      viewValue: 'Male',
+    },
+    {
+      value: Sex.FEMALE,
+      viewValue: 'Female',
+    },
+  ];
+
   public updateCredentialsForm: FormGroup;
   public usernameFormControl: FormControl;
   public emailFormControl: FormControl;
@@ -42,6 +67,11 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   public phoneNumberFormControl: FormControl;
   public firstNameFormControl: FormControl;
   public lastNameFormControl: FormControl;
+
+  public ageFormControl: FormControl;
+  public heightFormControl: FormControl;
+  public weightFormControl: FormControl;
+  public sexFormControl: FormControl;
 
   public user: User;
   public disabled = true;
@@ -130,92 +160,67 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   private subscribeToFormChanges(): void {
     this.subscriptions.add(
-      this.updateCredentialsForm.valueChanges.subscribe((u: User) =>
-        this.formChangesHandler(u)
+      this.updateCredentialsForm.valueChanges.subscribe(
+        (u: UserFromUpdateForm) => {
+          this.disabled = true;
+          const {
+            id,
+            authenticationLevel,
+            nutritionGoals,
+            type,
+            details,
+            birthDate,
+            ...others
+          } = this.user as unknown as User & { type: string };
+          // TODO make the date work
+          const shouldActivateUpdateButton =
+            this.detailsValidator(details, u) ||
+            this.userBasicInformationValidator(others, u) ||
+            this.birthDateValidator(
+              u?.birthDate?.toString(),
+              birthDate?.toString()
+            );
+          if (shouldActivateUpdateButton) {
+            this.disabled = false;
+          }
+        }
       )
     );
   }
 
-  private formChangesHandler(u: User): void {
-    let changes = false;
-    changes = this.objectKeysHandler(changes, u);
-    this.updateButtonDisableProperty(changes);
-  }
-
-  private objectKeysHandler(changes: boolean, u: User): boolean {
-    const keys = Object.keys(u);
-    for (const key of keys) {
-      if (changes) {
-        return changes;
+  private detailsValidator(
+    details: UserDetails,
+    user: UserFromUpdateForm
+  ): boolean {
+    const { id, ...detailsWithoutId } = details;
+    return Object.keys(detailsWithoutId).some((key: string) => {
+      const result = String(detailsWithoutId[key]) !== String(user[key]);
+      if (result) {
       }
-      changes = this.disablingButtonHandler(key, changes, u);
-    }
-    return changes;
+      return result;
+    });
   }
 
-  private disablingButtonHandler(
-    value: string,
-    changes: boolean,
-    u: User
+  private userBasicInformationValidator(
+    userBasicInformation: UserBasicInformation,
+    user: UserFromUpdateForm
   ): boolean {
-    if (!this.shouldUseDateHandler(value)) {
-      changes = this.disablingButtonDefaultHandler(changes, u, value);
-    } else {
-      changes = this.disablingButtonDateHandler(u, value, changes);
-    }
-    return changes;
+    return Object.keys(userBasicInformation).some((key: string) => {
+      const result = String(userBasicInformation[key]) !== String(user[key]);
+      if (result) {
+      }
+      return result;
+    });
   }
 
-  private disablingButtonDefaultHandler(
-    changes: boolean,
-    u: User,
-    value: string
-  ): boolean {
-    changes = this.setChangesToTruIfValuesDiffer(
-      String(u[value]),
-      String(this.user[value]),
-      changes
-    );
-    return changes;
-  }
-
-  private disablingButtonDateHandler(
-    u: User,
-    value: string,
-    changes: boolean
-  ): boolean {
-    const curr = this.transformToValidDateFormat(u[value]);
-    const origin = this.transformToValidDateFormat(this.user[value]);
-    changes = this.setChangesToTruIfValuesDiffer(curr, origin, changes);
-    return changes;
-  }
-
-  private setChangesToTruIfValuesDiffer(
-    curr: string,
-    origin: string,
-    changes: boolean
-  ): boolean {
-    if (curr === origin) {
-      return;
-    }
-    changes = true;
-    return changes;
+  private birthDateValidator(dateForm: string, dateUser: string): boolean {
+    const curr = this.transformToValidDateFormat(dateForm);
+    const origin = this.transformToValidDateFormat(dateUser);
+    return curr !== origin;
   }
 
   private transformToValidDateFormat(date: string): string {
     return this.datePipe.transform(date, 'MM/dd/yyyy');
-  }
-
-  private shouldUseDateHandler(value: string): boolean {
-    return value === 'birthDate';
-  }
-
-  private updateButtonDisableProperty(changes: boolean): void {
-    if (changes) {
-      this.disabled = false;
-    } else {
-      this.disabled = true;
-    }
   }
 
   private subscribeToUserStore() {
@@ -264,13 +269,17 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     this.firstNameFormControl?.setValue(this.user.firstName);
     this.lastNameFormControl?.setValue(this.user.lastName);
     this.birthDateFormControl?.setValue(this.user.birthDate);
+    this.ageFormControl?.setValue(this.user?.details.age);
+    this.heightFormControl?.setValue(this.user?.details.height);
+    this.weightFormControl?.setValue(this.user?.details.weight);
+    this.sexFormControl?.setValue(this.user?.details.sex);
   }
 
   private handleUpdateCredentials() {
     // TODO change Partial<User> to User
     const user: Partial<User> = this.extractUserDataFromForms();
     user.id = this.user.id;
-    this.store.dispatch(UserAction.PATCH_CREDENTIALS_REQUEST(user as User));
+    this.store.dispatch(UserAction.PATCH_CREDENTIALS_REQUEST(user));
     this.closeChangeWarrningDialog();
     this.logger.log(
       `${this.signature} dispatching ${UserActionType.PATCH_CREDENTIALS_REQUEST}`
@@ -285,10 +294,16 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       phoneNumber: String(this.phoneNumberFormControl.value),
       firstName: this.firstNameFormControl.value,
       lastName: this.lastNameFormControl.value,
+      details: {
+        age: this.ageFormControl.value,
+        height: this.heightFormControl.value,
+        weight: this.weightFormControl.value,
+        sex: this.sexFormControl.value,
+      },
     };
   }
 
-  private isFormValid() {
+  public isFormValid() {
     return this.updateCredentialsForm?.valid;
   }
 
@@ -300,6 +315,10 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       phoneNumber: this.phoneNumberFormControl,
       firstName: this.firstNameFormControl,
       lastName: this.lastNameFormControl,
+      age: this.ageFormControl,
+      height: this.heightFormControl,
+      weight: this.weightFormControl,
+      sex: this.sexFormControl,
     });
   }
 
@@ -310,6 +329,10 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     this.createPhoneNumberFormControl();
     this.createFirstNameFormControl();
     this.createLastNameFormControl();
+    this.createAgeFormControl();
+    this.createHeightFormControl();
+    this.createWeightFormControl();
+    this.createSexFormControl();
   }
 
   private createLastNameFormControl() {
@@ -352,6 +375,34 @@ export class CredentialsComponent implements OnInit, OnDestroy {
       Validators.minLength(3),
       Validators.maxLength(20),
     ]);
+  }
+
+  private createAgeFormControl() {
+    this.ageFormControl = new FormControl('', [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(100),
+    ]);
+  }
+
+  private createHeightFormControl() {
+    this.heightFormControl = new FormControl('', [
+      Validators.required,
+      Validators.min(50),
+      Validators.max(250),
+    ]);
+  }
+
+  private createWeightFormControl() {
+    this.weightFormControl = new FormControl('', [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(250),
+    ]);
+  }
+
+  private createSexFormControl() {
+    this.sexFormControl = new FormControl('', [Validators.required]);
   }
 
   private openSnackBar(message: string) {
