@@ -1,6 +1,5 @@
-export interface ProductNutritions {
+import { ProductMacroNutritions } from './product-macro-nutritions.interface';
+
+export interface ProductNutritions extends ProductMacroNutritions {
   kcal: number;
-  protein: number;
-  carbohydrates: number;
-  fats: number;
 }

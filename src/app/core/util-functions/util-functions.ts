@@ -1,7 +1,14 @@
 import { Product } from '@core/models/products';
 import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
+import { ProductMacroNutritions } from '@core/models/products/product-macro-nutritions.interface';
 import { UserProduct } from '@core/models/user-products/user-product.model';
 import { cloneDeep } from 'lodash';
+import { UserNutritionGoals } from '@core/stores/user/user-nutrition-goals.model';
+
+export const percentConstant = 100;
+export const fatsKcalPerUnit = 9;
+export const carbsKcalPerUnit = 4;
+export const proteinsKcalPerUnit = 4;
 
 export const productPropertiesToRecalculate: string[] = [
   'kcal',
@@ -98,8 +105,8 @@ export function calculateProperties<T>(
   const recalculatedObject: T = cloneDeep(object);
   keys.forEach(
     (key: string) =>
-      (recalculatedObject[key] = convertToPrecision(
-        multipleBy(object[key], share)
+      (recalculatedObject[key] = Math.trunc(
+        convertToPrecision(multipleBy(object[key], share))
       ))
   );
   return recalculatedObject;
@@ -143,4 +150,52 @@ export function setBeginningOfTheDay(date: Date): Date {
 export function setEndOfTheDay(date: Date): Date {
   date.setHours(23, 59, 59);
   return date;
+}
+
+export function calculateFats(kcal: number, percentage: number): number {
+  return Math.trunc(((percentage / percentConstant) * kcal) / fatsKcalPerUnit);
+}
+
+export function calculateCarbs(kcal: number, percentage: number): number {
+  return Math.trunc(((percentage / percentConstant) * kcal) / carbsKcalPerUnit);
+}
+
+export function calculateProtein(kcal: number, percentage: number): number {
+  return Math.trunc(
+    ((percentage / percentConstant) * kcal) / proteinsKcalPerUnit
+  );
+}
+
+export function calculateProductMacroNutritions(
+  userNutritionGoals: UserNutritionGoals
+): ProductMacroNutritions {
+  return {
+    protein: calculateProtein(
+      userNutritionGoals.kcal,
+      userNutritionGoals.protein
+    ),
+    carbohydrates: calculateCarbs(
+      userNutritionGoals.kcal,
+      userNutritionGoals.carbs
+    ),
+    fats: calculateFats(userNutritionGoals.kcal, userNutritionGoals.fats),
+  };
+}
+
+export function calculateProductMacroNutritionsPerPeriod(
+  userNutritionGoals: UserNutritionGoals,
+  period: number
+): ProductMacroNutritions {
+  return {
+    protein: Math.trunc(
+      calculateProtein(userNutritionGoals.kcal, userNutritionGoals.protein) *
+        period
+    ),
+    carbohydrates: Math.trunc(
+      calculateCarbs(userNutritionGoals.kcal, userNutritionGoals.carbs) * period
+    ),
+    fats: Math.trunc(
+      calculateFats(userNutritionGoals.kcal, userNutritionGoals.fats) * period
+    ),
+  };
 }

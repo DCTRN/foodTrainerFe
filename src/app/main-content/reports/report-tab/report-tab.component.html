@@ -1,1 +1,9 @@
-<div><app-calories-counter [timeStamp]="timeStamp"></app-calories-counter></div>
+<div>
+  <app-calories-counter [timeStamp]="timeStamp"></app-calories-counter
+  ><app-char-select
+    (chartSelectChange)="onChartSelectChange($event)"
+    [timeStamp]="timeStamp"
+  ></app-char-select>
+  <app-bar-chart></app-bar-chart>
+  <app-pie-chart></app-pie-chart>
+</div>

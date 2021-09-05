@@ -6,6 +6,7 @@ import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { Subscription } from 'rxjs';
 import { AppState } from 'src/app/reducers';
 import { TimeStamp } from '../itf/time-stamp.model';
+import { ChartOptions } from './chart-select/chart-select.component';
 
 @Component({
   selector: 'app-report-tab',
@@ -27,6 +28,10 @@ export class ReportTabComponent implements OnInit {
 
   public ngOnInit(): void {
     this.timeStampActionDispatchers[this.timeStamp]();
+  }
+
+  public onChartSelectChange(chartSelect: ChartOptions): void {
+    console.warn('chartSelect', chartSelect);
   }
 
   private dispatchGetUserProductsForTodaysDate(): void {

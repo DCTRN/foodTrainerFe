@@ -1,0 +1,10 @@
+<div class="main-wrapper">
+  <mat-form-field class="example-full-width">
+    <mat-label>Sex</mat-label>
+    <mat-select [formControl]="charSelect">
+      <mat-option *ngFor="let ch of charts" [value]="ch.value">
+        {{ ch.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

@@ -68,7 +68,6 @@ export class DiaryComponent implements OnInit {
     this.getUserProductsByCurrentDate();
     this.loadComponent(DiaryComponents.MEALS_CONTAINER_LIST);
     this.date.valueChanges.pipe().subscribe((date) => {
-      console.warn(date);
       this.currentDate = date;
       this.getUserProductsByCurrentDate();
     });

@@ -4,9 +4,9 @@ import {
   Injectable,
   ViewContainerRef,
 } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
 import { ComponentLoader } from '@core/models/component-loader.interface';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
