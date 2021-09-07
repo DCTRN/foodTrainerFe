@@ -5,12 +5,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { CaloriesCounterComponent } from './calories-counter/calories-counter.component';
 import { CharSelectComponent } from './chart-select/chart-select.component';
 import { BarChartComponent } from './charts/bar-chart/bar-chart.component';
-import { DoughnutChartComponent } from './charts/doughnut-chart/doughnut-chart.component';
 import { LineChartComponent } from './charts/line-chart/line-chart.component';
 import { PieChartComponent } from './charts/pie-chart/pie-chart.component';
 import { ReportTabComponent } from './report-tab.component';
 import { ChartsModule } from 'ng2-charts';
 import { MatButtonModule } from '@angular/material/button';
+import { PolarAreaChartComponent } from './charts/polar-area-chart/polar-area-chart.component';
 
 @NgModule({
   declarations: [
@@ -19,8 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
     CharSelectComponent,
     BarChartComponent,
     PieChartComponent,
-    DoughnutChartComponent,
     LineChartComponent,
+    PolarAreaChartComponent,
   ],
   imports: [
     CommonModule,

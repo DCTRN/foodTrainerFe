@@ -7,50 +7,26 @@ import {
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
 import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
-import { ChartOptions, ChartType } from 'chart.js';
-import * as pluginDataLabels from 'chartjs-plugin-datalabels';
+import { ChartType } from 'chart.js';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
-import { Label } from 'ng2-charts';
+import { Label, SingleDataSet } from 'ng2-charts';
 import { Subscription } from 'rxjs';
 import { AppState } from 'src/app/reducers';
 
 @Component({
-  selector: 'app-pie-chart',
-  templateUrl: './pie-chart.component.html',
-  styleUrls: ['./pie-chart.component.scss'],
+  selector: 'app-polar-area-chart',
+  templateUrl: './polar-area-chart.component.html',
+  styleUrls: ['./polar-area-chart.component.scss'],
 })
-export class PieChartComponent implements OnInit {
+export class PolarAreaChartComponent implements OnInit {
   @Input()
   public timeStamp: TimeStamp = TimeStamp.MONTHLY;
-  // Pie
-  public pieChartOptions: ChartOptions = {
-    responsive: true,
-    legend: {
-      position: 'top',
-    },
-    plugins: {
-      datalabels: {
-        formatter: (value, ctx) => {
-          const label = ctx.chart.data.labels[ctx.dataIndex];
-          return label;
-        },
-      },
-    },
-  };
-  public pieChartLabels: Label[] = [['Protein'], ['Carbs'], ['Fats']];
-  public pieChartData: number[] = [];
-  public pieChartType: ChartType = 'pie';
-  public pieChartLegend = true;
-  public pieChartPlugins = [pluginDataLabels];
-  public pieChartColors = [
-    {
-      backgroundColor: [
-        'rgba(255,0,0,0.3)',
-        'rgba(0,255,0,0.3)',
-        'rgba(0,0,255,0.3)',
-      ],
-    },
-  ];
+  // PolarArea
+  public polarAreaChartLabels: Label[] = ['Protein', 'Carbs', 'Fats'];
+  public polarAreaChartData: SingleDataSet = [];
+  public polarAreaLegend = true;
+
+  public polarAreaChartType: ChartType = 'polarArea';
   public shouldDisplayChart = false;
 
   private dateRanges: Record<number, fromUserProducts.DateRange> = {
@@ -79,22 +55,22 @@ export class PieChartComponent implements OnInit {
           fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
           this.dateRanges[this.timeStamp]
         )
-        .pipe()
         .subscribe((nutritions: ProductNutritions) =>
           this.updateDisplayedData(nutritions)
         )
     );
   }
 
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   private updateDisplayedData(nutritions: ProductNutritions): void {
-    this.pieChartData = [
+    console.warn('polar update', nutritions);
+    this.polarAreaChartData = [
       nutritions.protein | 0,
       nutritions.carbohydrates | 0,
       nutritions.fats | 0,
     ];
-  }
-
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

@@ -15,7 +15,7 @@ import { ChartOptions } from './chart-select/chart-select.component';
 })
 export class ReportTabComponent implements OnInit {
   @Input()
-  public timeStamp: TimeStamp = TimeStamp.DAILY;
+  public timeStamp: TimeStamp = TimeStamp.MONTHLY;
 
   private timeStampActionDispatchers: Record<number, () => void> = {
     [TimeStamp.DAILY]: () => this.dispatchGetUserProductsForTodaysDate(),

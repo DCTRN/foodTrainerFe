@@ -1,5 +1,8 @@
 import { UserProduct } from '@core/models/user-products/user-product.model';
-import { reduceUserProductsNutritions } from '@core/util-functions/util-functions';
+import {
+  createUserProductsNutritions,
+  reduceUserProductsNutritions,
+} from '@core/util-functions/util-functions';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { isWithinInterval, parseISO } from 'date-fns';
 import { AppState } from 'src/app/reducers';
@@ -26,7 +29,10 @@ export const selectUserProductsByDateRange = createSelector(
   selectUserProducts,
   (state: UserProduct[], props: DateRange) =>
     state.filter((up: UserProduct) =>
-      isWithinInterval(up.date, { start: props.start, end: props.end })
+      isWithinInterval(parseISO(up.date as unknown as string), {
+        start: props.start,
+        end: props.end,
+      })
     )
 );
 
@@ -43,7 +49,7 @@ export const selectUserProductsKcalByDateRange = createSelector(
   }
 );
 
-export const selectUserProductsNutritionsByDateRange = createSelector(
+export const selectReducedUserProductsNutritionsByDateRange = createSelector(
   selectUserProducts,
   (state: UserProduct[], props: DateRange) => {
     const filteredUserProducts = state.filter((up: UserProduct) =>
@@ -53,5 +59,18 @@ export const selectUserProductsNutritionsByDateRange = createSelector(
       })
     );
     return reduceUserProductsNutritions(filteredUserProducts);
+  }
+);
+
+export const selectUserProductsNutritionsByDateRange = createSelector(
+  selectUserProducts,
+  (state: UserProduct[], props: DateRange) => {
+    const filteredUserProducts = state.filter((up: UserProduct) =>
+      isWithinInterval(parseISO(up.date as unknown as string), {
+        start: props.start,
+        end: props.end,
+      })
+    );
+    return createUserProductsNutritions(filteredUserProducts);
   }
 );

@@ -1,16 +1,17 @@
-<div>
-  <div>
-    <div style="display: block">
-      <canvas
-        baseChart
-        [datasets]="barChartData"
-        [labels]="barChartLabels"
-        [options]="barChartOptions"
-        [plugins]="barChartPlugins"
-        [legend]="barChartLegend"
-        [chartType]="barChartType"
-      >
-      </canvas>
-    </div>
+<div class="main-content">
+  <div style="display: block">
+    <canvas
+      baseChart
+      [datasets]="barChartData"
+      [labels]="barChartLabels"
+      [options]="barChartOptions"
+      [plugins]="barChartPlugins"
+      [legend]="barChartLegend"
+      [chartType]="barChartType"
+    >
+    </canvas>
+  </div>
+  <div class="full-width" *ngIf="!shouldDisplayChart">
+    <h1 class="no-data" style="display: block">There is no data to display.</h1>
   </div>
 </div>

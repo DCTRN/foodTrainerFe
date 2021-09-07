@@ -1,9 +1,9 @@
 import { Product } from '@core/models/products';
-import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
 import { ProductMacroNutritions } from '@core/models/products/product-macro-nutritions.interface';
+import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
 import { UserProduct } from '@core/models/user-products/user-product.model';
-import { cloneDeep } from 'lodash';
 import { UserNutritionGoals } from '@core/stores/user/user-nutrition-goals.model';
+import { cloneDeep } from 'lodash';
 
 export const percentConstant = 100;
 export const fatsKcalPerUnit = 9;
@@ -46,6 +46,23 @@ export function removeDuplicatesById<T extends { id: number }>(
   return array.filter(
     (product, index, arr) => arr.findIndex((p) => p.id === product.id) === index
   );
+}
+
+export function createUserProductsNutritions(
+  userProducts: Array<UserProduct>
+): Array<ProductNutritions> {
+  return userProducts.map((up: UserProduct) =>
+    createNutritions(calculateProductValues(up.amount, up.product))
+  );
+}
+
+export function createNutritions(product: Product): ProductNutritions {
+  return {
+    kcal: product.kcal | 0,
+    protein: product.protein | 0,
+    carbohydrates: product.carbohydrates | 0,
+    fats: product.fats | 0,
+  };
 }
 
 export function reduceUserProductsNutritions(

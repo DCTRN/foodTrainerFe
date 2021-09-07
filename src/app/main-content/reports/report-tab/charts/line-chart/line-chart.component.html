@@ -1,1 +1,16 @@
-<p>line-chart works!</p>
+<div class="main-content">
+  <div style="display: block" *ngIf="shouldDisplayChart">
+    <canvas
+      baseChart
+      [datasets]="lineChartData"
+      [labels]="lineChartLabels"
+      [options]="lineChartOptions"
+      [colors]="lineChartColors"
+      [legend]="lineChartLegend"
+      [chartType]="lineChartType"
+    ></canvas>
+  </div>
+  <div class="full-width" *ngIf="!shouldDisplayChart">
+    <h1 class="no-data" style="display: block">There is no data to display.</h1>
+  </div>
+</div>

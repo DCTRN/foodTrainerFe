@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ProductMacroNutritions } from '@core/models/products/product-macro-nutritions.interface';
 import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
 import { UserNutritionGoals } from '@core/stores/user/user-nutrition-goals.model';
 import * as fromUser from '@core/stores/user/user.selectors';
@@ -43,6 +44,7 @@ export class BarChartComponent implements OnInit {
   public barChartPlugins = [pluginDataLabels];
 
   public barChartData: ChartDataSets[] = [];
+  public shouldDisplayChart = false;
 
   private subscription = new Subscription();
 
@@ -72,36 +74,40 @@ export class BarChartComponent implements OnInit {
           calculateProductMacroNutritionsPerPeriod(goals, this.timeStamp)
         )
       )
-      .subscribe((v) => {
-        console.warn(v);
-        this.barChartData[0] = {
-          data: [v.protein, v.carbohydrates, v.fats],
-          label: 'Expected amount',
-        };
-      });
+      .subscribe((v) => this.updateExpectedData(v));
 
     this.subscription.add(
       this.store
         .select(
-          fromUserProducts.selectUserProductsNutritionsByDateRange,
+          fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
           this.dateRanges[this.timeStamp]
         )
         .pipe()
-        .subscribe(
-          (nutritions: ProductNutritions) =>
-            (this.barChartData[1] = {
-              data: [
-                nutritions.protein | 0,
-                nutritions.carbohydrates | 0,
-                nutritions.fats | 0,
-              ],
-              label: 'Actual amount',
-            })
+        .subscribe((nutritions: ProductNutritions) =>
+          this.updateDisplayedData(nutritions)
         )
     );
   }
 
   public ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  private updateExpectedData(v: ProductMacroNutritions) {
+    this.barChartData[0] = {
+      data: [v.protein, v.carbohydrates, v.fats],
+      label: 'Expected amount',
+    };
+  }
+
+  private updateDisplayedData(nutritions: ProductNutritions): void {
+    this.barChartData[1] = {
+      data: [
+        nutritions.protein | 0,
+        nutritions.carbohydrates | 0,
+        nutritions.fats | 0,
+      ],
+      label: 'Actual amount',
+    };
   }
 }
