@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserProductsAction } from '@core/stores/user-products/user-products.actions';
-import { incrementDateByDay } from '@core/util-functions/util-functions';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { Subscription } from 'rxjs';
 import { AppState } from 'src/app/reducers';
+import { ChartOptions } from '../itf/chart-options';
 import { TimeStamp } from '../itf/time-stamp.model';
-import { ChartOptions } from './chart-select/chart-select.component';
 
 @Component({
   selector: 'app-report-tab',

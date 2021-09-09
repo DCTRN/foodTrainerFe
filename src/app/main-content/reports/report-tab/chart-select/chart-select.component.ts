@@ -4,22 +4,15 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatSelectData } from '@itf/mat-select-data.model';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
 import { Store } from '@ngrx/store';
-import { SimpleErrorStateMatcher } from '@utils/simple-error-state-matcher.class';
 import { Subscription } from 'rxjs';
 import { AppState } from 'src/app/reducers';
-
-export enum ChartOptions {
-  LINE,
-  BAR,
-  DOUGHNUT,
-  PIE,
-}
+import { ChartOptions } from '../../itf/chart-options';
 
 export const dailyCharts: Array<MatSelectData<ChartOptions, string>> = [
   {
