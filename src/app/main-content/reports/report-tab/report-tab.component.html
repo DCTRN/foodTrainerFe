@@ -1,11 +1,5 @@
 <div>
-  <app-calories-counter [timeStamp]="timeStamp"></app-calories-counter
-  ><app-char-select
-    (chartSelectChange)="onChartSelectChange($event)"
-    [timeStamp]="timeStamp"
-  ></app-char-select>
-  <!-- <app-bar-chart></app-bar-chart>
-  <app-pie-chart></app-pie-chart> -->
-  <app-line-chart></app-line-chart>
-  <!-- <app-polar-area-chart></app-polar-area-chart> -->
+  <app-calories-counter></app-calories-counter
+  ><app-char-select></app-char-select>
+  <ng-container #componentContainer></ng-container>
 </div>

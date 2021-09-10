@@ -4,16 +4,22 @@
     mat-stretch-tabs
   >
     <mat-tab label="Daily">
-      <ng-template matTabContent><app-report-tab></app-report-tab></ng-template>
+      <ng-template matTabContent
+        ><app-report-tab [timeStampInit]="timeStampEnum.DAILY"></app-report-tab
+      ></ng-template>
     </mat-tab>
     <mat-tab label="Weekly">
       <ng-template matTabContent
-        ><app-report-tab></app-report-tab>
+        ><app-report-tab
+          [timeStampInit]="timeStampEnum.WEEKLY"
+        ></app-report-tab>
       </ng-template>
     </mat-tab>
     <mat-tab label="Monthly">
       <ng-template matTabContent
-        ><app-report-tab></app-report-tab>
+        ><app-report-tab
+          [timeStampInit]="timeStampEnum.MONTHLY"
+        ></app-report-tab>
       </ng-template>
     </mat-tab>
   </mat-tab-group>

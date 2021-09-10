@@ -1,5 +1,5 @@
 <div class="main-content">
-  <div style="display: block">
+  <div class="full-width" *ngIf="shouldDisplayChart">
     <canvas
       baseChart
       [data]="pieChartData"

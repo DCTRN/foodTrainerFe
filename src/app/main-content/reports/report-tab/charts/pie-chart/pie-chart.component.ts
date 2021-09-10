@@ -5,6 +5,7 @@ import {
   setEndOfTheDay,
 } from '@core/util-functions/util-functions';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
+import * as fromReportTab from '@main-content/reports/store/report-tab/report-tab.selectors';
 import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
 import { ChartOptions, ChartType } from 'chart.js';
@@ -12,6 +13,7 @@ import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { Label } from 'ng2-charts';
 import { Subscription } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 
 @Component({
@@ -75,11 +77,22 @@ export class PieChartComponent implements OnInit {
   public ngOnInit(): void {
     this.subscription.add(
       this.store
-        .select(
-          fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
-          this.dateRanges[this.timeStamp]
+        .select(fromReportTab.selectCurrentTimeStampType)
+        .pipe(
+          switchMap((timeStamp: TimeStamp) =>
+            this.store.select(
+              fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
+              this.dateRanges[timeStamp]
+            )
+          ),
+          tap(
+            (nutritions: ProductNutritions) =>
+              (this.shouldDisplayChart =
+                nutritions.protein > 0 ||
+                nutritions.carbohydrates > 0 ||
+                nutritions.fats > 0)
+          )
         )
-        .pipe()
         .subscribe((nutritions: ProductNutritions) =>
           this.updateDisplayedData(nutritions)
         )

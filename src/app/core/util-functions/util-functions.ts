@@ -3,6 +3,7 @@ import { ProductMacroNutritions } from '@core/models/products/product-macro-nutr
 import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
 import { UserProduct } from '@core/models/user-products/user-product.model';
 import { UserNutritionGoals } from '@core/stores/user/user-nutrition-goals.model';
+import { addHours } from 'date-fns';
 import { cloneDeep } from 'lodash';
 
 export const percentConstant = 100;
@@ -167,6 +168,15 @@ export function setBeginningOfTheDay(date: Date): Date {
 export function setEndOfTheDay(date: Date): Date {
   date.setHours(23, 59, 59);
   return date;
+}
+
+export function removeOffset(date: Date): Date {
+  const amountOfMinutesInHour = 60;
+  const offset = date.getTimezoneOffset();
+  const signModifier = offset < 0 ? -1 : 1;
+  const hoursToAdd = (signModifier * offset) / amountOfMinutesInHour;
+  const resultDate = addHours(date, hoursToAdd);
+  return resultDate;
 }
 
 export function calculateFats(kcal: number, percentage: number): number {

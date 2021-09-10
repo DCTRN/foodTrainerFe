@@ -1,7 +1,6 @@
-
 export enum ChartOptions {
+  PIE,
   LINE,
   BAR,
-  DOUGHNUT,
-  PIE
+  POLAR_AREA,
 }

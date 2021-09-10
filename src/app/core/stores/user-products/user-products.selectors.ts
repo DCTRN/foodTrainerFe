@@ -4,7 +4,7 @@ import {
   reduceUserProductsNutritions,
 } from '@core/util-functions/util-functions';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { isWithinInterval, parseISO } from 'date-fns';
+import { addHours, isWithinInterval, parseISO } from 'date-fns';
 import { AppState } from 'src/app/reducers';
 import { UserProducts } from './user-products.actions';
 
@@ -61,6 +61,31 @@ export const selectReducedUserProductsNutritionsByDateRange = createSelector(
     return reduceUserProductsNutritions(filteredUserProducts);
   }
 );
+
+export const selectAccumulatedUserProductsNutritionsByDateRangeForWeek =
+  createSelector(
+    selectUserProducts,
+    (state: UserProduct[], props: DateRange) => {
+      const filteredUserProducts = state.filter((up: UserProduct) =>
+        isWithinInterval(parseISO(up.date as unknown as string), {
+          start: props.start,
+          end: props.end,
+        })
+      );
+      const result = [];
+      const userProductsToReduce = [[], [], [], [], [], [], []];
+      filteredUserProducts.forEach((up: UserProduct) => {
+        const calculatedDay = addHours(new Date(up.date), -2);
+        const day = calculatedDay.getDay();
+        const index = day === 0 ? 6 : day - 1;
+        userProductsToReduce[index].push(up);
+      });
+      userProductsToReduce.forEach((ups: UserProduct[]) =>
+        result.push(reduceUserProductsNutritions(ups))
+      );
+      return result;
+    }
+  );
 
 export const selectUserProductsNutritionsByDateRange = createSelector(
   selectUserProducts,

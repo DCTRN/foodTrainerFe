@@ -11,6 +11,7 @@ import { ReportTabActions } from './store/report-tab/report-tab.actions';
   styleUrls: ['./reports.component.scss'],
 })
 export class ReportsComponent implements OnInit {
+  public timeStampEnum = TimeStamp;
   private tabToTimeStampMapping: Record<number, TimeStamp> = {
     0: TimeStamp.DAILY,
     1: TimeStamp.WEEKLY,

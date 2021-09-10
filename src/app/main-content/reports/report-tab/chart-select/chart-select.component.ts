@@ -1,65 +1,61 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSelectData } from '@itf/mat-select-data.model';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
+import { ReportTabActions } from '@main-content/reports/store/report-tab/report-tab.actions';
+import * as ReportTabSelects from '@main-content/reports/store/report-tab/report-tab.selectors';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 import { ChartOptions } from '../../itf/chart-options';
 
 export const dailyCharts: Array<MatSelectData<ChartOptions, string>> = [
   {
+    value: ChartOptions.PIE,
+    viewValue: 'Pie Chart',
+  },
+  {
     value: ChartOptions.BAR,
     viewValue: 'Bar Chart',
   },
   {
-    value: ChartOptions.PIE,
-    viewValue: 'Pie Chart',
+    value: ChartOptions.POLAR_AREA,
+    viewValue: 'Polar Area Chart',
   },
 ];
 
 export const weeklyCharts: Array<MatSelectData<ChartOptions, string>> = [
   {
-    value: ChartOptions.LINE,
-    viewValue: 'Line Chart',
+    value: ChartOptions.PIE,
+    viewValue: 'Pie Chart',
   },
   {
     value: ChartOptions.BAR,
     viewValue: 'Bar Chart',
   },
   {
-    value: ChartOptions.DOUGHNUT,
-    viewValue: 'Doughnut Chart',
+    value: ChartOptions.POLAR_AREA,
+    viewValue: 'Polar Area Chart',
   },
   {
-    value: ChartOptions.PIE,
-    viewValue: 'Pie Chart',
+    value: ChartOptions.LINE,
+    viewValue: 'Line Chart',
   },
 ];
 
 export const monthlyCharts: Array<MatSelectData<ChartOptions, string>> = [
   {
-    value: ChartOptions.LINE,
-    viewValue: 'Line Chart',
+    value: ChartOptions.PIE,
+    viewValue: 'Pie Chart',
   },
   {
     value: ChartOptions.BAR,
     viewValue: 'Bar Chart',
   },
   {
-    value: ChartOptions.DOUGHNUT,
-    viewValue: 'Doughnut Chart',
-  },
-  {
-    value: ChartOptions.PIE,
-    viewValue: 'Pie Chart',
+    value: ChartOptions.POLAR_AREA,
+    viewValue: 'Polar Area Chart',
   },
 ];
 
@@ -69,13 +65,7 @@ export const monthlyCharts: Array<MatSelectData<ChartOptions, string>> = [
   styleUrls: ['./chart-select.component.scss'],
 })
 export class CharSelectComponent implements OnInit, OnDestroy {
-  @Input()
   public timeStamp: TimeStamp = TimeStamp.DAILY;
-
-  @Output()
-  public chartSelectChange: EventEmitter<ChartOptions> = new EventEmitter<ChartOptions>();
-
-  public kcal: number;
 
   private chartsPerTimeStamp: Record<
     number,
@@ -88,16 +78,16 @@ export class CharSelectComponent implements OnInit, OnDestroy {
 
   public charts: Array<MatSelectData<ChartOptions, string>>;
   public charSelect: FormControl;
-  public selectedChart: ChartOptions;
+  public selectedChart: ChartOptions = ChartOptions.PIE;
 
   private subscriptions = new Subscription();
 
   constructor(private store: Store<AppState>) {}
 
   public ngOnInit(): void {
-    this.charts = this.chartsPerTimeStamp[this.timeStamp];
+    this.charts = this.chartsPerTimeStamp[TimeStamp.DAILY];
     this.selectedChart = this.charts[0].value;
-    this.chartSelectChange.emit(this.selectedChart);
+    this.dispatchUpdateSelectedChartTypeAction(this.selectedChart);
     this.initializeComponent();
   }
 
@@ -108,14 +98,45 @@ export class CharSelectComponent implements OnInit, OnDestroy {
   private initializeComponent(): void {
     this.createSexFormControl();
     this.subscribeToFormChanges();
+    this.subscribeToCurrentTimeStamp();
+  }
+
+  private subscribeToCurrentTimeStamp() {
+    this.subscriptions.add(
+      this.store
+        .select(ReportTabSelects.selectCurrentTimeStampType)
+        .pipe(distinctUntilChanged())
+        .subscribe((currentTimeStamp: TimeStamp) =>
+          this.updateChartOptions(currentTimeStamp)
+        )
+    );
+  }
+
+  private updateChartOptions(currentTimeStamp: TimeStamp) {
+    this.charts = this.chartsPerTimeStamp[currentTimeStamp];
+    this.selectedChart = this.charts[0].value;
+    this.charSelect.setValue(this.selectedChart);
   }
 
   private subscribeToFormChanges(): void {
     this.subscriptions.add(
-      this.charSelect.valueChanges.subscribe((chartSelect: ChartOptions) => {
-        this.chartSelectChange.emit(chartSelect);
-      })
+      this.charSelect.valueChanges
+        .pipe(filter((selectedChart) => selectedChart !== this.selectedChart))
+        .subscribe((chartSelect: ChartOptions) =>
+          this.dispatchUpdateSelectedChartTypeAction(chartSelect)
+        )
     );
+  }
+
+  private dispatchUpdateSelectedChartTypeAction(chartSelect: ChartOptions) {
+    this.selectedChart = chartSelect;
+    this.store.dispatch(this.createUpdateSelectedChartAction(chartSelect));
+  }
+
+  private createUpdateSelectedChartAction(chartSelect: ChartOptions) {
+    return ReportTabActions.UPDATE_SELECTED_TIME_CHART_TYPE({
+      selectedChartType: chartSelect,
+    });
   }
 
   private createSexFormControl() {

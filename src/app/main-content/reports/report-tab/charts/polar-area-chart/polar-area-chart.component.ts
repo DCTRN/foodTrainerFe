@@ -1,16 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
 import {
   setBeginningOfTheDay,
   setEndOfTheDay,
 } from '@core/util-functions/util-functions';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
+import * as fromReportTab from '@main-content/reports/store/report-tab/report-tab.selectors';
 import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
 import { ChartType } from 'chart.js';
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { Label, SingleDataSet } from 'ng2-charts';
 import { Subscription } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 
 @Component({
@@ -19,7 +21,6 @@ import { AppState } from 'src/app/reducers';
   styleUrls: ['./polar-area-chart.component.scss'],
 })
 export class PolarAreaChartComponent implements OnInit {
-  @Input()
   public timeStamp: TimeStamp = TimeStamp.MONTHLY;
   // PolarArea
   public polarAreaChartLabels: Label[] = ['Protein', 'Carbs', 'Fats'];
@@ -51,9 +52,21 @@ export class PolarAreaChartComponent implements OnInit {
   public ngOnInit(): void {
     this.subscription.add(
       this.store
-        .select(
-          fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
-          this.dateRanges[this.timeStamp]
+        .select(fromReportTab.selectCurrentTimeStampType)
+        .pipe(
+          switchMap((timeStamp: TimeStamp) =>
+            this.store.select(
+              fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
+              this.dateRanges[timeStamp]
+            )
+          ),
+          tap(
+            (nutritions: ProductNutritions) =>
+              (this.shouldDisplayChart =
+                nutritions.protein > 0 ||
+                nutritions.carbohydrates > 0 ||
+                nutritions.fats > 0)
+          )
         )
         .subscribe((nutritions: ProductNutritions) =>
           this.updateDisplayedData(nutritions)
@@ -66,7 +79,6 @@ export class PolarAreaChartComponent implements OnInit {
   }
 
   private updateDisplayedData(nutritions: ProductNutritions): void {
-    console.warn('polar update', nutritions);
     this.polarAreaChartData = [
       nutritions.protein | 0,
       nutritions.carbohydrates | 0,

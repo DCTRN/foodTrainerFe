@@ -1,9 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   setBeginningOfTheDay,
   setEndOfTheDay,
 } from '@core/util-functions/util-functions';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
+import * as fromReportTab from '@main-content/reports/store/report-tab/report-tab.selectors';
 import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
 import { DateRange } from '@stores/user-products/user-products.selectors';
@@ -12,6 +13,7 @@ import endOfMonth from 'date-fns/endOfMonth';
 import endOfWeek from 'date-fns/endOfWeek';
 import startOfMonth from 'date-fns/startOfMonth';
 import { Subscription } from 'rxjs';
+import { concatMap, switchMap, take } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 
 @Component({
@@ -20,7 +22,6 @@ import { AppState } from 'src/app/reducers';
   styleUrls: ['./calories-counter.component.scss'],
 })
 export class CaloriesCounterComponent implements OnInit, OnDestroy {
-  @Input()
   public timeStamp: TimeStamp = TimeStamp.DAILY;
   public kcal: number;
 
@@ -46,9 +47,14 @@ export class CaloriesCounterComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.subscription.add(
       this.store
-        .select(
-          fromUserProducts.selectUserProductsKcalByDateRange,
-          this.dateRanges[this.timeStamp]
+        .select(fromReportTab.selectCurrentTimeStampType)
+        .pipe(
+          switchMap((timeStamp: TimeStamp) =>
+            this.store.select(
+              fromUserProducts.selectUserProductsKcalByDateRange,
+              this.dateRanges[timeStamp]
+            )
+          )
         )
         .subscribe((kcal) => (this.kcal = kcal))
     );

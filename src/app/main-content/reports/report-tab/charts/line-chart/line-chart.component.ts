@@ -20,7 +20,6 @@ import { AppState } from 'src/app/reducers';
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent implements OnInit {
-  @Input()
   public timeStamp: TimeStamp = TimeStamp.MONTHLY;
   public lineChartData: ChartDataSets[] = [
     {
@@ -146,7 +145,7 @@ export class LineChartComponent implements OnInit {
     this.subscription.add(
       this.store
         .select(
-          fromUserProducts.selectUserProductsNutritionsByDateRange,
+          fromUserProducts.selectAccumulatedUserProductsNutritionsByDateRangeForWeek,
           this.dateRanges[this.timeStamp]
         )
         .pipe(
