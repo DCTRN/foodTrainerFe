@@ -59,22 +59,23 @@ export class PieChartComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   public ngOnInit(): void {
+    this.subscribeToReducedProductNutritions();
+  }
+
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private subscribeToReducedProductNutritions(): void {
     this.subscription.add(
       this.store
         .select(fromReportTab.selectCurrentTimeStampType)
         .pipe(
           switchMap((timeStamp: TimeStamp) =>
-            this.store.select(
-              fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
-              this.dateRanges[timeStamp]
-            )
+            this.getReducedProductNutritions(timeStamp)
           ),
-          tap(
-            (nutritions: ProductNutritions) =>
-              (this.shouldDisplayChart =
-                nutritions.protein > 0 ||
-                nutritions.carbohydrates > 0 ||
-                nutritions.fats > 0)
+          tap((nutritions: ProductNutritions) =>
+            this.updateShouldDisplayChart(nutritions)
           )
         )
         .subscribe((nutritions: ProductNutritions) =>
@@ -83,15 +84,25 @@ export class PieChartComponent implements OnInit {
     );
   }
 
+  private getReducedProductNutritions(timeStamp: TimeStamp) {
+    return this.store.select(
+      fromUserProducts.selectReducedUserProductsNutritionsByDateRange,
+      this.dateRanges[timeStamp]
+    );
+  }
+
+  private updateShouldDisplayChart(nutritions: ProductNutritions): void {
+    this.shouldDisplayChart =
+      nutritions.protein > 0 ||
+      nutritions.carbohydrates > 0 ||
+      nutritions.fats > 0;
+  }
+
   private updateDisplayedData(nutritions: ProductNutritions): void {
     this.pieChartData = [
       nutritions.protein | 0,
       nutritions.carbohydrates | 0,
       nutritions.fats | 0,
     ];
-  }
-
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 }

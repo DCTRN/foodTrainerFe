@@ -1,4 +1,5 @@
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
 import { ChartOptions } from '@main-content/reports/itf/chart-options';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
 import { ReportTabActions } from '@main-content/reports/store/report-tab/report-tab.actions';
@@ -40,4 +41,18 @@ export const matTabEvent2: MatTabChangeEvent = {
 export const matTabEvent3: MatTabChangeEvent = {
   index: 2,
   tab: undefined,
+};
+
+export const productNutritionsMock0: ProductNutritions = {
+  kcal: 0,
+  protein: 0,
+  carbohydrates: 0,
+  fats: 0,
+};
+
+export const productNutritionsMock1: ProductNutritions = {
+  kcal: 500,
+  protein: 100,
+  carbohydrates: 100,
+  fats: 100,
 };
