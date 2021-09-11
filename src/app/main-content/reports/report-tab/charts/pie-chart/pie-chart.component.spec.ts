@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideMockStore } from '@ngrx/store/testing';
+import { initialReportTabState } from '@testsUT/reports/reports-mock-data.model';
 import { PieChartComponent } from './pie-chart.component';
 
 describe('PieChartComponent', () => {
@@ -8,9 +9,16 @@ describe('PieChartComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PieChartComponent ]
-    })
-    .compileComponents();
+      providers: [
+        provideMockStore({
+          initialState: {
+            ...initialReportTabState,
+            userProducts: { userProducts: [] },
+          },
+        }),
+      ],
+      declarations: [PieChartComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

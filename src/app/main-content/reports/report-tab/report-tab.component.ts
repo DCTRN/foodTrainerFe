@@ -8,37 +8,20 @@ import {
 } from '@angular/core';
 import { ComponentLoader } from '@core/models/component-loader.interface';
 import { ComponentLoaderService } from '@core/services/component-loader/component-loader.service';
-import { UserProductsAction } from '@core/stores/user-products/user-products.actions';
-import {
-  removeOffset,
-  setBeginningOfTheDay,
-} from '@core/util-functions/util-functions';
+import { createUserproductsGetByDateActionsPerTimeStamp } from '@core/util-functions/util-functions';
 import * as ReportTabSelects from '@main-content/reports/store/report-tab/report-tab.selectors';
 import { Store } from '@ngrx/store';
-import {
-  addHours,
-  endOfMonth,
-  endOfWeek,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns';
 import { Subscription } from 'rxjs';
 import {
-  debounceTime,
   distinctUntilChanged,
   filter,
+  switchMap,
   take,
+  tap,
 } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 import { ChartOptions } from '../itf/chart-options';
 import { TimeStamp } from '../itf/time-stamp.model';
-
-export enum ChartsComponents {
-  PIE_CHART,
-  BAR_CHART,
-  LINE_CHART,
-  POLAR_AREA_CHART,
-}
 
 @Component({
   selector: 'app-report-tab',
@@ -53,12 +36,6 @@ export class ReportTabComponent implements OnInit, OnDestroy {
   public container: ViewContainerRef;
 
   public timeStamp: TimeStamp = TimeStamp.DAILY;
-
-  private readonly timeStampActionDispatchers: Record<number, () => void> = {
-    [TimeStamp.DAILY]: () => this.dispatchGetUserProductsForTodaysDate(),
-    [TimeStamp.WEEKLY]: () => this.dispatchGetUserProductsForCurrentWeek(),
-    [TimeStamp.MONTHLY]: () => this.dispatchGetUserProductsForCurrentMonth(),
-  };
 
   private readonly components: { [key: string]: ComponentLoader } = {
     [ChartOptions.PIE]: {
@@ -86,6 +63,8 @@ export class ReportTabComponent implements OnInit, OnDestroy {
         ),
     },
   };
+  private userProductsByDateActions =
+    createUserproductsGetByDateActionsPerTimeStamp();
   private subscriptions = new Subscription();
 
   constructor(
@@ -94,32 +73,43 @@ export class ReportTabComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
+    this.subscribeToTimeStamp();
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private subscribeToTimeStamp() {
     this.subscriptions.add(
       this.store
         .select(ReportTabSelects.selectCurrentTimeStampType)
         .pipe(
           distinctUntilChanged(),
-          filter(
-            (currentTimeStamp: TimeStamp) =>
-              currentTimeStamp === this.timeStampInit
-          )
+          filter((timeStamp: TimeStamp) =>
+            this.isComponentDisplayed(timeStamp)
+          ),
+          tap((timeStamp: TimeStamp) => this.getUserProductsByDate(timeStamp)),
+          switchMap(() => this.loadChart())
         )
-        .subscribe((currentTimeStamp: TimeStamp) => {
-          this.timeStamp = currentTimeStamp;
-          this.timeStampActionDispatchers[currentTimeStamp]();
-        })
-    );
-
-    this.subscriptions.add(
-      this.store
-        .select(ReportTabSelects.selectSelectedChartType)
-        .pipe(debounceTime(200), distinctUntilChanged())
-        .subscribe((chart: ChartOptions) => this.loadComponent(chart))
+        .subscribe()
     );
   }
 
-  public ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  private loadChart() {
+    return this.store.select(ReportTabSelects.selectSelectedChartType).pipe(
+      distinctUntilChanged(),
+      tap((chart: ChartOptions) => this.loadComponent(chart))
+    );
+  }
+
+  private isComponentDisplayed(currentTimeStamp: TimeStamp): boolean {
+    return currentTimeStamp === this.timeStampInit;
+  }
+
+  private getUserProductsByDate(currentTimeStamp: TimeStamp) {
+    this.timeStamp = currentTimeStamp;
+    this.store.dispatch(this.userProductsByDateActions[this.timeStamp]);
   }
 
   private loadComponent(component: ChartOptions): void {
@@ -128,42 +118,5 @@ export class ReportTabComponent implements OnInit, OnDestroy {
       .loadComponent(this.container, this.components[component])
       .pipe(take(1))
       .subscribe();
-  }
-
-  private dispatchGetUserProductsForTodaysDate(): void {
-    const today = {
-      date: removeOffset(setBeginningOfTheDay(new Date())),
-    };
-    return this.store.dispatch(
-      UserProductsAction.GET_USER_PRODUCTS_BY_DATE_REQUEST({
-        userProductsBy: today,
-      })
-    );
-  }
-
-  private dispatchGetUserProductsForCurrentWeek(): void {
-    const week = {
-      start: removeOffset(startOfWeek(new Date(), { weekStartsOn: 1 })),
-      end: removeOffset(
-        setBeginningOfTheDay(endOfWeek(new Date(), { weekStartsOn: 1 }))
-      ),
-    };
-    return this.store.dispatch(
-      UserProductsAction.GET_USER_PRODUCTS_BY_DATE_RANGE_REQUEST({
-        userProductsBy: week,
-      })
-    );
-  }
-
-  private dispatchGetUserProductsForCurrentMonth(): void {
-    const month = {
-      start: removeOffset(startOfMonth(new Date())),
-      end: removeOffset(setBeginningOfTheDay(endOfMonth(new Date()))),
-    };
-    return this.store.dispatch(
-      UserProductsAction.GET_USER_PRODUCTS_BY_DATE_RANGE_REQUEST({
-        userProductsBy: month,
-      })
-    );
   }
 }

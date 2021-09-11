@@ -1,16 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideMockStore } from '@ngrx/store/testing';
+import { initialReportTabState } from '@testsUT/reports/reports-mock-data.model';
 import { BarChartComponent } from './bar-chart.component';
 
-describe('BarChartComponent', () => {
+xdescribe('BarChartComponent', () => {
   let component: BarChartComponent;
   let fixture: ComponentFixture<BarChartComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BarChartComponent ]
-    })
-    .compileComponents();
+      providers: [
+        provideMockStore({
+          initialState: {
+            ...initialReportTabState,
+            userProducts: { userProducts: [] },
+          },
+        }),
+      ],
+      declarations: [BarChartComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

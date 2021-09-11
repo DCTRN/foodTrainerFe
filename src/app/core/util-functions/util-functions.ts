@@ -2,8 +2,18 @@ import { Product } from '@core/models/products';
 import { ProductMacroNutritions } from '@core/models/products/product-macro-nutritions.interface';
 import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
 import { UserProduct } from '@core/models/user-products/user-product.model';
+import { UserProductsAction } from '@core/stores/user-products/user-products.actions';
+import { DateRange } from '@core/stores/user-products/user-products.selectors';
 import { UserNutritionGoals } from '@core/stores/user/user-nutrition-goals.model';
-import { addHours } from 'date-fns';
+import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
+import { Action } from '@ngrx/store';
+import {
+  addHours,
+  endOfMonth,
+  endOfWeek,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns';
 import { cloneDeep } from 'lodash';
 
 export const percentConstant = 100;
@@ -224,5 +234,51 @@ export function calculateProductMacroNutritionsPerPeriod(
     fats: Math.trunc(
       calculateFats(userNutritionGoals.kcal, userNutritionGoals.fats) * period
     ),
+  };
+}
+
+export function createDateRanges(): Record<TimeStamp, DateRange> {
+  return {
+    [TimeStamp.DAILY]: {
+      start: setBeginningOfTheDay(new Date()),
+      end: setEndOfTheDay(new Date()),
+    },
+    [TimeStamp.WEEKLY]: {
+      start: startOfWeek(new Date(), { weekStartsOn: 1 }),
+      end: endOfWeek(new Date(), { weekStartsOn: 1 }),
+    },
+    [TimeStamp.MONTHLY]: {
+      start: startOfMonth(new Date()),
+      end: endOfMonth(new Date()),
+    },
+  };
+}
+
+export function createUserproductsGetByDateActionsPerTimeStamp(): Record<
+  TimeStamp,
+  Action
+> {
+  return {
+    [TimeStamp.DAILY]: UserProductsAction.GET_USER_PRODUCTS_BY_DATE_REQUEST({
+      userProductsBy: {
+        date: removeOffset(setBeginningOfTheDay(new Date())),
+      },
+    }),
+    [TimeStamp.WEEKLY]:
+      UserProductsAction.GET_USER_PRODUCTS_BY_DATE_RANGE_REQUEST({
+        userProductsBy: {
+          start: removeOffset(startOfWeek(new Date(), { weekStartsOn: 1 })),
+          end: removeOffset(
+            setBeginningOfTheDay(endOfWeek(new Date(), { weekStartsOn: 1 }))
+          ),
+        },
+      }),
+    [TimeStamp.MONTHLY]:
+      UserProductsAction.GET_USER_PRODUCTS_BY_DATE_RANGE_REQUEST({
+        userProductsBy: {
+          start: removeOffset(startOfMonth(new Date())),
+          end: removeOffset(setBeginningOfTheDay(endOfMonth(new Date()))),
+        },
+      }),
   };
 }

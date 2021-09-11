@@ -1,16 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ProductNutritions } from '@core/models/products/product-nutritions.interface';
-import {
-  setBeginningOfTheDay,
-  setEndOfTheDay,
-} from '@core/util-functions/util-functions';
+import { createDateRanges } from '@core/util-functions/util-functions';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
 import * as fromReportTab from '@main-content/reports/store/report-tab/report-tab.selectors';
 import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
 import { ChartOptions, ChartType } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { Label } from 'ng2-charts';
 import { Subscription } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -55,20 +51,8 @@ export class PieChartComponent implements OnInit {
   ];
   public shouldDisplayChart = false;
 
-  private dateRanges: Record<number, fromUserProducts.DateRange> = {
-    [TimeStamp.DAILY]: {
-      start: setBeginningOfTheDay(new Date()),
-      end: setEndOfTheDay(new Date()),
-    },
-    [TimeStamp.WEEKLY]: {
-      start: startOfWeek(new Date(), { weekStartsOn: 1 }),
-      end: endOfWeek(new Date(), { weekStartsOn: 1 }),
-    },
-    [TimeStamp.MONTHLY]: {
-      start: startOfMonth(new Date()),
-      end: endOfMonth(new Date()),
-    },
-  };
+  private dateRanges: Record<number, fromUserProducts.DateRange> =
+    createDateRanges();
 
   private subscription = new Subscription();
 

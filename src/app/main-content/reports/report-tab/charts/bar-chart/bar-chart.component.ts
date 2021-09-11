@@ -5,8 +5,7 @@ import { UserNutritionGoals } from '@core/stores/user/user-nutrition-goals.model
 import * as fromUser from '@core/stores/user/user.selectors';
 import {
   calculateProductMacroNutritionsPerPeriod,
-  setBeginningOfTheDay,
-  setEndOfTheDay,
+  createDateRanges,
 } from '@core/util-functions/util-functions';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
 import * as fromReportTab from '@main-content/reports/store/report-tab/report-tab.selectors';
@@ -14,10 +13,9 @@ import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
 import { Label } from 'ng2-charts';
 import { Subscription } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 
 @Component({
@@ -49,20 +47,8 @@ export class BarChartComponent implements OnInit {
 
   private subscription = new Subscription();
 
-  private dateRanges: Record<number, fromUserProducts.DateRange> = {
-    [TimeStamp.DAILY]: {
-      start: setBeginningOfTheDay(new Date()),
-      end: setEndOfTheDay(new Date()),
-    },
-    [TimeStamp.WEEKLY]: {
-      start: startOfWeek(new Date(), { weekStartsOn: 1 }),
-      end: endOfWeek(new Date(), { weekStartsOn: 1 }),
-    },
-    [TimeStamp.MONTHLY]: {
-      start: startOfMonth(new Date()),
-      end: endOfMonth(new Date()),
-    },
-  };
+  private dateRanges: Record<number, fromUserProducts.DateRange> =
+    createDateRanges();
 
   constructor(private store: Store<AppState>) {}
 

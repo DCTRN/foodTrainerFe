@@ -1,19 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  setBeginningOfTheDay,
-  setEndOfTheDay,
-} from '@core/util-functions/util-functions';
+import { createDateRanges } from '@core/util-functions/util-functions';
 import { TimeStamp } from '@main-content/reports/itf/time-stamp.model';
 import * as fromReportTab from '@main-content/reports/store/report-tab/report-tab.selectors';
 import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
 import { DateRange } from '@stores/user-products/user-products.selectors';
-import { startOfWeek } from 'date-fns';
-import endOfMonth from 'date-fns/endOfMonth';
-import endOfWeek from 'date-fns/endOfWeek';
-import startOfMonth from 'date-fns/startOfMonth';
+import { parseISO } from 'date-fns';
 import { Subscription } from 'rxjs';
-import { concatMap, switchMap, take } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 
 @Component({
@@ -25,20 +19,7 @@ export class CaloriesCounterComponent implements OnInit, OnDestroy {
   public timeStamp: TimeStamp = TimeStamp.DAILY;
   public kcal: number;
 
-  private dateRanges: Record<number, DateRange> = {
-    [TimeStamp.DAILY]: {
-      start: setBeginningOfTheDay(new Date()),
-      end: setEndOfTheDay(new Date()),
-    },
-    [TimeStamp.WEEKLY]: {
-      start: startOfWeek(new Date(), { weekStartsOn: 1 }),
-      end: endOfWeek(new Date(), { weekStartsOn: 1 }),
-    },
-    [TimeStamp.MONTHLY]: {
-      start: startOfMonth(new Date()),
-      end: endOfMonth(new Date()),
-    },
-  };
+  private dateRanges: Record<TimeStamp, DateRange> = createDateRanges();
 
   private subscription = new Subscription();
 
@@ -50,11 +31,9 @@ export class CaloriesCounterComponent implements OnInit, OnDestroy {
         .select(fromReportTab.selectCurrentTimeStampType)
         .pipe(
           switchMap((timeStamp: TimeStamp) =>
-            this.store.select(
-              fromUserProducts.selectUserProductsKcalByDateRange,
-              this.dateRanges[timeStamp]
-            )
-          )
+            this.getUserProductsKcalByTimeStamp(timeStamp)
+          ),
+          // filter((kcal: number) => kcal > 0)
         )
         .subscribe((kcal) => (this.kcal = kcal))
     );
@@ -62,5 +41,12 @@ export class CaloriesCounterComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  private getUserProductsKcalByTimeStamp(timeStamp: TimeStamp) {
+    return this.store.select(
+      fromUserProducts.selectUserProductsKcalByDateRange,
+      this.dateRanges[timeStamp]
+    );
   }
 }

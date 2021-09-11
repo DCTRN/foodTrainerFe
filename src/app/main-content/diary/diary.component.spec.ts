@@ -3,10 +3,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   async,
   ComponentFixture,
-  fakeAsync,
   getTestBed,
   TestBed,
-  tick,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ButtonAction } from '@core/models/products';
