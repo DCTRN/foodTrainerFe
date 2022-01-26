@@ -5,9 +5,8 @@ import * as fromReportTab from '@main-content/reports/store/report-tab/report-ta
 import { Store } from '@ngrx/store';
 import * as fromUserProducts from '@stores/user-products/user-products.selectors';
 import { DateRange } from '@stores/user-products/user-products.selectors';
-import { parseISO } from 'date-fns';
 import { Subscription } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { delay, switchMap, tap } from 'rxjs/operators';
 import { AppState } from 'src/app/reducers';
 
 @Component({
@@ -16,34 +15,35 @@ import { AppState } from 'src/app/reducers';
   styleUrls: ['./calories-counter.component.scss'],
 })
 export class CaloriesCounterComponent implements OnInit, OnDestroy {
-  public timeStamp: TimeStamp = TimeStamp.DAILY;
   public kcal: number;
 
   private dateRanges: Record<TimeStamp, DateRange> = createDateRanges();
 
   private subscription = new Subscription();
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) { }
 
   public ngOnInit(): void {
-    this.subscription.add(
-      this.store
-        .select(fromReportTab.selectCurrentTimeStampType)
-        .pipe(
-          switchMap((timeStamp: TimeStamp) =>
-            this.getUserProductsKcalByTimeStamp(timeStamp)
-          ),
-          // filter((kcal: number) => kcal > 0)
-        )
-        .subscribe((kcal) => (this.kcal = kcal))
-    );
+    setTimeout(() => {
+      this.subscription.add(
+        this.store
+          .select(fromReportTab.selectCurrentTimeStampType)
+          .pipe(
+            switchMap((timeStamp: TimeStamp) =>
+              this.getUserProductsKcalBy(timeStamp)
+            ),
+            tap((kcal) => console.warn('kcal: ', kcal))
+          )
+          .subscribe((kcal) => (this.kcal = kcal))
+      );
+    }, 3000);
   }
 
   public ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  private getUserProductsKcalByTimeStamp(timeStamp: TimeStamp) {
+  private getUserProductsKcalBy(timeStamp: TimeStamp) {
     return this.store.select(
       fromUserProducts.selectUserProductsKcalByDateRange,
       this.dateRanges[timeStamp]

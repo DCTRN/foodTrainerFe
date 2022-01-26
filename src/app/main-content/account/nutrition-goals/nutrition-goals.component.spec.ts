@@ -17,15 +17,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ModalService } from '@core/modal-service/modal.service';
 import { ModalConfiguration } from '@core/modal-service/models/modal-configuration';
 import { NotificationService } from '@core/notifications/service/notification.service';
-import { UserAction } from '@core/stores/user/user.actions';
 import { User } from '@core/stores/user/user.model';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  user1,
-  user1Details,
-  user1NutritionGoals,
-} from '@testsUT/user/user-mock-data.model';
+import { user1, user1NutritionGoals } from '@testsUT/user/user-mock-data.model';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ReplaySubject } from 'rxjs';
 import { NutritionGoalsComponent } from './nutrition-goals.component';
@@ -105,12 +100,12 @@ describe('NutritionGoalsComponent', () => {
   });
 
   it('should fill forms with current value from store', () => {
-    const kca = component.kcalFormControl.value;
+    const kcal = component.kcalFormControl.value;
     const protein = component.proteinFormControl.value;
     const carbs = component.carbsFormControl.value;
     const fats = component.fatsFormControl.value;
 
-    expect(kca).toEqual(user1NutritionGoals.kcal);
+    expect(kcal).toEqual(user1NutritionGoals.kcal);
     expect(protein).toEqual(user1NutritionGoals.protein);
     expect(carbs).toEqual(user1NutritionGoals.carbs);
     expect(fats).toEqual(user1NutritionGoals.fats);

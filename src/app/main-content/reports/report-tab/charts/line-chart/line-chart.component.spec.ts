@@ -1,9 +1,10 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialReportTabState } from '@testsUT/reports/reports-mock-data.model';
 import { LineChartComponent } from './line-chart.component';
 
-xdescribe('LineChartComponent', () => {
+describe('LineChartComponent', () => {
   let component: LineChartComponent;
   let fixture: ComponentFixture<LineChartComponent>;
 
@@ -18,6 +19,7 @@ xdescribe('LineChartComponent', () => {
         }),
       ],
       declarations: [LineChartComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
